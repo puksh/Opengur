@@ -28,7 +28,6 @@ jobs:
         run: |
           echo "API_CLIENT_ID=\"${{ secrets.API_CLIENT_ID || 'placeholder_client_id' }}\"" > gradle.properties
           echo "API_CLIENT_SECRET=\"${{ secrets.API_CLIENT_SECRET || 'placeholder_client_secret' }}\"" >> gradle.properties
-          echo "FABRIC_KEY=\"${{ secrets.FABRIC_KEY || '' }}\"" >> gradle.properties
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
