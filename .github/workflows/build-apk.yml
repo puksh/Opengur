@@ -25,6 +25,9 @@ jobs:
           cache: 'gradle'
 
       - name: Create gradle.properties with API credentials
+        # Note: Builds without real API credentials will compile successfully but may have limited
+        # runtime functionality. To fully test API features, set API_CLIENT_ID and API_CLIENT_SECRET
+        # as repository secrets in GitHub Settings > Secrets > Actions
         run: |
           echo "API_CLIENT_ID=\"${{ secrets.API_CLIENT_ID || 'placeholder_client_id' }}\"" > gradle.properties
           echo "API_CLIENT_SECRET=\"${{ secrets.API_CLIENT_SECRET || 'placeholder_client_secret' }}\"" >> gradle.properties
