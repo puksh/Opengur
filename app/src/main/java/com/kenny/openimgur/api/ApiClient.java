@@ -33,7 +33,7 @@ public class ApiClient {
 
     public static final String IMGUR_GALLERY_URL = IMGUR_URL + "gallery/";
 
-    private static final String API_URL = "https://api.imgur.com";
+    private static final String API_URL = "https://api.imgur.com/3/";
 
     private static Retrofit sRestAdapter;
 

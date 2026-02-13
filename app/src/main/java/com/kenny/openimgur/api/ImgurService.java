@@ -32,125 +32,125 @@ import retrofit2.http.Query;
 public interface ImgurService {
 
     // Get Requests
-    @GET("/3/gallery/{section}/{sort}/{page}")
+    @GET("gallery/{section}/{sort}/{page}")
     Call<GalleryResponse> getGallery(@Path("section") String section, @Path("sort") String sort, @Path("page") int page, @Query("showViral") boolean showViral);
 
-    @GET("/3/gallery/{section}/top/{window}/{page}")
+    @GET("gallery/{section}/top/{window}/{page}")
     Call<GalleryResponse> getGalleryForTopSorted(@Path("section") String section, @Path("window") String window, @Path("page") int page);
 
-    @GET("/3/gallery/{id}")
+    @GET("gallery/{id}")
     Call<BasicObjectResponse> getGalleryDetails(@Path("id") String itemId);
 
-    @GET("/3/image/{id}")
+    @GET("image/{id}")
     Call<PhotoResponse> getImageDetails(@Path("id") String imageId);
 
-    @GET("/3/gallery/{id}/images")
+    @GET("gallery/{id}/images")
     Call<AlbumResponse> getAlbumImages(@Path("id") String albumId);
 
-    @GET("/3/gallery/{id}/comments/{sort}")
+    @GET("gallery/{id}/comments/{sort}")
     Call<CommentResponse> getComments(@Path("id") String itemId, @Path("sort") String commentSort);
 
-    @GET("/3/account/{user}")
+    @GET("account/{user}")
     Call<UserResponse> getProfile(@Path("user") String username);
 
-    @GET("/3/account/{user}/favorites/{page}")
+    @GET("account/{user}/favorites/{page}")
     Call<GalleryResponse> getProfileFavorites(@Path("user") String username, @Path("page") int page);
 
-    @GET("/3/account/{user}/gallery_favorites/{page}/newest")
+    @GET("account/{user}/gallery_favorites/{page}/newest")
     Call<GalleryResponse> getProfileGalleryFavorites(@Path("user") String username, @Path("page") int page);
 
-    @GET("/3/account/{user}/submissions/{page}")
+    @GET("account/{user}/submissions/{page}")
     Call<GalleryResponse> getProfileSubmissions(@Path("user") String username, @Path("page") int page);
 
-    @GET("/3/account/{user}/comments/{sort}/{page}")
+    @GET("account/{user}/comments/{sort}/{page}")
     Call<CommentResponse> getProfileComments(@Path("user") String username, @Path("sort") String sort, @Path("page") int page);
 
-    @GET("/3/account/{user}/albums/{page}")
+    @GET("account/{user}/albums/{page}")
     Call<GalleryResponse> getProfileAlbums(@Path("user") String username, @Path("page") int page);
 
-    @GET("/3/account/{user}/images/{page}")
+    @GET("account/{user}/images/{page}")
     Call<GalleryResponse> getProfileUploads(@Path("user") String username, @Path("page") int page);
 
-    @GET("/3/account/{user}/gallery_profile")
+    @GET("account/{user}/gallery_profile")
     Call<TrophyResponse> getProfileTrophies(@Path("user") String username);
 
-    @GET("/3/gallery/r/{subreddit}/{sort}/{page}")
+    @GET("gallery/r/{subreddit}/{sort}/{page}")
     Call<GalleryResponse> getSubReddit(@Path("subreddit") String query, @Path("sort") String sort, @Path("page") int page);
 
-    @GET("/3/gallery/r/{subreddit}/top/{window}/{page}")
+    @GET("gallery/r/{subreddit}/top/{window}/{page}")
     Call<GalleryResponse> getSubRedditForTopSorted(@Path("subreddit") String query, @Path("window") String window, @Path("page") int page);
 
-    @GET("/3/gallery/random/{page}")
+    @GET("gallery/random/{page}")
     Call<GalleryResponse> getRandomGallery(@Path("page") int page);
 
-    @GET("/3/topics/defaults")
+    @GET("topics/defaults")
     Call<TopicResponse> getDefaultTopics();
 
-    @GET("/3/topics/{topic}/{sort}/{page}")
+    @GET("topics/{topic}/{sort}/{page}")
     Call<GalleryResponse> getTopic(@Path("topic") int topicId, @Path("sort") String sort, @Path("page") int page);
 
-    @GET("/3/topics/{topic}/top/{window}/{page}")
+    @GET("topics/{topic}/top/{window}/{page}")
     Call<GalleryResponse> getTopicForTopSorted(@Path("topic") int topicId, @Path("window") String window, @Path("page") int page);
 
-    @GET("/3/memegen/defaults")
+    @GET("memegen/defaults")
     Call<GalleryResponse> getDefaultMemes();
 
-    @GET("/3/gallery/search/{sort}/{page}")
+    @GET("gallery/search/{sort}/{page}")
     Call<GalleryResponse> searchGallery(@Path("sort") String sort, @Path("page") int page, @Query("q") String query);
 
-    @GET("/3/gallery/search/top/{window}/{page}")
+    @GET("gallery/search/top/{window}/{page}")
     Call<GalleryResponse> searchGalleryForTopSorted(@Path("window") String window, @Path("page") int page, @Query("q") String query);
 
-    @GET("/3/gallery/{id}/tags")
+    @GET("gallery/{id}/tags")
     Call<TagResponse> getTags(@Path("id") String itemId);
 
-    @GET("/3/notification?new=true")
+    @GET("notification?new=true")
     Call<NotificationResponse> getNotifications();
 
 
     // Post Requests. Some of the POST requests have fields when they are not needed. This is because OKHTTP requires a body when posting
     @FormUrlEncoded
-    @POST("/3/image/{id}/favorite")
+    @POST("image/{id}/favorite")
     Call<BasicResponse> favoriteImage(@Path("id") String imageId, @Field("id") String id);
 
     @FormUrlEncoded
-    @POST("/3/album/{id}/favorite")
+    @POST("album/{id}/favorite")
     Call<BasicResponse> favoriteAlbum(@Path("id") String albumId, @Field("id") String id);
 
     @Multipart
-    @POST("/3/upload")
+    @POST("upload")
     Call<PhotoResponse> uploadPhoto(@Part("image") RequestBody file, @Part("title") RequestBody title, @Part("description") RequestBody description, @Part("type") RequestBody type);
 
     @FormUrlEncoded
-    @POST("/3/upload")
+    @POST("upload")
     Call<PhotoResponse> uploadLink(@Field("image") String link, @Field("title") String title, @Field("description") String description, @Field("type") String type);
 
     @FormUrlEncoded
-    @POST("/3/gallery/{id}")
+    @POST("gallery/{id}")
     Call<BasicResponse> submitToGallery(@Path("id") String id, @Field("title") String title, @Field("topic") int topicId, @Field("terms") String terms);
 
     @FormUrlEncoded
-    @POST("/3/album")
+    @POST("album")
     Call<BasicObjectResponse> createAlbum(@Field("ids") String ids, @Field("cover") String coverId, @Field("title") String title, @Field("description") String description);
 
     @FormUrlEncoded
-    @POST("/3/gallery/{id}/vote/{vote}")
+    @POST("gallery/{id}/vote/{vote}")
     Call<BasicResponse> voteOnGallery(@Path("id") String itemId, @Path("vote") String vote, @Field("vote") String itemVote);
 
     @FormUrlEncoded
-    @POST("/3/comment/{id}/vote/{vote}")
+    @POST("comment/{id}/vote/{vote}")
     Call<BasicResponse> voteOnComment(@Path("id") String itemId, @Path("vote") String vote, @Field("vote") String itemVote);
 
     @FormUrlEncoded
-    @POST("/3/gallery/{galleryId}/comment")
+    @POST("gallery/{galleryId}/comment")
     Call<CommentPostResponse> postComment(@Path("galleryId") String galleryId, @Field("comment") String comment);
 
     @FormUrlEncoded
-    @POST("/3/gallery/{galleryId}/comment/{parentId}")
+    @POST("gallery/{galleryId}/comment/{parentId}")
     Call<CommentPostResponse> postCommentReply(@Path("galleryId") String galleryId, @Path("parentId") String parentId, @Field("comment") String comment);
 
     @FormUrlEncoded
-    @POST("/3/conversations/{recipient}")
+    @POST("conversations/{recipient}")
     Call<BasicResponse> sendMessage(@Path("recipient") String recipientId, @Field("body") String message);
 
     @FormUrlEncoded
@@ -158,17 +158,17 @@ public interface ImgurService {
     Call<OAuthResponse> refreshToken(@Field("client_id") String clientId, @Field("client_secret") String clientSecret, @Field("refresh_token") String refreshToken, @Field("grant_type") String grantType);
 
     @FormUrlEncoded
-    @POST("/3/gallery/{id}/report")
+    @POST("gallery/{id}/report")
     Call<BasicResponse> reportPost(@Path("id") String galleryId, @Field("reason") int reason);
 
     @FormUrlEncoded
-    @POST("/3/notification/")
+    @POST("notification/")
     Call<BasicResponse> markNotificationsRead(@Field("ids") String ids);
 
     // Delete Requests
-    @DELETE("/3/album/{deleteHash}")
+    @DELETE("album/{deleteHash}")
     Call<BasicResponse> deleteAlbum(@Path("deleteHash") String deleteHash);
 
-    @DELETE("/3/image/{deleteHash}")
+    @DELETE("image/{deleteHash}")
     Call<BasicResponse> deletePhoto(@Path("deleteHash") String deleteHash);
 }
