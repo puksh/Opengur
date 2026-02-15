@@ -20,6 +20,7 @@ import com.kenny.openimgur.collections.SetUniqueList;
 import com.kenny.openimgur.ui.CenteredDrawable;
 import com.kenny.openimgur.util.FileUtil;
 import com.kenny.openimgur.util.ImageUtil;
+import com.kenny.openimgur.util.LinkUtils;
 import com.kenny.openimgur.util.LogUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
@@ -117,6 +118,9 @@ public class GalleryAdapter extends BaseRecyclerAdapter<ImgurBaseObject> {
             // Check if the link is a thumbed version of a large gif
             if (photoObject.hasVideoLink() && photoObject.isLinkAThumbnail() && ImgurPhoto.IMAGE_TYPE_GIF.equals(photoObject.getType())) {
                 photoUrl = photoObject.getThumbnail(ImgurPhoto.THUMBNAIL_GALLERY, true, FileUtil.EXTENSION_GIF);
+            } else if (photoObject.hasVideoLink() && LinkUtils.isVideoLink(photoObject.getLink())) {
+                // For mp4/webm videos, use jpg thumbnail instead of the video file
+                photoUrl = photoObject.getThumbnail(ImgurPhoto.THUMBNAIL_GALLERY, true, FileUtil.EXTENSION_JPEG);
             } else {
                 photoUrl = ((ImgurPhoto) obj).getThumbnail(ImgurPhoto.THUMBNAIL_GALLERY, false, null);
             }
