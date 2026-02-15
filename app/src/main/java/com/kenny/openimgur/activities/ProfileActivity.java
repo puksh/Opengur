@@ -18,7 +18,6 @@ import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.CookieManager;
-import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -194,48 +193,9 @@ public class ProfileActivity extends BaseActivity {
         getSupportActionBar().hide();
         mMultiView.setViewState(MultiStateView.VIEW_STATE_EMPTY);
         WebView webView = (WebView) mMultiView.getView(MultiStateView.VIEW_STATE_EMPTY).findViewById(R.id.loginWebView);
-        
-        // Configure WebView settings for better compatibility
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setDomStorageEnabled(true);
-        webView.getSettings().setLoadWithOverviewMode(true);
-        webView.getSettings().setUseWideViewPort(true);
-        
-        // Set a proper User-Agent to avoid being rate limited
-        String userAgent = webView.getSettings().getUserAgentString();
-        webView.getSettings().setUserAgentString(userAgent + " OpenGur/4.7.2");
-        
-        // Clear previous session data
-        CookieManager.getInstance().removeAllCookie();
-        webView.clearCache(true);
-        webView.clearHistory();
-        webView.clearFormData();
-        
         webView.loadUrl(LOGIN_URL);
+        webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                super.onReceivedError(view, errorCode, description, failingUrl);
-                LogUtil.e(TAG, "WebView error: " + description + " (code: " + errorCode + ")");
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                // Check if the page loaded shows an error message from Imgur
-                view.evaluateJavascript(
-                    "(function() { var body = document.body.innerText; if (body.includes('over capacity') || body.includes('error')) return body; return ''; })();",
-                    new ValueCallback<String>() {
-                        @Override
-                        public void onReceiveValue(String value) {
-                            if (value != null && !value.isEmpty() && !value.equals("\"\"")) {
-                                LogUtil.w(TAG, "Imgur error page detected: " + value);
-                            }
-                        }
-                    }
-                );
-            }
-
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.startsWith(REDIRECT_URL)) {
