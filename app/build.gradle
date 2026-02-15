@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 
 project.ext {
     version_name = '4.7.1'
@@ -91,6 +90,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
 
     // Misc
-    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.google.android.apps.muzei:muzei-api:2.0'
 }
