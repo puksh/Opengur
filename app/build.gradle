@@ -83,7 +83,7 @@ dependencies {
     compile("com.github.Kennyc1012:CommonAdapters:1.0") {
         exclude group: 'com.android.support'
     }
-    compile 'com.pacioianu.david:ink-page-indicator:1.2.0'
+    compile 'com.github.DavidPacioianu:InkPageIndicator:v1.2.0'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
     compile 'com.github.Kennyc1012:ColorChooser:0.3.0:standardRelease@aar'
     compile 'com.jakewharton:butterknife:8.4.0'
