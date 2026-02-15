@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.PopupMenu;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +21,8 @@ import com.kenny.openimgur.api.responses.TopicResponse;
 import com.kenny.openimgur.classes.FragmentListener;
 import com.kenny.openimgur.classes.ImgurFilters;
 import com.kenny.openimgur.classes.ImgurTopic;
+import com.kenny.openimgur.classes.ImgurUser;
+import com.kenny.openimgur.classes.OpengurApp;
 import com.kenny.openimgur.ui.adapters.GalleryAdapter;
 import com.kenny.openimgur.util.LogUtil;
 import com.kenny.openimgur.util.SqlHelper;
@@ -256,7 +259,14 @@ public class TopicsFragment extends BaseGridFragment {
                         mMultiStateView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
                     }
                 } else {
-                    ViewUtils.setErrorText(mMultiStateView, R.id.errorMessage, R.string.error_generic);
+                    // Check if user is logged in
+                    OpengurApp app = OpengurApp.getInstance();
+                    ImgurUser user = app.getUser();
+                    if (user == null || TextUtils.isEmpty(user.getAccessToken())) {
+                        ViewUtils.setErrorText(mMultiStateView, R.id.errorMessage, R.string.error_401);
+                    } else {
+                        ViewUtils.setErrorText(mMultiStateView, R.id.errorMessage, R.string.error_generic);
+                    }
                     mMultiStateView.setViewState(MultiStateView.VIEW_STATE_ERROR);
                 }
             }
