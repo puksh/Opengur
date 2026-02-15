@@ -149,7 +149,7 @@ public class SettingsFragment extends BasePreferenceFragment implements Preferen
                 return true;
 
             case "openSource":
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Kennyc1012/Opengur"));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/puksh/Opengur"));
 
                 if (browserIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                     startActivity(browserIntent);
@@ -179,7 +179,7 @@ public class SettingsFragment extends BasePreferenceFragment implements Preferen
                 return true;
 
             case "privacyPolicy":
-                Intent privacyIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Kennyc1012/Opengur/blob/master/Privacy_Policy.md"));
+                Intent privacyIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/puksh/Opengur/blob/master/Privacy_Policy.md"));
 
                 if (privacyIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                     startActivity(privacyIntent);
@@ -190,7 +190,7 @@ public class SettingsFragment extends BasePreferenceFragment implements Preferen
                             .setView(wv)
                             .show();
 
-                    wv.loadUrl("https://github.com/Kennyc1012/Opengur/blob/master/Privacy_Policy.md");
+                    wv.loadUrl("https://github.com/puksh/Opengur/blob/master/Privacy_Policy.md");
                 }
                 return true;
         }
