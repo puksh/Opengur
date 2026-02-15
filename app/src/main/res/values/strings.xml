@@ -214,12 +214,6 @@
     <string name="comment_copied">Comment Copied</string>
     <string name="comments_unlisted">Gallery is unlisted</string>
 
-    <!-- Beta Community -->
-    <string name="beta_test">Beta Tester</string>
-    <string name="beta_message">Want to become a beta tester for Opengur and receive features before they are officially released?</string>
-    <string name="beta_confirm">I Sure Do</string>
-    <string name="beta_no">No Thanks</string>
-
     <!-- Photo Uploads/Picking -->
     <string name="upload_camera">Camera</string>
     <string name="upload_gallery">Gallery</string>
@@ -264,7 +258,6 @@
     <string name="nav_random">Random</string>
     <string name="nav_uploads">Uploads</string>
     <string name="nav_settings">Settings</string>
-    <string name="nav_beta">Beta</string>
     <string name="nav_feedback">Feedback</string>
 
     <!-- Muzei -->
@@ -348,10 +341,6 @@
     <string name="filter_scoring_year">Highest Scoring &#8226; Year</string>
     <string name="filter_scoring_all">Highest Scoring &#8226; All</string>
 
-    <string name="unsupported">Unsupported</string>
-    <string name="unsupported_msg">Opengur is no longer under development and will no longer be receiving any updates. Thank you
-    for all of your support. It is recommended that you install the Official Imgur app.</string>
-    <string name="install">Install</string>
 
     <!-- UI transition names, should not be translated -->
     <string name="transition_upload_photo" translatable="false">uploadPhoto</string>

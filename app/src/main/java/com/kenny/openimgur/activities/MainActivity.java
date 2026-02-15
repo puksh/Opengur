@@ -75,9 +75,7 @@ public class MainActivity extends BaseActivity implements FragmentListener, Navi
 
     public static final int PAGE_SETTINGS = 7;
 
-    public static final int PAGE_BETA = 8;
-
-    public static final int PAGE_FEEDBACK = 9;
+    public static final int PAGE_FEEDBACK = 8;
 
     @BindView(R.id.drawerLayout)
     DrawerLayout mDrawer;
@@ -239,7 +237,6 @@ public class MainActivity extends BaseActivity implements FragmentListener, Navi
 
         if (getFragmentManager().findFragmentById(R.id.container) == null) changePage(menuItemId);
         updateUserHeader(user);
-        checkForImgurNag();
     }
 
     private void updateUserHeader(@Nullable ImgurUser user) {
@@ -321,7 +318,7 @@ public class MainActivity extends BaseActivity implements FragmentListener, Navi
 
             case R.id.nav_feedback:
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto", "kennyc.developer@gmail.com", null));
+                        "mailto", "opengur@kot.li", null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Opengur Feedback");
                 share(emailIntent, R.string.send_feedback);
                 break;
@@ -336,25 +333,6 @@ public class MainActivity extends BaseActivity implements FragmentListener, Navi
                 if (mCurrentPage == PAGE_MEME) return;
                 fragment = new MemeFragment();
                 mCurrentPage = PAGE_MEME;
-                break;
-
-            case R.id.nav_beta:
-                new AlertDialog.Builder(this, theme.getAlertDialogTheme())
-                        .setTitle(R.string.beta_test)
-                        .setMessage(R.string.beta_message)
-                        .setNegativeButton(R.string.beta_no, null)
-                        .setPositiveButton(R.string.beta_confirm, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/apps/testing/com.kennyc.open.imgur"));
-
-                                if (browserIntent.resolveActivity(getPackageManager()) != null) {
-                                    startActivity(browserIntent);
-                                } else {
-                                    Snackbar.make(mCoordinatorLayout, R.string.cant_launch_intent, Snackbar.LENGTH_LONG).show();
-                                }
-                            }
-                        }).show();
                 break;
         }
 
@@ -518,31 +496,6 @@ public class MainActivity extends BaseActivity implements FragmentListener, Navi
         }
 
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void checkForImgurNag() {
-        SharedPreferences pf = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
-        if (pf.getBoolean("showImgurNag", true)) {
-            new AlertDialog.Builder(this, theme.getAlertDialogTheme())
-                    .setTitle(R.string.unsupported)
-                    .setMessage(R.string.unsupported_msg)
-                    .setNegativeButton(R.string.close, null)
-                    .setPositiveButton(R.string.install, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            String imgurPackage = "com.imgur.mobile";
-
-                            try {
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + imgurPackage)));
-                            } catch (android.content.ActivityNotFoundException anfe) {
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + imgurPackage)));
-                            }
-                        }
-                    }).show();
-
-            pf.edit().putBoolean("showImgurNag", false).apply();
-        }
     }
 
     @Override
