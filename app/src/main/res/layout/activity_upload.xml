@@ -31,7 +31,7 @@
             android:text="@string/back"
             android:textColor="@android:color/white" />
 
-        <com.pixelcan.inkpageindicator.InkPageIndicator
+        <com.kenny.openimgur.ui.InkPageIndicator
             android:id="@+id/indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

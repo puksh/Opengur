@@ -23,9 +23,9 @@ import com.kenny.openimgur.fragments.UploadFragment;
 import com.kenny.openimgur.fragments.UploadInfoFragment;
 import com.kenny.openimgur.services.UploadService;
 import com.kenny.openimgur.ui.FragmentPagerAdapter;
+import com.kenny.openimgur.ui.InkPageIndicator;
 import com.kenny.openimgur.ui.ViewPager;
 import com.kenny.openimgur.util.LogUtil;
-import com.pixelcan.inkpageindicator.InkPageIndicator;
 
 import java.io.File;
 import java.util.ArrayList;

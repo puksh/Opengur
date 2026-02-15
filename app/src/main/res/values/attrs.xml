@@ -15,4 +15,12 @@
         <attr name="swipingEnabled" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="InkPageIndicator">
+        <attr name="dotDiameter" format="dimension" />
+        <attr name="dotGap" format="dimension" />
+        <attr name="pageIndicatorColor" format="color" />
+        <attr name="currentPageIndicatorColor" format="color" />
+        <attr name="animationDuration" format="integer" />
+    </declare-styleable>
+
 </resources>
