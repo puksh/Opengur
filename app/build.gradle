@@ -9,8 +9,8 @@ project.ext {
 }
 
 repositories {
-    google()
     mavenCentral()
+    jcenter()
 }
 
 android {
