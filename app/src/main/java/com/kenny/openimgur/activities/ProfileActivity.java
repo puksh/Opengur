@@ -18,6 +18,7 @@ import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.CookieManager;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -224,9 +225,12 @@ public class ProfileActivity extends BaseActivity {
                 // Check if the page loaded shows an error message from Imgur
                 view.evaluateJavascript(
                     "(function() { var body = document.body.innerText; if (body.includes('over capacity') || body.includes('error')) return body; return ''; })();",
-                    value -> {
-                        if (value != null && !value.isEmpty() && !value.equals("\"\"")) {
-                            LogUtil.w(TAG, "Imgur error page detected: " + value);
+                    new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String value) {
+                            if (value != null && !value.isEmpty() && !value.equals("\"\"")) {
+                                LogUtil.w(TAG, "Imgur error page detected: " + value);
+                            }
                         }
                     }
                 );
