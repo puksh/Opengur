@@ -1,35 +1,34 @@
-[Opengur](https://kennyc1012.github.io/Opengur/)
-=========
-***NO LONGER UNDER ACTIVE DEVELOPMENT***
+# [Opengur](https://kennyc1012.github.io/Opengur/)
 
-Open source Imgur Android App
+Open source Imgur Android App [(created by Kennyc1012)](https://github.com/Kennyc1012/Opengur)
 
-Want to become a beta tester? [Click Here!](https://plus.google.com/u/0/communities/107476382114210885879)
+<img src="https://github.com/puksh/Opengur/raw/master/assets/ss1.png" height="400px"/>
 
-![screenshot](https://github.com/Kennyc1012/Opengur/raw/master/assets/ss1.png)
+# Features
 
-#Features
-- Built in native java
+- Built in native Java
 - Native support for both Gifs and GifV image formats
-- Tablet Support
-- Album Support
+- Tablet support
+- Album support
 - Material Design
 - Dark Theme
 - Meme Generator
-- Muzei Support
+- Muzei support
 - Support for Api 17+
 
-#What's New
-Check the [Changelog](https://github.com/Kennyc1012/Opengur/blob/master/CHANGELOG.MD) for the changes of each version
+# What's New
 
-#Building
-Check out the [wiki](https://github.com/Kennyc1012/Opengur/wiki) for instructions on building Open Imgur
+Check the [Changelog](https://github.com/puksh/Opengur/blob/master/CHANGELOG.MD) for the changes of each version
 
-#Contribution
-Pull requests are welcomed and encouraged. If you experience any bugs, please [file an issue](https://github.com/Kennyc1012/Opengur/issues/new)
+# Building
 
-License
-=======
+Check out the [wiki](https://github.com/puksh/Opengur/wiki) for instructions on building Open Imgur
+
+# Contribution
+
+Pull requests are welcomed and encouraged. If you experience any bugs, please [file an issue](https://github.com/puksh/Opengur/issues/new)
+
+# License
 
     Copyright 2014 Kenny Campagna
 
@@ -37,7 +36,7 @@ License
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+      http://www.apache.org/licenses/LICENSE-2.0
 
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
