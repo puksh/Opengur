@@ -259,15 +259,43 @@ public class TopicsFragment extends BaseGridFragment {
                         mMultiStateView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
                     }
                 } else {
-                    // Check if user is logged in
-                    OpengurApp app = OpengurApp.getInstance();
-                    ImgurUser user = app.getUser();
-                    if (user == null || TextUtils.isEmpty(user.getAccessToken())) {
-                        ViewUtils.setErrorText(mMultiStateView, R.id.errorMessage, R.string.error_401);
+                    // API returned empty data, check if we have cached topics
+                    SqlHelper sql = SqlHelper.getInstance(getActivity());
+                    List<ImgurTopic> cachedTopics = sql.getTopics();
+                    
+                    if (!cachedTopics.isEmpty()) {
+                        // Use cached topics instead of showing error
+                        LogUtil.v(TAG, "Using cached topics as API returned empty data");
+                        if (mTopic == null) mTopic = cachedTopics.get(0);
+                        if (mListener != null) mListener.onUpdateActionBarSpinner(cachedTopics, mTopic);
+                        
+                        if (getAdapter() == null || getAdapter().isEmpty()) {
+                            fetchGallery();
+                        } else {
+                            mMultiStateView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
+                        }
                     } else {
-                        ViewUtils.setErrorText(mMultiStateView, R.id.errorMessage, R.string.error_generic);
+                        // No cached topics, insert defaults and use them
+                        LogUtil.v(TAG, "No cached topics, inserting defaults");
+                        sql.insertDefaultTopics();
+                        cachedTopics = sql.getTopics();
+                        
+                        if (!cachedTopics.isEmpty()) {
+                            if (mTopic == null) mTopic = cachedTopics.get(0);
+                            if (mListener != null) mListener.onUpdateActionBarSpinner(cachedTopics, mTopic);
+                            fetchGallery();
+                        } else {
+                            // Even defaults failed, show error
+                            OpengurApp app = OpengurApp.getInstance();
+                            ImgurUser user = app.getUser();
+                            if (user == null || TextUtils.isEmpty(user.getAccessToken())) {
+                                ViewUtils.setErrorText(mMultiStateView, R.id.errorMessage, R.string.error_401);
+                            } else {
+                                ViewUtils.setErrorText(mMultiStateView, R.id.errorMessage, R.string.error_generic);
+                            }
+                            mMultiStateView.setViewState(MultiStateView.VIEW_STATE_ERROR);
+                        }
                     }
-                    mMultiStateView.setViewState(MultiStateView.VIEW_STATE_ERROR);
                 }
             }
 
@@ -275,8 +303,38 @@ public class TopicsFragment extends BaseGridFragment {
             public void onFailure(Call<TopicResponse> call, Throwable t) {
                 if (!isAdded()) return;
                 LogUtil.e(TAG, "Unable to fetch topics", t);
-                ViewUtils.setErrorText(mMultiStateView, R.id.errorMessage, ApiClient.getErrorCode(t));
-                mMultiStateView.setViewState(MultiStateView.VIEW_STATE_ERROR);
+                
+                // Check if we have cached topics to fall back on
+                SqlHelper sql = SqlHelper.getInstance(getActivity());
+                List<ImgurTopic> cachedTopics = sql.getTopics();
+                
+                if (!cachedTopics.isEmpty()) {
+                    // Use cached topics instead of showing error
+                    LogUtil.v(TAG, "Using cached topics as API request failed");
+                    if (mTopic == null) mTopic = cachedTopics.get(0);
+                    if (mListener != null) mListener.onUpdateActionBarSpinner(cachedTopics, mTopic);
+                    
+                    if (getAdapter() == null || getAdapter().isEmpty()) {
+                        fetchGallery();
+                    } else {
+                        mMultiStateView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
+                    }
+                } else {
+                    // No cached topics, insert defaults and use them
+                    LogUtil.v(TAG, "API failed and no cached topics, inserting defaults");
+                    sql.insertDefaultTopics();
+                    cachedTopics = sql.getTopics();
+                    
+                    if (!cachedTopics.isEmpty()) {
+                        if (mTopic == null) mTopic = cachedTopics.get(0);
+                        if (mListener != null) mListener.onUpdateActionBarSpinner(cachedTopics, mTopic);
+                        fetchGallery();
+                    } else {
+                        // Even defaults failed, show error
+                        ViewUtils.setErrorText(mMultiStateView, R.id.errorMessage, ApiClient.getErrorCode(t));
+                        mMultiStateView.setViewState(MultiStateView.VIEW_STATE_ERROR);
+                    }
+                }
             }
         });
     }

@@ -20,6 +20,12 @@ public class ImgurTopic implements Parcelable {
     @SerializedName("description")
     private String mDesc;
 
+    public ImgurTopic(int id, String name, String description) {
+        mId = id;
+        mName = name;
+        mDesc = description;
+    }
+
     public ImgurTopic(Cursor cursor) {
         mId = cursor.getInt(DBContracts.TopicsContract.COLUMN_INDEX_ID);
         mName = cursor.getString(DBContracts.TopicsContract.COLUMN_INDEX_NAME);

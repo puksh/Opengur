@@ -333,6 +333,28 @@ public class SqlHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * Inserts hardcoded default topics as a fallback when API fails
+     * These are the standard Imgur topics as of 2026
+     */
+    public void insertDefaultTopics() {
+        List<ImgurTopic> defaultTopics = new ArrayList<>();
+        defaultTopics.add(new ImgurTopic(5, "Gaming", "Video games, gaming culture, and esports"));
+        defaultTopics.add(new ImgurTopic(6, "Memes", "Funny images and internet memes"));
+        defaultTopics.add(new ImgurTopic(7, "Funny Videos", "Humorous video content"));
+        defaultTopics.add(new ImgurTopic(8, "Pets", "Cats, dogs, and other adorable animals"));
+        defaultTopics.add(new ImgurTopic(11, "Art", "Creative artwork and illustrations"));
+        defaultTopics.add(new ImgurTopic(15, "Entertainment", "Movies, TV shows, and entertainment news"));
+        defaultTopics.add(new ImgurTopic(19, "Anime", "Japanese animation and manga"));
+        defaultTopics.add(new ImgurTopic(23, "Nature", "Wildlife, landscapes, and natural wonders"));
+        defaultTopics.add(new ImgurTopic(27, "Space", "Astronomy, space exploration, and the cosmos"));
+        defaultTopics.add(new ImgurTopic(31, "Food", "Culinary creations and food photography"));
+        defaultTopics.add(new ImgurTopic(35, "TIL", "Today I Learned - interesting facts and knowledge"));
+        defaultTopics.add(new ImgurTopic(39, "Travel", "Travel photography and destination guides"));
+        addTopics(defaultTopics);
+        LogUtil.v(TAG, "Inserted " + defaultTopics.size() + " default topics");
+    }
+
+    /**
      * Returns a list of all the cached topics
      *
      * @return
