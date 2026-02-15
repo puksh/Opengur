@@ -39,9 +39,6 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
-
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
@@ -60,12 +57,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Accept Android SDK licenses
-        run: yes | sdkmanager --licenses || true
-
-      - name: Install required SDK components
+      - name: Accept SDK licenses (if available)
         run: |
-          sdkmanager "platforms;android-25" "build-tools;25.0.1" || true
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses 2>/dev/null || echo "Licenses will be auto-accepted by Gradle"
 
       - name: Build APK (${{ github.event.inputs.build_variant || 'full' }} ${{ github.event.inputs.build_type || 'debug' }})
         run: |
