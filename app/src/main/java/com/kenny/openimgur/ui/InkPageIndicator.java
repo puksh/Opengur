@@ -1,4 +1,4 @@
-package main.java.com.kenny.openimgur.ui;
+package com.kenny.openimgur.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
