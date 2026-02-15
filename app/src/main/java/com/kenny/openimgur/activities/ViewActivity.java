@@ -184,6 +184,8 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
 
     String mGalleryId = null;
 
+    boolean mIsAlbumLink = false;
+
     boolean mIsResuming = false;
 
     boolean mLoadComments;
@@ -306,7 +308,32 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
 
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             LogUtil.v(TAG, "Received Gallery via ACTION_VIEW");
-            mGalleryId = intent.getData().getPathSegments().get(1);
+            String url = intent.getDataString();
+            LogUtil.v(TAG, "URL: " + url);
+            
+            // Detect the link type and extract the ID appropriately
+            LinkUtils.LinkMatch linkType = LinkUtils.findImgurLinkMatch(url);
+            
+            switch (linkType) {
+                case ALBUM:
+                    mGalleryId = LinkUtils.getAlbumId(url);
+                    mIsAlbumLink = true;
+                    LogUtil.v(TAG, "Detected album link with ID: " + mGalleryId);
+                    break;
+                    
+                case GALLERY:
+                    mGalleryId = LinkUtils.getGalleryId(url);
+                    mIsAlbumLink = false;
+                    LogUtil.v(TAG, "Detected gallery link with ID: " + mGalleryId);
+                    break;
+                    
+                default:
+                    // Fallback to simple image/direct link
+                    mGalleryId = LinkUtils.getId(url);
+                    mIsAlbumLink = intent.getBooleanExtra(KEY_VIEW_FOR_ALBUM, false);
+                    LogUtil.v(TAG, "Detected " + linkType + " link with ID: " + mGalleryId);
+                    break;
+            }
         } else if (!intent.hasExtra(KEY_OBJECTS) || !intent.hasExtra(KEY_POSITION)) {
             Snackbar.make(mViewPager, R.string.error_generic, Snackbar.LENGTH_LONG).show();
             finish();
@@ -379,8 +406,7 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
 
             // Check if the activity was opened externally by a link click
             if (!TextUtils.isEmpty(mGalleryId)) {
-                boolean isAlbumLink = getIntent().getBooleanExtra(KEY_VIEW_FOR_ALBUM, false);
-                fetchItemDetails(mGalleryId, isAlbumLink);
+                fetchItemDetails(mGalleryId, mIsAlbumLink);
                 mMultiView.setViewState(MultiStateView.VIEW_STATE_LOADING);
             } else {
                 mViewPager.setAdapter(mPagerAdapter);
