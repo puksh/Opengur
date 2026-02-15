@@ -25,16 +25,21 @@ android {
         buildConfigField "String", "API_CLIENT_SECRET", project.API_CLIENT_SECRET
     }
 
+    flavorDimensions "version"
+
     productFlavors {
         full {
+            dimension "version"
             versionName project.ext.version_name
         }
 
         beta {
+            dimension "version"
             versionName project.ext.version_name + "-beta" + beta_number
         }
 
         f_droid {
+            dimension "version"
             versionName project.ext.version_name + "-F_Droid"
         }
     }

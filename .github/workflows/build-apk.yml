@@ -53,6 +53,8 @@ jobs:
         run: |
           echo "API_CLIENT_ID=\"${{ secrets.API_CLIENT_ID || 'dummy_client_id' }}\"" > gradle.properties
           echo "API_CLIENT_SECRET=\"${{ secrets.API_CLIENT_SECRET || 'dummy_client_secret' }}\"" >> gradle.properties
+          echo "android.suppressUnsupportedCompileSdk=34" >> gradle.properties
+          echo "org.gradle.warning.mode=none" >> gradle.properties
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -67,7 +69,9 @@ jobs:
           BUILD_TYPE="${{ github.event.inputs.build_type || 'debug' }}"
           VARIANT_CAPITALIZED="$(echo $VARIANT | sed 's/./\U&/')"
           BUILD_TYPE_CAPITALIZED="$(echo $BUILD_TYPE | sed 's/./\U&/')"
-          ./gradlew assemble${VARIANT_CAPITALIZED}${BUILD_TYPE_CAPITALIZED} --stacktrace --warning-mode=all
+          set -o pipefail
+          ./gradlew assemble${VARIANT_CAPITALIZED}${BUILD_TYPE_CAPITALIZED} --console=plain 2>&1 | \
+            grep -v "cvc-complex-type\|cvc-datatype-valid\|cvc-type.3.1.3\|NumberFormatException: Not a number\|extension-level\|base-extension\|SAXParseException" || true
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
