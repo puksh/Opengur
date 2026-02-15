@@ -172,6 +172,8 @@ public class FullScreenPhotoFragment extends BaseFragment {
      * Displays the image
      */
     void displayImage() {
+        multiView.setViewState(MultiStateView.VIEW_STATE_LOADING);
+        
         if (!replacedPNG && LinkUtils.isImgurPNG(url)) {
             replacedPNG = true;
             LogUtil.v(TAG, "Replacing png link with jpeg");
