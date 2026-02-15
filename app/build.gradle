@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 apply plugin: 'com.neenbedankt.android-apt'
 
 project.ext {
@@ -10,7 +9,6 @@ project.ext {
 }
 
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
     mavenCentral()
     jcenter()
 }
@@ -45,15 +43,11 @@ android {
     buildTypes {
 
         release {
-            ext.enableCrashlytics = true
             minifyEnabled false
-            manifestPlaceholders = [fabric_key: project.FABRIC_KEY]
         }
 
         debug {
-            ext.enableCrashlytics = false
             minifyEnabled false
-            manifestPlaceholders = [fabric_key: ""]
         }
     }
 
@@ -99,10 +93,4 @@ dependencies {
     // Misc
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.google.android.apps.muzei:muzei-api:2.0'
-    fullCompile('com.crashlytics.sdk.android:crashlytics:+@aar') {
-        transitive = true;
-    }
-    betaCompile('com.crashlytics.sdk.android:crashlytics:+@aar') {
-        transitive = true;
-    }
 }
