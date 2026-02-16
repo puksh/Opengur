@@ -134,12 +134,14 @@ public class FullScreenPhotoFragment extends BaseFragment {
 
     private void configView(Bundle savedInstanceState) {
         if (photo.isAnimated()) {
-            if (photo.isLinkAThumbnail() || photo.getSize() > (1024 * 1024 * 5)) {
+            boolean hasVideo = photo.hasVideoLink() && !TextUtils.isEmpty(photo.getVideoLink());
+
+            if (hasVideo && (photo.isLinkAThumbnail() || photo.getSize() > (1024 * 1024 * 5))) {
                 url = photo.getVideoLink();
                 displayVideo(savedInstanceState);
             } else {
                 url = photo.getLink();
-                if (LinkUtils.isVideoLink(url)) {
+                if (hasVideo && LinkUtils.isVideoLink(url)) {
                     displayVideo(savedInstanceState);
                 } else {
                     displayImage();
@@ -153,15 +155,17 @@ public class FullScreenPhotoFragment extends BaseFragment {
 
     @Override
     public void onDestroyView() {
-        handler.removeMessages(0);
-        handler = null;
+        if (handler != null) {
+            handler.removeMessages(0);
+            handler = null;
+        }
 
         // Free up some memory
-        if (gifImageView.getDrawable() instanceof GifDrawable) {
+        if (gifImageView != null && gifImageView.getDrawable() instanceof GifDrawable) {
             ((GifDrawable) gifImageView.getDrawable()).recycle();
-        } else if (videoView.getDuration() > 0) {
+        } else if (videoView != null && videoView.getDuration() > 0) {
             videoView.suspend();
-        } else {
+        } else if (imageView != null) {
             imageView.recycle();
         }
 
@@ -213,19 +217,21 @@ public class FullScreenPhotoFragment extends BaseFragment {
             VideoCache.getInstance().putVideo(url, new VideoCache.VideoCacheListener() {
                 @Override
                 public void onVideoDownloadStart(String key, String url) {
-                    loadingView.setVisibility(View.VISIBLE);
+                    if (loadingView != null) loadingView.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onVideoDownloadFailed(Exception ex, String url) {
-                    if (!isAdded() || isRemoving()) return;
+                    if (!isAdded() || isRemoving() || multiView == null) return;
 
                     multiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
                 }
 
                 @Override
                 public void onVideoDownloadComplete(File file) {
-                    if (!isAdded() || isRemoving()) return;
+                    if (!isAdded() || isRemoving() || getView() == null || multiView == null || videoView == null || imageView == null) {
+                        return;
+                    }
 
                     multiView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
                     videoView.setVisibility(View.VISIBLE);
@@ -241,12 +247,14 @@ public class FullScreenPhotoFragment extends BaseFragment {
 
                     videoView.setVideoPath(file.getAbsolutePath());
                     if (getUserVisibleHint()) videoView.start();
-                    loadingView.setVisibility(View.GONE);
+                    if (loadingView != null) loadingView.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onProgress(int downloaded, int total) {
-                    if (!isAdded() || isRemoving()) return;
+                    if (!isAdded() || isRemoving() || getView() == null || progressBar == null || percentage == null || fileTransfer == null || total <= 0) {
+                        return;
+                    }
 
                     int progress = (downloaded * 100) / total;
                     progressBar.setProgress(progress);
@@ -354,7 +362,7 @@ public class FullScreenPhotoFragment extends BaseFragment {
             } else if (videoView != null && videoView.getDuration() > 0) {
                 videoView.start();
             } else {
-                handler.sendEmptyMessageDelayed(0, GIF_DELAY);
+                if (handler != null) handler.sendEmptyMessageDelayed(0, GIF_DELAY);
             }
         } else {
             if (gifImageView != null && gifImageView.getDrawable() instanceof GifDrawable) {
@@ -396,7 +404,9 @@ public class FullScreenPhotoFragment extends BaseFragment {
     private final ImageLoadingProgressListener progressListener = new ImageLoadingProgressListener() {
         @Override
         public void onProgressUpdate(String imageUri, View view, int current, int total) {
-            if (!isAdded() || isRemoving()) return;
+            if (!isAdded() || isRemoving() || progressBar == null || percentage == null || fileTransfer == null || total <= 0) {
+                return;
+            }
 
             int progress = (current * 100) / total;
             progressBar.setProgress(progress);
@@ -425,7 +435,9 @@ public class FullScreenPhotoFragment extends BaseFragment {
         public void onLoadingComplete(String url, View view, Bitmap bitmap) {
             startedToLoad = false;
             bitmap.recycle();
-            if (!isAdded() || isRemoving()) return;
+            if (!isAdded() || isRemoving() || multiView == null || loadingView == null || videoView == null || gifImageView == null || imageView == null) {
+                return;
+            }
 
             if (url.endsWith(".gif")) {
                 displayGif(url);
@@ -496,7 +508,7 @@ public class FullScreenPhotoFragment extends BaseFragment {
         @Override
         public void onLoadingStarted(String imageUri, View view) {
             startedToLoad = true;
-            loadingView.setVisibility(View.VISIBLE);
+            if (loadingView != null) loadingView.setVisibility(View.VISIBLE);
         }
     };
 }

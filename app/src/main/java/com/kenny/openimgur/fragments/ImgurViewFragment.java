@@ -42,6 +42,7 @@ import com.kenny.openimgur.classes.ImgurAlbum;
 import com.kenny.openimgur.classes.ImgurBaseObject;
 import com.kenny.openimgur.classes.ImgurListener;
 import com.kenny.openimgur.classes.ImgurPhoto;
+import com.kenny.openimgur.classes.ImgurTag;
 import com.kenny.openimgur.classes.VideoCache;
 import com.kenny.openimgur.services.DownloaderService;
 import com.kenny.openimgur.ui.VideoView;
@@ -386,6 +387,8 @@ public class ImgurViewFragment extends BaseFragment implements ImgurListener {
         // Adjust position for header
         final int position = mListView.getLayoutManager().getPosition(view) - 1;
         final ImgurPhoto photo = mPhotoAdapter.getItem(position);
+        final boolean hasVideo = photo.hasVideoLink() && !TextUtils.isEmpty(photo.getVideoLink());
+        final boolean useInlineGif = photo.getSize() <= FIVE_MB && !photo.isLinkAThumbnail();
 
         if (image.getVisibility() == View.VISIBLE && image.getDrawable() instanceof GifDrawable) {
             play.setVisibility(View.GONE);
@@ -402,8 +405,7 @@ public class ImgurViewFragment extends BaseFragment implements ImgurListener {
         play.setVisibility(View.GONE);
         prog.setVisibility(View.VISIBLE);
 
-        // Load regular gifs if they are less than 5mb
-        if (photo.getSize() <= FIVE_MB && !photo.isLinkAThumbnail()) {
+        if (useInlineGif || !hasVideo) {
             final ImageLoader loader = ImageUtil.getImageLoader(getActivity());
             File file = DiskCacheUtils.findInCache(photo.getLink(), loader.getDiskCache());
 
@@ -626,9 +628,10 @@ public class ImgurViewFragment extends BaseFragment implements ImgurListener {
                     if (!isAdded() || response == null || response.body() == null) return;
 
                     TagResponse tagResponse = response.body();
+                    List<ImgurTag> tags = tagResponse.getTags();
 
-                    if (tagResponse.data != null && !tagResponse.data.tags.isEmpty()) {
-                        mImgurObject.setTags(tagResponse.data.tags);
+                    if (!tags.isEmpty()) {
+                        mImgurObject.setTags(tags);
                         if (mPhotoAdapter != null) mPhotoAdapter.notifyItemChanged(0);
                     } else {
                         LogUtil.v(TAG, "Did not receive any tags");
