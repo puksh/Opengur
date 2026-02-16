@@ -244,7 +244,7 @@ public class LinkUtils {
         if (TextUtils.isEmpty(url)) return false;
 
         url = url.toLowerCase();
-        return url.endsWith(".gifv") || url.endsWith(".mp4") || url.endsWith(".webm");
+        return url.matches(".*\\.(gifv|mp4|webm)(?:$|[?&#/_-].*)");
     }
 
     /**

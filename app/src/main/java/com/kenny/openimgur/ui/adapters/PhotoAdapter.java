@@ -24,6 +24,7 @@ import com.kenny.openimgur.ui.PointsBar;
 import com.kenny.openimgur.ui.VideoView;
 import com.kenny.openimgur.util.FileUtil;
 import com.kenny.openimgur.util.ImageUtil;
+import com.kenny.openimgur.util.LinkUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import java.util.List;
@@ -240,6 +241,11 @@ public class PhotoAdapter extends BaseRecyclerAdapter<ImgurPhoto> {
      */
     private String getPhotoUrl(ImgurPhoto photo) {
         String url;
+
+        // Some Imgur links come in video form (e.g. .mp4_1080x2467). Always use a static image thumbnail for those.
+        if (photo.hasVideoLink() && LinkUtils.isVideoLink(photo.getLink())) {
+            return photo.getThumbnail(ImgurPhoto.THUMBNAIL_HUGE, true, FileUtil.EXTENSION_JPEG);
+        }
 
         // Check if we have an mp4 and if we should load its thumbnail
         if (photo.isAnimated() && photo.hasVideoLink() && photo.isLinkAThumbnail()) {
