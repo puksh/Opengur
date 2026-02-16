@@ -17,12 +17,15 @@ package com.kenny.openimgur.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.media.AudioAttributes;
 import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.net.Uri;
+import android.os.Build;
+import android.os.StrictMode;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -242,11 +245,26 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
             mDuration = -1;
             mMediaPlayer.setOnCompletionListener(mCompletionListener);
             mMediaPlayer.setOnErrorListener(mErrorListener);
+            mMediaPlayer.setOnInfoListener(mInfoListener);
             mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
             mCurrentBufferPercentage = 0;
-            mMediaPlayer.setDataSource(getContext(), mUri, mHeaders);
+            StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
+
+            try {
+                mMediaPlayer.setDataSource(getContext(), mUri, mHeaders);
+            } finally {
+                StrictMode.setThreadPolicy(originalPolicy);
+            }
+
             mMediaPlayer.setDisplay(mSurfaceHolder);
-            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mMediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
+                        .build());
+            } else {
+                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            }
             mMediaPlayer.setScreenOnWhilePlaying(true);
             mMediaPlayer.prepareAsync();
             // we don't set the target state here either, but preserve the
@@ -418,6 +436,21 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
                     mCurrentBufferPercentage = percent;
                 }
             };
+
+    private MediaPlayer.OnInfoListener mInfoListener = new MediaPlayer.OnInfoListener() {
+        @Override
+        public boolean onInfo(MediaPlayer mp, int what, int extra) {
+            switch (what) {
+                case MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
+                case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+                case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+    };
 
     /**
      * Register a callback to be invoked when the media file

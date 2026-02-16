@@ -208,7 +208,7 @@ public class FullScreenPhotoFragment extends BaseFragment {
             position = 0;
         }
 
-        if (FileUtil.isFileValid(file)) {
+        if (file != null) {
             multiView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
             videoView.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.GONE);

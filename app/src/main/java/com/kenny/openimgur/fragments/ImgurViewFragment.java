@@ -461,7 +461,7 @@ public class ImgurViewFragment extends BaseFragment implements ImgurListener {
         } else if (hasVideo) {
             File file = VideoCache.getInstance().getVideoFile(photo.getVideoLink());
 
-            if (FileUtil.isFileValid(file)) {
+            if (file != null) {
                 video.setVisibility(View.VISIBLE);
                 video.setVideoPath(file.getAbsolutePath());
                 image.setVisibility(View.GONE);

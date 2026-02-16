@@ -1,6 +1,7 @@
 package com.kenny.openimgur.classes;
 
 import android.os.AsyncTask;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -43,15 +44,28 @@ public class VideoCache {
     private VideoCache() {
         OpengurApp app = OpengurApp.getInstance();
         String cacheKey = app.getPreferences().getString(SettingsActivity.KEY_CACHE_LOC, SettingsActivity.CACHE_LOC_INTERNAL);
-        File dir = ImageUtil.getCacheDirectory(app.getApplicationContext(), cacheKey);
-        mCacheDir = new File(dir, "video_cache");
-        mCacheDir.mkdirs();
+        StrictMode.ThreadPolicy policy = allowDiskAccess();
+
+        try {
+            File dir = ImageUtil.getCacheDirectory(app.getApplicationContext(), cacheKey);
+            mCacheDir = new File(dir, "video_cache");
+            mCacheDir.mkdirs();
+        } finally {
+            StrictMode.setThreadPolicy(policy);
+        }
+
         mKeyGenerator = new Md5FileNameGenerator();
     }
 
     public void setCacheDirectory(File dir) {
         mCacheDir = new File(dir, "video_cache");
-        mCacheDir.mkdirs();
+        StrictMode.ThreadPolicy policy = allowDiskAccess();
+
+        try {
+            mCacheDir.mkdirs();
+        } finally {
+            StrictMode.setThreadPolicy(policy);
+        }
     }
 
     /**
@@ -68,39 +82,7 @@ public class VideoCache {
             return;
         }
 
-        String key = mKeyGenerator.generate(url);
-        File file = getVideoFile(key);
-
-        if (FileUtil.isFileValid(file)) {
-            LogUtil.v(TAG, "File already exists, deleting existing file and replacing it");
-            file.delete();
-        }
-
-        try {
-            if (file == null) {
-                String ext = getExtension(url);
-
-                if (TextUtils.isEmpty(ext)) {
-                    if (listener != null) listener.onVideoDownloadFailed(new IllegalArgumentException("Invalid extension for url " + url), url);
-                    return;
-                }
-
-                file = new File(mCacheDir, key + ext);
-            }
-
-            file.createNewFile();
-        } catch (IOException e) {
-            LogUtil.e(TAG, "Error creating file", e);
-            if (listener != null) listener.onVideoDownloadFailed(e, url);
-        }
-
-        if (FileUtil.isFileValid(file)) {
-            new DownloadVideo(key, url, listener).execute(file);
-        } else if (listener != null) {
-            Exception e = new FileNotFoundException("Unable to create file for download");
-            LogUtil.e(TAG, "Error creating file", e);
-            listener.onVideoDownloadFailed(e, url);
-        }
+        new DownloadVideo(url, listener).execute();
     }
 
     /**
@@ -113,20 +95,38 @@ public class VideoCache {
         if (TextUtils.isEmpty(url)) return null;
 
         String ext = getExtension(url);
-        if (TextUtils.isEmpty(url)) return null;
+        if (TextUtils.isEmpty(ext)) return null;
 
         String key = mKeyGenerator.generate(url);
         File file = new File(mCacheDir, key + ext);
-        return FileUtil.isFileValid(file) ? file : null;
+        StrictMode.ThreadPolicy policy = allowDiskAccess();
+
+        try {
+            return FileUtil.isFileValid(file) ? file : null;
+        } finally {
+            StrictMode.setThreadPolicy(policy);
+        }
     }
 
     public void deleteCache() {
-        FileUtil.deleteDirectory(mCacheDir);
-        mCacheDir.mkdirs();
+        StrictMode.ThreadPolicy policy = allowDiskAccess();
+
+        try {
+            FileUtil.deleteDirectory(mCacheDir);
+            mCacheDir.mkdirs();
+        } finally {
+            StrictMode.setThreadPolicy(policy);
+        }
     }
 
     public long getCacheSize() {
-        return FileUtil.getDirectorySize(mCacheDir);
+        StrictMode.ThreadPolicy policy = allowDiskAccess();
+
+        try {
+            return FileUtil.getDirectorySize(mCacheDir);
+        } finally {
+            StrictMode.setThreadPolicy(policy);
+        }
     }
 
     public interface VideoCacheListener {
@@ -142,39 +142,59 @@ public class VideoCache {
         void onProgress(int downloaded, int total);
     }
 
-    private static class DownloadVideo extends AsyncTask<File, Integer, Object> {
-        private String mKey;
+    private class DownloadVideo extends AsyncTask<Void, Integer, Object> {
+        private final String mKey;
 
-        private VideoCacheListener mListener;
+        private final VideoCacheListener mListener;
 
-        private String mUrl;
+        private final String mOriginalUrl;
 
-        public DownloadVideo(String key, String url, VideoCacheListener listener) {
-            this.mKey = key;
-            this.mListener = listener;
-            this.mUrl = url;
-            if (mUrl.endsWith(".gifv")) mUrl = mUrl.replace(".gifv", ".mp4");
+        private final String mDownloadUrl;
+
+        public DownloadVideo(String url, VideoCacheListener listener) {
+            mKey = mKeyGenerator.generate(url);
+            mListener = listener;
+            mOriginalUrl = url;
+            mDownloadUrl = url.endsWith(".gifv") ? url.replace(".gifv", ".mp4") : url;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if (mListener != null) mListener.onVideoDownloadStart(mKey, mUrl);
+            if (mListener != null) mListener.onVideoDownloadStart(mKey, mDownloadUrl);
         }
 
         @Override
-        protected Object doInBackground(File... file) {
+        protected Object doInBackground(Void... values) {
             InputStream in = null;
             BufferedOutputStream buffer = null;
-            LogUtil.v(TAG, "Downloading video from " + mUrl);
+            LogUtil.v(TAG, "Downloading video from " + mDownloadUrl);
             File writeFile = null;
 
             try {
-                URL url = new URL(mUrl);
+                String ext = getExtension(mOriginalUrl);
+
+                if (TextUtils.isEmpty(ext)) {
+                    return new IllegalArgumentException("Invalid extension for url " + mOriginalUrl);
+                }
+
+                writeFile = new File(mCacheDir, mKey + ext);
+
+                if (FileUtil.isFileValid(writeFile)) {
+                    LogUtil.v(TAG, "File already exists, deleting existing file and replacing it");
+                    writeFile.delete();
+                }
+
+                writeFile.createNewFile();
+
+                if (!FileUtil.isFileValid(writeFile)) {
+                    return new FileNotFoundException("Unable to create file for download");
+                }
+
+                URL url = new URL(mDownloadUrl);
                 URLConnection connection = url.openConnection();
                 connection.connect();
                 in = connection.getInputStream();
-                writeFile = file[0];
                 buffer = new BufferedOutputStream(new FileOutputStream(writeFile));
                 byte byt[] = new byte[1024];
                 int i;
@@ -191,7 +211,6 @@ public class VideoCache {
                 return writeFile;
             } catch (Exception e) {
                 LogUtil.e(TAG, "An error occurred whiling downloading video", e);
-                // Delete the file if an exception occurs to allow download retries
                 if (writeFile != null) writeFile.delete();
                 return e;
             } finally {
@@ -215,7 +234,7 @@ public class VideoCache {
                     mListener.onVideoDownloadComplete((File) o);
                 }
             } else if (mListener != null) {
-                mListener.onVideoDownloadFailed((Exception) o, mUrl);
+                mListener.onVideoDownloadFailed((Exception) o, mDownloadUrl);
             }
         }
     }
@@ -229,5 +248,14 @@ public class VideoCache {
         }
 
         return null;
+    }
+
+    private StrictMode.ThreadPolicy allowDiskAccess() {
+        StrictMode.ThreadPolicy policy = StrictMode.getThreadPolicy();
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder(policy)
+                .permitDiskReads()
+                .permitDiskWrites()
+                .build());
+        return policy;
     }
 }

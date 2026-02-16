@@ -1,6 +1,7 @@
 package com.kenny.openimgur.api;
 
 
+import android.os.StrictMode;
 import android.support.annotation.StringRes;
 
 import com.google.gson.FieldNamingPolicy;
@@ -72,13 +73,20 @@ public class ApiClient {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(new TrafficStatsInterceptor())
                 .addInterceptor(new OAuthInterceptor(user != null ? user.getAccessToken() : null));
 
-        File cacheDir = app.getCacheDir();
+        StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
 
-        if (FileUtil.isFileValid(cacheDir)) {
-            File cache = new File(cacheDir, "http_cache");
-            builder.cache(new Cache(cache, CACHE_SIZE));
+        try {
+            File cacheDir = app.getCacheDir();
+
+            if (FileUtil.isFileValid(cacheDir)) {
+                File cache = new File(cacheDir, "http_cache");
+                builder.cache(new Cache(cache, CACHE_SIZE));
+            }
+        } finally {
+            StrictMode.setThreadPolicy(originalPolicy);
         }
 
         return builder.build();

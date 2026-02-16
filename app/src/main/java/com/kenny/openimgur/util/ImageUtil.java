@@ -150,7 +150,11 @@ public class ImageUtil {
     }
 
     public static ImageLoader getImageLoader(@NonNull Context context) {
-        if (imageLoader == null || !imageLoader.isInited()) {
+        if (imageLoader == null) {
+            imageLoader = ImageLoader.getInstance();
+        }
+
+        if (!imageLoader.isInited()) {
             initImageLoader(context.getApplicationContext());
             imageLoader = ImageLoader.getInstance();
         }
@@ -250,6 +254,7 @@ public class ImageUtil {
         }
 
         ImageLoader.getInstance().init(config);
+        imageLoader = ImageLoader.getInstance();
 
         // Check our cache to see if we should delete it
         long lastClear = pref.getLong("lastClear", 0);
