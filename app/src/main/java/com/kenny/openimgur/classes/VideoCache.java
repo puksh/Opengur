@@ -2,6 +2,7 @@ package com.kenny.openimgur.classes;
 
 import android.os.AsyncTask;
 import android.os.StrictMode;
+import android.net.TrafficStats;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -26,6 +27,8 @@ import java.net.URLConnection;
  */
 public class VideoCache {
     private static final String TAG = "VideoCache";
+
+    private static final int TRAFFIC_STATS_TAG_VIDEO = 0xF0A2;
 
     private static VideoCache mInstance;
 
@@ -170,6 +173,7 @@ public class VideoCache {
             BufferedOutputStream buffer = null;
             LogUtil.v(TAG, "Downloading video from " + mDownloadUrl);
             File writeFile = null;
+            TrafficStats.setThreadStatsTag(TRAFFIC_STATS_TAG_VIDEO);
 
             try {
                 String ext = getExtension(mOriginalUrl);
@@ -216,6 +220,7 @@ public class VideoCache {
             } finally {
                 FileUtil.closeStream(in);
                 FileUtil.closeStream(buffer);
+                TrafficStats.clearThreadStatsTag();
             }
         }
 

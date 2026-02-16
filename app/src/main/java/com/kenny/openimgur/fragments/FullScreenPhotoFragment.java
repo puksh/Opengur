@@ -173,8 +173,8 @@ public class FullScreenPhotoFragment extends BaseFragment {
         // Free up some memory
         if (gifImageView != null && gifImageView.getDrawable() instanceof GifDrawable) {
             ((GifDrawable) gifImageView.getDrawable()).recycle();
-        } else if (videoView != null && videoView.getDuration() > 0) {
-            videoView.suspend();
+        } else if (videoView != null) {
+            videoView.stopPlayback();
         } else if (imageView != null) {
             imageView.recycle();
         }
@@ -294,6 +294,124 @@ public class FullScreenPhotoFragment extends BaseFragment {
             ImageUtil.getImageLoader(getActivity()).displayImage(url, gifImageView, null, simpleImageLoadingListener, progressListener);
             multiView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
         }
+    }
+
+    private void displayStaticImageFromCacheAsync(final String imageUrl) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final File file = ImageUtil.getImageLoader(getActivity()).getDiskCache().get(imageUrl);
+
+                    if (!FileUtil.isFileValid(file)) {
+                        postStaticImageError();
+                        return;
+                    }
+
+                    int width = photo != null ? photo.getWidth() : 0;
+                    int height = photo != null ? photo.getHeight() : 0;
+
+                    if (width <= 0 || height <= 0) {
+                        int[] dimensions = ImageUtil.getBitmapDimensions(file);
+                        width = dimensions[0];
+                        height = dimensions[1];
+                    }
+
+                    if (width <= 0 || height <= 0) {
+                        postStaticImageError();
+                        return;
+                    }
+
+                    final int finalWidth = width;
+                    final int finalHeight = height;
+                    final boolean enableTiling = finalWidth > 2048 || finalHeight > 2048;
+                    final Uri fileUri = Uri.fromFile(file);
+
+                    if (!isAdded() || isRemoving() || getActivity() == null) {
+                        return;
+                    }
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!isAdded() || isRemoving() || multiView == null || videoView == null || gifImageView == null || imageView == null) {
+                                return;
+                            }
+
+                            LogUtil.v(TAG, "Tiling enabled for image " + enableTiling);
+
+                            imageView.setOnImageEventListener(new SubsamplingScaleImageView.OnImageEventListener() {
+                                @Override
+                                public void onReady() {
+
+                                }
+
+                                @Override
+                                public void onImageLoaded() {
+
+                                }
+
+                                @Override
+                                public void onPreviewLoadError(Exception e) {
+
+                                }
+
+                                @Override
+                                public void onImageLoadError(Exception e) {
+                                    LogUtil.e(TAG, "Error loading image", e);
+                                    if (multiView != null)
+                                        multiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
+                                }
+
+                                @Override
+                                public void onTileLoadError(Exception e) {
+                                    LogUtil.e(TAG, "Error creating tile", e);
+                                    if (multiView != null)
+                                        multiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
+                                }
+
+                                @Override
+                                public void onPreviewReleased() {
+
+                                }
+                            });
+
+                            imageView.setMinimumTileDpi(160);
+                            imageView.setImage(ImageSource.uri(fileUri).dimensions(finalWidth, finalHeight).tiling(enableTiling));
+                            videoView.setVisibility(View.GONE);
+                            gifImageView.setVisibility(View.GONE);
+                            multiView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
+
+                            if (loadingView != null) {
+                                loadingView.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    LogUtil.e(TAG, "Error creating tile bitmap", e);
+                    postStaticImageError();
+                }
+            }
+        }).start();
+    }
+
+    private void postStaticImageError() {
+        if (!isAdded() || isRemoving() || getActivity() == null) {
+            return;
+        }
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (multiView != null) {
+                    multiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
+                }
+
+                if (loadingView != null) {
+                    loadingView.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     @Override
@@ -452,67 +570,12 @@ public class FullScreenPhotoFragment extends BaseFragment {
             if (url.endsWith(".gif")) {
                 displayGif(url);
             } else {
-                // Static images will use the TouchImageView to render the image. This allows large(tall) images to render better and be better legible
-                try {
-                    File file = ImageUtil.getImageLoader(getActivity()).getDiskCache().get(url);
-                    if (FileUtil.isFileValid(file)) {
-                        // We will enable tiling if any of the image dimensions are above 2048 px (Canvas draw limit)
-                        int[] dimensions = ImageUtil.getBitmapDimensions(file);
-                        boolean enableTiling = dimensions[0] > 2048 || dimensions[1] > 2048;
-                        LogUtil.v(TAG, "Tiling enabled for image " + enableTiling);
-                        Uri fileUri = Uri.fromFile(file);
-
-                        imageView.setOnImageEventListener(new SubsamplingScaleImageView.OnImageEventListener() {
-                            @Override
-                            public void onReady() {
-
-                            }
-
-                            @Override
-                            public void onImageLoaded() {
-
-                            }
-
-                            @Override
-                            public void onPreviewLoadError(Exception e) {
-
-                            }
-
-                            @Override
-                            public void onImageLoadError(Exception e) {
-                                LogUtil.e(TAG, "Error loading image", e);
-                                if (multiView != null)
-                                    multiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
-                            }
-
-                            @Override
-                            public void onTileLoadError(Exception e) {
-                                LogUtil.e(TAG, "Error creating tile", e);
-                                if (multiView != null)
-                                    multiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
-                            }
-
-                            @Override
-                            public void onPreviewReleased() {
-
-                            }
-                        });
-
-                        imageView.setMinimumTileDpi(160);
-                        imageView.setImage(ImageSource.uri(fileUri).dimensions(dimensions[0], dimensions[1]).tiling(enableTiling));
-                        videoView.setVisibility(View.GONE);
-                        gifImageView.setVisibility(View.GONE);
-                        multiView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
-                    } else {
-                        multiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
-                    }
-                } catch (Exception e) {
-                    LogUtil.e(TAG, "Error creating tile bitmap", e);
-                    multiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
-                }
+                displayStaticImageFromCacheAsync(url);
             }
 
-            loadingView.setVisibility(View.GONE);
+            if (url.endsWith(".gif")) {
+                loadingView.setVisibility(View.GONE);
+            }
         }
 
         @Override
