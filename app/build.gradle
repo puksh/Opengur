@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 project.ext {
     version_name = '4.7.2'
     version_code = 92
-    support_version = '25.0.1'
+    support_version = '28.0.0'
     beta_number = 2
 }
 
@@ -13,13 +13,13 @@ repositories {
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.1'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "com.kennyc.open.imgur"
         minSdkVersion 17
-        targetSdkVersion 25
+        targetSdkVersion 28
         versionCode project.ext.version_code
         buildConfigField "String", "API_CLIENT_ID", project.API_CLIENT_ID
         buildConfigField "String", "API_CLIENT_SECRET", project.API_CLIENT_SECRET
