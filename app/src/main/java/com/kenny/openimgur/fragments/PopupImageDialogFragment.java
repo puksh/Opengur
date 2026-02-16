@@ -2,9 +2,14 @@ package com.kenny.openimgur.fragments;
 
 import android.app.DialogFragment;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.RectF;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.widget.ImageView.ScaleType;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,15 +28,19 @@ import com.kenny.openimgur.classes.VideoCache;
 import com.kenny.openimgur.ui.VideoView;
 import com.kenny.openimgur.util.FileUtil;
 import com.kenny.openimgur.util.ImageUtil;
+import com.kenny.openimgur.util.LinkUtils;
 import com.kennyc.view.MultiStateView;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.utils.DiskCacheUtils;
 
 import java.io.File;
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import pl.droidsonroids.gif.GifDrawable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -89,6 +98,16 @@ public class PopupImageDialogFragment extends DialogFragment implements VideoCac
         super.onCreate(savedInstanceState);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (getDialog() != null && getDialog().getWindow() != null) {
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -122,11 +141,19 @@ public class PopupImageDialogFragment extends DialogFragment implements VideoCac
             fetchImageDetails();
         }
 
-        mImage.setOnClickListener(new View.OnClickListener() {
+        mImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                dismissAllowingStateLoss();
-                startActivity(FullScreenPhotoActivity.createIntent(getActivity(), mImageUrl));
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    if (isTouchInsideImageContent(mImage, motionEvent.getX(), motionEvent.getY())) {
+                        dismissAllowingStateLoss();
+                        startActivity(FullScreenPhotoActivity.createIntent(getActivity(), mImageUrl));
+                    } else {
+                        dismissAllowingStateLoss();
+                    }
+                }
+
+                return true;
             }
         });
 
@@ -172,6 +199,16 @@ public class PopupImageDialogFragment extends DialogFragment implements VideoCac
      * @param isAnimated
      */
     public void displayImage(String url, final boolean isAnimated) {
+        if (isAnimated) {
+            mImage.setScaleType(ScaleType.FIT_CENTER);
+            mImage.setAdjustViewBounds(true);
+            loadGifAsync(url, mImage);
+            return;
+        }
+
+        mImage.setScaleType(ScaleType.CENTER_CROP);
+        mImage.setAdjustViewBounds(false);
+
         ImageUtil.getImageLoader(getActivity()).displayImage(url, mImage, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
@@ -190,12 +227,6 @@ public class PopupImageDialogFragment extends DialogFragment implements VideoCac
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
                 if (isAdded()) {
                     mMultiView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
-                    if (isAnimated) {
-                        if (!ImageUtil.loadAndDisplayGif((ImageView) view, s, ImageUtil.getImageLoader(getActivity()))) {
-                            Toast.makeText(getActivity(), R.string.loading_image_error, Toast.LENGTH_SHORT).show();
-                            dismissAllowingStateLoss();
-                        }
-                    }
                 }
             }
 
@@ -205,6 +236,75 @@ public class PopupImageDialogFragment extends DialogFragment implements VideoCac
                     dismissAllowingStateLoss();
                     Toast.makeText(getActivity(), R.string.loading_image_error, Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+    }
+
+    private void loadGifAsync(final String url, final ImageView imageView) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                GifDrawable gifDrawable = null;
+
+                try {
+                    if (!isAdded() || getActivity() == null) {
+                        return;
+                    }
+
+                    File file = DiskCacheUtils.findInCache(url, ImageUtil.getImageLoader(getActivity()).getDiskCache());
+
+                    if (!FileUtil.isFileValid(file)) {
+                        postGifLoadError();
+                        return;
+                    }
+
+                    gifDrawable = new GifDrawable(file);
+                } catch (IOException e) {
+                    postGifLoadError();
+                    return;
+                }
+
+                final GifDrawable finalGifDrawable = gifDrawable;
+
+                if (!isAdded() || getActivity() == null) {
+                    if (finalGifDrawable != null) {
+                        finalGifDrawable.recycle();
+                    }
+                    return;
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isAdded() || getActivity() == null || imageView == null || mMultiView == null) {
+                            if (finalGifDrawable != null) {
+                                finalGifDrawable.recycle();
+                            }
+                            return;
+                        }
+
+                        imageView.setImageDrawable(finalGifDrawable);
+                        mMultiView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void postGifLoadError() {
+        if (!isAdded() || getActivity() == null) {
+            return;
+        }
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (!isAdded() || getActivity() == null) {
+                    return;
+                }
+
+                Toast.makeText(getActivity(), R.string.loading_image_error, Toast.LENGTH_SHORT).show();
+                dismissAllowingStateLoss();
             }
         });
     }
@@ -283,7 +383,10 @@ public class PopupImageDialogFragment extends DialogFragment implements VideoCac
                     ImgurPhoto photo = response.body().data;
 
                     if (photo.isAnimated()) {
-                        if (photo.isLinkAThumbnail() || photo.getSize() > PHOTO_SIZE_LIMIT) {
+                        boolean shouldUseVideo = photo.hasVideoLink() &&
+                                (photo.isLinkAThumbnail() || photo.getSize() > PHOTO_SIZE_LIMIT || LinkUtils.isVideoLink(photo.getLink()));
+
+                        if (shouldUseVideo) {
                             mImageUrl = photo.getVideoLink();
                             displayVideo(mImageUrl);
                         } else {
@@ -307,5 +410,22 @@ public class PopupImageDialogFragment extends DialogFragment implements VideoCac
                 dismissAllowingStateLoss();
             }
         });
+    }
+
+    private boolean isTouchInsideImageContent(ImageView imageView, float x, float y) {
+        if (imageView == null) {
+            return false;
+        }
+
+        Drawable drawable = imageView.getDrawable();
+
+        if (drawable == null || drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            return false;
+        }
+
+        RectF bounds = new RectF(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        imageView.getImageMatrix().mapRect(bounds);
+        bounds.offset(imageView.getPaddingLeft(), imageView.getPaddingTop());
+        return bounds.contains(x, y);
     }
 }

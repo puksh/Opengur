@@ -66,6 +66,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -77,6 +78,8 @@ import retrofit2.Response;
  * Created by kcampagna on 7/12/14.
  */
 public class ViewActivity extends BaseActivity implements View.OnClickListener, ImgurListener, SideGalleryFragment.SideGalleryListener, CommentPopupFragment.CommentListener {
+
+    private static final Pattern DIRECT_MEDIA_PATTERN = Pattern.compile(".*\\.(jpg|jpeg|png|gif|webp|gifv|mp4|webm)(?:$|[?&#/_-].*)", Pattern.CASE_INSENSITIVE);
 
     private enum CommentSort {
         BEST, NEW, TOP, WORST;
@@ -591,6 +594,13 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onLinkTap(View view, String url) {
         if (!TextUtils.isEmpty(url) && canDoFragmentTransaction()) {
+            if (isDirectMediaLink(url)) {
+                boolean isAnimated = LinkUtils.isLinkAnimated(url);
+                boolean isVideo = LinkUtils.isVideoLink(url);
+                getFragmentManager().beginTransaction().add(PopupImageDialogFragment.getInstance(url, isAnimated, true, isVideo), "popup").commitAllowingStateLoss();
+                return;
+            }
+
             LinkUtils.LinkMatch match = LinkUtils.findImgurLinkMatch(url);
 
             switch (match) {
@@ -685,6 +695,14 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
                 }
             }
         }
+    }
+
+    private boolean isDirectMediaLink(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return false;
+        }
+
+        return DIRECT_MEDIA_PATTERN.matcher(url).matches();
     }
 
     @Override

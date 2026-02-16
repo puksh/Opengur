@@ -2,6 +2,7 @@ package com.kenny.openimgur.ui.adapters;
 
 import android.content.Context;
 import android.support.v4.util.LongSparseArray;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -12,8 +13,9 @@ import android.text.style.ForegroundColorSpan;
 import android.text.util.Linkify;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ImageButton;
 
 import com.kenny.openimgur.R;
 import com.kenny.openimgur.classes.CustomLinkMovement;
@@ -25,6 +27,8 @@ import com.kenny.openimgur.util.LinkUtils;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 
@@ -52,8 +56,14 @@ public class CommentAdapter extends BaseRecyclerAdapter<ImgurComment> {
 
     private int mCommentIndent;
 
+    private static final Pattern URL_PATTERN = Pattern.compile("https?://\\S+");
+
+    private static final Pattern DIRECT_IMAGE_PATTERN = Pattern.compile(".*\\.(jpg|jpeg|png|gif|webp)(?:$|[?&#/_-].*)", Pattern.CASE_INSENSITIVE);
+
+    private static final Pattern DIRECT_VIDEO_PATTERN = Pattern.compile(".*\\.(gifv|mp4|webm)(?:$|[?&#/_-].*)", Pattern.CASE_INSENSITIVE);
+
     public CommentAdapter(Context context, List<ImgurComment> comments, ImgurListener listener) {
-        super(context, comments);
+        super(context, comments, true);
         mListener = listener;
         mGreenTextColor = getColor(R.color.notoriety_positive);
         mRedTextColor = getColor(R.color.notoriety_negative);
@@ -92,6 +102,24 @@ public class CommentAdapter extends BaseRecyclerAdapter<ImgurComment> {
                 if (mListener != null) mListener.onLinkTap(holder.itemView, null);
             }
         });
+
+        holder.mediaPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null && holder.mediaPlay.getTag() instanceof String) {
+                    mListener.onLinkTap(holder.itemView, (String) holder.mediaPlay.getTag());
+                }
+            }
+        });
+
+        holder.mediaPreview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null && holder.mediaPlay.getTag() instanceof String) {
+                    mListener.onLinkTap(holder.itemView, (String) holder.mediaPlay.getTag());
+                }
+            }
+        });
         return holder;
     }
 
@@ -100,11 +128,19 @@ public class CommentAdapter extends BaseRecyclerAdapter<ImgurComment> {
         holder.itemView.setTag(holder);
         CommentViewHolder commentHolder = (CommentViewHolder) holder;
         final ImgurComment comment = getItem(position);
+        String commentText = comment.getComment();
+        String mediaUrl = findEmbeddableMediaUrl(commentText);
+        String displayComment = getDisplayCommentText(commentText, mediaUrl);
 
-        commentHolder.comment.setText(comment.getComment());
+        commentHolder.comment.setText(displayComment);
         commentHolder.author.setText(constructSpan(comment));
-        Linkify.addLinks(commentHolder.comment, Linkify.WEB_URLS);
-        Linkify.addLinks(commentHolder.comment, LinkUtils.USER_CALLOUT_PATTERN, null);
+        commentHolder.comment.setVisibility(TextUtils.isEmpty(displayComment) ? View.GONE : View.VISIBLE);
+
+        if (!TextUtils.isEmpty(displayComment)) {
+            Linkify.addLinks(commentHolder.comment, Linkify.WEB_URLS);
+            Linkify.addLinks(commentHolder.comment, LinkUtils.USER_CALLOUT_PATTERN, null);
+        }
+
         commentHolder.replies.setVisibility(comment.getReplyCount() > 0 ? View.VISIBLE : View.GONE);
         boolean isExpanded = mExpandedComments.contains(comment);
         commentHolder.replies.setRotation(isExpanded ? EXPANDED : COLLAPSED);
@@ -129,6 +165,101 @@ public class CommentAdapter extends BaseRecyclerAdapter<ImgurComment> {
 
         int bgColor = position == mSelectedIndex ? getColor(R.color.comment_bg_selected) : getColor(android.R.color.transparent);
         commentHolder.itemView.setBackgroundColor(bgColor);
+
+        if (!TextUtils.isEmpty(mediaUrl)) {
+            String previewUrl = getPreviewUrl(mediaUrl);
+            boolean showPlayButton = LinkUtils.isLinkAnimated(mediaUrl);
+            commentHolder.mediaContainer.setVisibility(View.VISIBLE);
+            commentHolder.mediaPlay.setVisibility(showPlayButton ? View.VISIBLE : View.GONE);
+            commentHolder.mediaPlay.setTag(mediaUrl);
+
+            if (!TextUtils.isEmpty(previewUrl)) {
+                displayImage(commentHolder.mediaPreview, previewUrl);
+            } else {
+                commentHolder.mediaPreview.setImageDrawable(null);
+            }
+        } else {
+            commentHolder.mediaContainer.setVisibility(View.GONE);
+            commentHolder.mediaPlay.setTag(null);
+            commentHolder.mediaPreview.setImageDrawable(null);
+        }
+    }
+
+    private String findEmbeddableMediaUrl(String commentText) {
+        if (TextUtils.isEmpty(commentText)) {
+            return null;
+        }
+
+        Matcher matcher = URL_PATTERN.matcher(commentText);
+
+        while (matcher.find()) {
+            String url = sanitizeUrl(matcher.group());
+
+            if (isEmbeddableMediaUrl(url)) {
+                return url;
+            }
+        }
+
+        return null;
+    }
+
+    private boolean isEmbeddableMediaUrl(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return false;
+        }
+
+        return DIRECT_IMAGE_PATTERN.matcher(url).matches() || DIRECT_VIDEO_PATTERN.matcher(url).matches();
+    }
+
+    private String getDisplayCommentText(String commentText, String mediaUrl) {
+        if (TextUtils.isEmpty(commentText) || TextUtils.isEmpty(mediaUrl)) {
+            return commentText;
+        }
+
+        String cleaned = commentText.replaceFirst(Pattern.quote(mediaUrl) + "[\\)\\]\\}\\.,]*", "");
+        cleaned = cleaned.replaceAll("\\s{2,}", " ").trim();
+        return cleaned;
+    }
+
+    private String sanitizeUrl(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return url;
+        }
+
+        while (!TextUtils.isEmpty(url)) {
+            char c = url.charAt(url.length() - 1);
+
+            if (c == ')' || c == ']' || c == '}' || c == ',' || c == '.') {
+                url = url.substring(0, url.length() - 1);
+            } else {
+                break;
+            }
+        }
+
+        return url;
+    }
+
+    private String getPreviewUrl(String mediaUrl) {
+        if (TextUtils.isEmpty(mediaUrl)) {
+            return mediaUrl;
+        }
+
+        int queryIndex = mediaUrl.indexOf('?');
+        String cleanUrl = queryIndex >= 0 ? mediaUrl.substring(0, queryIndex) : mediaUrl;
+
+        if (LinkUtils.isVideoLink(cleanUrl)) {
+            if (!cleanUrl.contains("imgur.com")) {
+                return null;
+            }
+
+            int extIndex = cleanUrl.lastIndexOf('.');
+
+            if (extIndex > 0) {
+                return cleanUrl.substring(0, extIndex) + ".jpg";
+            }
+        }
+
+        return cleanUrl;
     }
 
     /**
@@ -313,6 +444,15 @@ public class CommentAdapter extends BaseRecyclerAdapter<ImgurComment> {
 
         @BindView(R.id.indicator)
         View indicator;
+
+        @BindView(R.id.mediaContainer)
+        View mediaContainer;
+
+        @BindView(R.id.mediaPreview)
+        ImageView mediaPreview;
+
+        @BindView(R.id.mediaPlay)
+        FloatingActionButton mediaPlay;
 
         public CommentViewHolder(View view) {
             super(view);

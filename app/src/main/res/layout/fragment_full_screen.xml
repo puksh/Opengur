@@ -23,8 +23,10 @@
         <ImageView
             android:id="@+id/gifImage"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter" />
 
         <com.kenny.openimgur.ui.VideoView
             android:id="@+id/video"

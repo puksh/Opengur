@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -38,6 +39,31 @@
             android:textAppearance="@style/TextAppearance.Regular"
             android:textSize="14sp"
             tools:text="This will be a comment " />
+
+        <FrameLayout
+            android:id="@+id/mediaContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/mediaPreview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/mediaPlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_play_arrow_24dp"
+                app:backgroundTint="@color/play_circle_default"
+                app:fabSize="mini" />
+
+        </FrameLayout>
 
         <ImageButton
             android:id="@+id/replies"

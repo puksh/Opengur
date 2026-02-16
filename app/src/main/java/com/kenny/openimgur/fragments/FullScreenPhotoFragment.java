@@ -45,6 +45,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListe
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.io.File;
+import java.io.IOException;
 
 import butterknife.BindView;
 import pl.droidsonroids.gif.GifDrawable;
@@ -280,20 +281,81 @@ public class FullScreenPhotoFragment extends BaseFragment {
 
         if (getUserVisibleHint()) {
             // Auto play the gif if we are visible
-            File file = ImageUtil.getImageLoader(getActivity()).getDiskCache().get(url);
-            if (!ImageUtil.loadAndDisplayGif(gifImageView, file)) {
-                multiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
-            } else {
-                videoView.setVisibility(View.GONE);
-                imageView.setVisibility(View.GONE);
-                multiView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
-            }
+            loadGifFromCacheAsync(url);
         } else {
             videoView.setVisibility(View.GONE);
             imageView.setVisibility(View.GONE);
             ImageUtil.getImageLoader(getActivity()).displayImage(url, gifImageView, null, simpleImageLoadingListener, progressListener);
             multiView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
         }
+    }
+
+    private void loadGifFromCacheAsync(final String gifUrl) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                GifDrawable gifDrawable = null;
+
+                try {
+                    if (!isAdded() || isRemoving() || getActivity() == null) {
+                        return;
+                    }
+
+                    File file = ImageUtil.getImageLoader(getActivity()).getDiskCache().get(gifUrl);
+
+                    if (!FileUtil.isFileValid(file)) {
+                        postGifLoadError();
+                        return;
+                    }
+
+                    gifDrawable = new GifDrawable(file);
+                } catch (IOException e) {
+                    postGifLoadError();
+                    return;
+                }
+
+                final GifDrawable finalGifDrawable = gifDrawable;
+
+                if (!isAdded() || isRemoving() || getActivity() == null) {
+                    if (finalGifDrawable != null) {
+                        finalGifDrawable.recycle();
+                    }
+                    return;
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isAdded() || isRemoving() || gifImageView == null || multiView == null || videoView == null || imageView == null) {
+                            if (finalGifDrawable != null) {
+                                finalGifDrawable.recycle();
+                            }
+                            return;
+                        }
+
+                        videoView.setVisibility(View.GONE);
+                        imageView.setVisibility(View.GONE);
+                        gifImageView.setImageDrawable(finalGifDrawable);
+                        multiView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void postGifLoadError() {
+        if (!isAdded() || isRemoving() || getActivity() == null) {
+            return;
+        }
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (multiView != null) {
+                    multiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
+                }
+            }
+        });
     }
 
     private void displayStaticImageFromCacheAsync(final String imageUrl) {
