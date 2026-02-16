@@ -135,8 +135,9 @@ public class FullScreenPhotoFragment extends BaseFragment {
     private void configView(Bundle savedInstanceState) {
         if (photo.isAnimated()) {
             boolean hasVideo = photo.hasVideoLink() && !TextUtils.isEmpty(photo.getVideoLink());
+            boolean isGifSource = isGifSource(photo);
 
-            if (hasVideo && (photo.isLinkAThumbnail() || photo.getSize() > (1024 * 1024 * 5))) {
+            if (hasVideo && (!isGifSource || photo.isLinkAThumbnail() || photo.getSize() > (1024 * 1024 * 5))) {
                 url = photo.getVideoLink();
                 displayVideo(savedInstanceState);
             } else {
@@ -151,6 +152,15 @@ public class FullScreenPhotoFragment extends BaseFragment {
             url = photo.getLink();
             displayImage();
         }
+    }
+
+    private boolean isGifSource(@NonNull ImgurPhoto photo) {
+        if (ImgurPhoto.IMAGE_TYPE_GIF.equalsIgnoreCase(photo.getType())) {
+            return true;
+        }
+
+        String link = photo.getLink();
+        return !TextUtils.isEmpty(link) && link.toLowerCase().endsWith(".gif");
     }
 
     @Override

@@ -388,7 +388,9 @@ public class ImgurViewFragment extends BaseFragment implements ImgurListener {
         final int position = mListView.getLayoutManager().getPosition(view) - 1;
         final ImgurPhoto photo = mPhotoAdapter.getItem(position);
         final boolean hasVideo = photo.hasVideoLink() && !TextUtils.isEmpty(photo.getVideoLink());
-        final boolean useInlineGif = photo.getSize() <= FIVE_MB && !photo.isLinkAThumbnail();
+        final boolean isGifSource = isGifSource(photo);
+        final boolean useInlineGif = isGifSource && photo.getSize() <= FIVE_MB && !photo.isLinkAThumbnail();
+        final boolean shouldPlayGif = useInlineGif || (!hasVideo && isGifSource);
 
         if (image.getVisibility() == View.VISIBLE && image.getDrawable() instanceof GifDrawable) {
             play.setVisibility(View.GONE);
@@ -405,7 +407,7 @@ public class ImgurViewFragment extends BaseFragment implements ImgurListener {
         play.setVisibility(View.GONE);
         prog.setVisibility(View.VISIBLE);
 
-        if (useInlineGif || !hasVideo) {
+        if (shouldPlayGif) {
             final ImageLoader loader = ImageUtil.getImageLoader(getActivity());
             File file = DiskCacheUtils.findInCache(photo.getLink(), loader.getDiskCache());
 
@@ -456,7 +458,7 @@ public class ImgurViewFragment extends BaseFragment implements ImgurListener {
                     }
                 });
             }
-        } else {
+        } else if (hasVideo) {
             File file = VideoCache.getInstance().getVideoFile(photo.getVideoLink());
 
             if (FileUtil.isFileValid(file)) {
@@ -502,7 +504,20 @@ public class ImgurViewFragment extends BaseFragment implements ImgurListener {
                     }
                 });
             }
+        } else {
+            Snackbar.make(mMultiView, R.string.loading_image_error, Snackbar.LENGTH_LONG).show();
+            prog.setVisibility(View.GONE);
+            play.setVisibility(View.VISIBLE);
         }
+    }
+
+    private boolean isGifSource(@NonNull ImgurPhoto photo) {
+        if (ImgurPhoto.IMAGE_TYPE_GIF.equalsIgnoreCase(photo.getType())) {
+            return true;
+        }
+
+        String link = photo.getLink();
+        return !TextUtils.isEmpty(link) && link.toLowerCase().endsWith(".gif");
     }
 
     @Override
