@@ -13,15 +13,20 @@ import com.kenny.openimgur.classes.ImgurBaseObject;
 import com.kenny.openimgur.classes.ImgurUser;
 import com.kenny.openimgur.classes.OpengurApp;
 import com.kenny.openimgur.util.FileUtil;
+import com.kenny.openimgur.util.NetworkUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -43,6 +48,10 @@ public class ApiClient {
 
     // 25MB
     private static final long CACHE_SIZE = 25 * 1024 * 1024;
+
+    private static final int CACHE_MAX_AGE_SECONDS = 60;
+
+    private static final long CACHE_MAX_STALE_SECONDS = TimeUnit.DAYS.toSeconds(7);
 
     public static final String CLIENT_ID = BuildConfig.API_CLIENT_ID;
 
@@ -68,12 +77,55 @@ public class ApiClient {
     }
 
     private static OkHttpClient getClient() {
-        OpengurApp app = OpengurApp.getInstance();
+        final OpengurApp app = OpengurApp.getInstance();
         ImgurUser user = app.getUser();
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(20, TimeUnit.SECONDS)
                 .addInterceptor(new TrafficStatsInterceptor())
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request();
+                        boolean isGet = "GET".equalsIgnoreCase(request.method());
+
+                        if (isGet && !NetworkUtils.hasInternet(app)) {
+                            request = request.newBuilder()
+                                    .header("Cache-Control", "public, only-if-cached, max-stale=" + CACHE_MAX_STALE_SECONDS)
+                                    .build();
+                        }
+
+                        try {
+                            return chain.proceed(request);
+                        } catch (IOException ex) {
+                            if (!isGet) {
+                                throw ex;
+                            }
+
+                            Request cacheRequest = request.newBuilder()
+                                    .header("Cache-Control", "public, only-if-cached, max-stale=" + CACHE_MAX_STALE_SECONDS)
+                                    .build();
+
+                            return chain.proceed(cacheRequest);
+                        }
+                    }
+                })
+                .addNetworkInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request();
+                        Response response = chain.proceed(request);
+
+                        if ("GET".equalsIgnoreCase(request.method()) && response.isSuccessful()) {
+                            return response.newBuilder()
+                                    .header("Cache-Control", "public, max-age=" + CACHE_MAX_AGE_SECONDS)
+                                    .removeHeader("Pragma")
+                                    .build();
+                        }
+
+                        return response;
+                    }
+                })
                 .addInterceptor(new OAuthInterceptor(user != null ? user.getAccessToken() : null));
 
         StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
