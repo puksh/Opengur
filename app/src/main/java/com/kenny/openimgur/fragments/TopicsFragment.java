@@ -166,7 +166,13 @@ public class TopicsFragment extends BaseGridFragment {
 
     @Override
     protected void fetchGallery() {
-        if (mTopic == null) return;
+        if (mTopic == null) {
+            // We cannot fetch gallery items without a selected topic.
+            // Fetch topics first so retry always performs useful work.
+            mIsLoading = false;
+            fetchTopics();
+            return;
+        }
         super.fetchGallery();
 
         ImgurService apiService = ApiClient.getService();
@@ -175,6 +181,16 @@ public class TopicsFragment extends BaseGridFragment {
             apiService.getTopicForTopSorted(mTopic.getId(), mTimeSort.getSort(), mCurrentPage).enqueue(this);
         } else {
             apiService.getTopic(mTopic.getId(), mSort.getSort(), mCurrentPage).enqueue(this);
+        }
+    }
+
+    @Nullable
+    @Override
+    public void onRetryClick() {
+        if (mTopic == null) {
+            fetchTopics();
+        } else {
+            super.onRetryClick();
         }
     }
 

@@ -198,6 +198,12 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
 
     BottomSheetBehavior mBottomSheetBehavior;
 
+    @Nullable
+    private Call<CommentResponse> mCommentCall;
+
+    @Nullable
+    private String mCommentRequestKey;
+
     public static Intent createIntent(Context context, ArrayList<ImgurBaseObject> objects, int position) {
         Intent intent = new Intent(context, ViewActivity.class);
         intent.putExtra(KEY_POSITION, position);
@@ -468,6 +474,12 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     protected void onDestroy() {
+        if (mCommentCall != null) {
+            mCommentCall.cancel();
+            mCommentCall = null;
+            mCommentRequestKey = null;
+        }
+
         dismissDialogFragment("comment");
 
         if (mCommentAdapter != null) {
@@ -790,10 +802,35 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
             }
 
             if (imgurBaseObject.isListed()) {
+                final String requestKey = imgurBaseObject.getId() + "_" + mCommentSort.getApiValue();
+
+                // Avoid duplicate in-flight requests for the same gallery/sort combo.
+                if (mCommentCall != null && requestKey.equals(mCommentRequestKey) && !mCommentCall.isCanceled()) {
+                    return;
+                }
+
+                // Cancel prior comment call when requesting a different item/sort.
+                if (mCommentCall != null) {
+                    mCommentCall.cancel();
+                }
+
                 mMultiView.setViewState(MultiStateView.VIEW_STATE_LOADING);
-                ApiClient.getService().getComments(imgurBaseObject.getId(), mCommentSort.getApiValue()).enqueue(new Callback<CommentResponse>() {
+                final Call<CommentResponse> call = ApiClient.getService().getComments(imgurBaseObject.getId(), mCommentSort.getApiValue());
+                mCommentCall = call;
+                mCommentRequestKey = requestKey;
+
+                call.enqueue(new Callback<CommentResponse>() {
                     @Override
                     public void onResponse(Call<CommentResponse> call, Response<CommentResponse> response) {
+                        if (call.isCanceled()) {
+                            return;
+                        }
+
+                        if (mCommentCall == call) {
+                            mCommentCall = null;
+                            mCommentRequestKey = null;
+                        }
+
                         if (mPagerAdapter == null || mPagerAdapter.getImgurItem(mCurrentPosition) == null) {
                             return;
                         }
@@ -849,6 +886,15 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
 
                     @Override
                     public void onFailure(Call<CommentResponse> call, Throwable t) {
+                        if (call.isCanceled()) {
+                            return;
+                        }
+
+                        if (mCommentCall == call) {
+                            mCommentCall = null;
+                            mCommentRequestKey = null;
+                        }
+
                         LogUtil.e(TAG, "Error fetching comments", t);
                         ViewUtils.setErrorText(mMultiView, R.id.errorMessage, ApiClient.getErrorCode(t));
                         mMultiView.setViewState(MultiStateView.VIEW_STATE_ERROR);

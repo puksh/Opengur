@@ -14,6 +14,7 @@ import com.kenny.openimgur.classes.OpengurApp;
 import com.kenny.openimgur.util.FileUtil;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
@@ -100,6 +101,12 @@ public class ApiClient {
      */
     @StringRes
     public static int getErrorCode(Throwable error) {
+        int statusCode = getHttpStatusCode(error);
+
+        if (statusCode > 0) {
+            return getErrorCode(statusCode);
+        }
+
         if (error instanceof UnknownHostException) {
             return R.string.error_network;
         }
@@ -131,5 +138,63 @@ public class ApiClient {
             default:
                 return R.string.error_generic;
         }
+    }
+
+    private static int getHttpStatusCode(Throwable error) {
+        Throwable throwable = error;
+
+        while (throwable != null) {
+            int retrofitHttpStatusCode = getRetrofitHttpStatusCode(throwable);
+
+            if (retrofitHttpStatusCode > 0) {
+                return retrofitHttpStatusCode;
+            }
+
+            String message = throwable.getMessage();
+
+            // Some network stacks wrap status information in the exception message.
+            if (!android.text.TextUtils.isEmpty(message)) {
+                if (message.contains("429")) {
+                    return 429;
+                }
+
+                if (message.contains("403")) {
+                    return HttpURLConnection.HTTP_FORBIDDEN;
+                }
+
+                if (message.contains("401")) {
+                    return HttpURLConnection.HTTP_UNAUTHORIZED;
+                }
+
+                if (message.contains("503")) {
+                    return HttpURLConnection.HTTP_UNAVAILABLE;
+                }
+            }
+
+            throwable = throwable.getCause();
+        }
+
+        return -1;
+    }
+
+    private static int getRetrofitHttpStatusCode(Throwable throwable) {
+        String className = throwable.getClass().getName();
+
+        if (!"retrofit2.HttpException".equals(className) && !"retrofit2.adapter.rxjava.HttpException".equals(className)) {
+            return -1;
+        }
+
+        try {
+            Method codeMethod = throwable.getClass().getMethod("code");
+            Object codeValue = codeMethod.invoke(throwable);
+
+            if (codeValue instanceof Integer) {
+                return (Integer) codeValue;
+            }
+        } catch (Exception ignored) {
+            // Fall through to generic handling below.
+        }
+
+        return -1;
     }
 }
