@@ -39,8 +39,8 @@ public class ApiClient {
 
     private static ImgurService sService;
 
-    // 10MB
-    private static final long CACHE_SIZE = 10 * 1024 * 1024;
+    // 25MB
+    private static final long CACHE_SIZE = 25 * 1024 * 1024;
 
     public static final String CLIENT_ID = BuildConfig.API_CLIENT_ID;
 

@@ -43,6 +43,8 @@ import retrofit2.Response;
  * Created by Kenny Campagna on 12/13/2014.
  */
 public abstract class BaseGridFragment extends BaseFragment implements Callback<GalleryResponse>, View.OnClickListener {
+    private static final int PAGING_PREFETCH_THRESHOLD = 6;
+
     private static final String KEY_CURRENT_POSITION = "position";
 
     private static final String KEY_ITEMS = "items";
@@ -114,8 +116,10 @@ public abstract class BaseGridFragment extends BaseFragment implements Callback<
                 int totalItemCount = mManager.getItemCount();
                 int firstVisibleItemPosition = mManager.findFirstVisibleItemPosition();
 
-                // Load more items when hey get to the end of the list
-                if (mHasMore && totalItemCount > 0 && firstVisibleItemPosition + visibleItemCount >= totalItemCount && !mIsLoading) {
+                // Load slightly before reaching the end to smooth pagination while scrolling down.
+                if (dy > 0 && mHasMore && totalItemCount > 0
+                    && firstVisibleItemPosition + visibleItemCount + PAGING_PREFETCH_THRESHOLD >= totalItemCount
+                    && !mIsLoading) {
                     mIsLoading = true;
                     mCurrentPage++;
                     fetchGallery();
@@ -301,8 +305,6 @@ public abstract class BaseGridFragment extends BaseFragment implements Callback<
 
     protected void onApiResult(@NonNull GalleryResponse galleryResponse) {
         if (!galleryResponse.data.isEmpty()) {
-            galleryResponse.purgeNSFW(mAllowNSFW);
-
             if (getAdapter() == null) {
                 setAdapter(new GalleryAdapter(getActivity(), SetUniqueList.decorate(galleryResponse.data), this, showPoints()));
             } else {

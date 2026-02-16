@@ -147,6 +147,7 @@ public class ViewUtils {
      * @param gridSpacing  The spacing between the grid items
      */
     public static void setRecyclerViewGridDefaults(@NonNull Context context, @NonNull RecyclerView recyclerView, int numColumns, int gridSpacing) {
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(context, numColumns));
         recyclerView.addItemDecoration(new GridItemDecoration(gridSpacing, numColumns));
     }
