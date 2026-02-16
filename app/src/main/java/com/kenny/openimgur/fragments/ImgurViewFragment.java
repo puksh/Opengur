@@ -768,6 +768,15 @@ public class ImgurViewFragment extends BaseFragment implements ImgurListener {
 
         if (requestCode == RequestCodes.FULL_SCREEN_VIEW && resultCode == Activity.RESULT_OK) {
             int endingPosition = data != null ? data.getIntExtra(FullScreenPhotoActivity.KEY_ENDING_POSITION, -1) : -1;
+            if (mPhotoAdapter != null) {
+                if (endingPosition >= 0) {
+                    // Pad for header item in adapter
+                    mPhotoAdapter.notifyItemChanged(endingPosition + 1);
+                } else {
+                    mPhotoAdapter.notifyDataSetChanged();
+                }
+            }
+
             // Pad the ending position to account for the header
             if (endingPosition >= 0 && mListView != null) mListView.scrollToPosition(endingPosition + 1);
         }
