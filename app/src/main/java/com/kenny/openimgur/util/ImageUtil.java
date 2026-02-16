@@ -239,6 +239,7 @@ public class ImageUtil {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
                 .threadPoolSize(threadPoolSize)
                 .denyCacheImageMultipleSizesInMemory()
+                .imageDownloader(new TrafficStatsImageDownloader(context))
                 .diskCache(discCache)
                 .defaultDisplayImageOptions(getDefaultDisplayOptions().build())
                 .memoryCacheSize(memory)
