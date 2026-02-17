@@ -161,7 +161,7 @@ public class UploadFragment extends BaseFragment implements View.OnClickListener
                 if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
                     startActivityForResult(intent, RequestCodes.SELECT_PHOTO);
                 } else {
-                    // TODO?
+                    Snackbar.make(mMultiView, R.string.cant_launch_intent, Snackbar.LENGTH_LONG).show();
                 }
                 return true;
 

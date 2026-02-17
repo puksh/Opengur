@@ -30,7 +30,6 @@ import com.kenny.openimgur.fragments.ProfileAlbumsFragment;
 import com.kenny.openimgur.fragments.ProfileCommentsFragment;
 import com.kenny.openimgur.fragments.ProfileFavoritesFragment;
 import com.kenny.openimgur.fragments.ProfileInfoFragment;
-import com.kenny.openimgur.fragments.ProfileMessagesFragment;
 import com.kenny.openimgur.fragments.ProfileSubmissionsFragment;
 import com.kenny.openimgur.fragments.ProfileUploadsFragment;
 import com.kenny.openimgur.services.AlarmReceiver;
@@ -349,7 +348,7 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private static class ProfilePager extends FragmentStatePagerAdapter {
-        private static final int NUM_PAGES_SELF = 7;
+        private static final int NUM_PAGES_SELF = 6;
 
         private static final int NUM_PAGES_FAR = 5;
 
@@ -392,10 +391,6 @@ public class ProfileActivity extends BaseActivity {
                 // Uploads
                 case 5:
                     return new ProfileUploadsFragment();
-
-                // Messages
-                case 6:
-                    return new ProfileMessagesFragment();
 
                 default:
                     throw new IndexOutOfBoundsException("How did this happen?");

@@ -56,7 +56,6 @@ public class OpengurApp extends Application implements SharedPreferences.OnShare
         if (mUser != null) AlarmReceiver.createNotificationAlarm(this);
         ImageUtil.initImageLoader(getApplicationContext());
 
-        migrateDownloadFolder();
         FabricUtil.init(this, mPref);
 
         // Check if for ADB logging on a non debug build
@@ -199,33 +198,6 @@ public class OpengurApp extends Application implements SharedPreferences.OnShare
                     AlarmReceiver.createNotificationAlarm(getApplicationContext());
                 }
                 break;
-        }
-    }
-
-    /**
-     * TODO Remove after several versions
-     */
-    private void migrateDownloadFolder() {
-        if (!mPref.getBoolean("migrated_downloads_v2", false)) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "OpenImgur");
-                    boolean hasPermission = PermissionUtils.hasPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                    if (!hasPermission) return;
-
-                    if (FileUtil.isFileValid(dir)) {
-                        File newDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Opengur");
-                        boolean success = dir.renameTo(newDir);
-                        if (success) FileUtil.scanDirectory(newDir, getApplicationContext());
-                        LogUtil.v(TAG, "Result of folder renaming " + success);
-                    } else {
-                        LogUtil.v(TAG, "Directory not found, nothing to do here");
-                    }
-
-                    getPreferences().edit().putBoolean("migrated_downloads_v2", true).apply();
-                }
-            }).start();
         }
     }
 }

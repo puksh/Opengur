@@ -34,7 +34,6 @@
         <item>Albums</item>
         <item>Comments</item>
         <item>Uploads</item>
-        <item>Messages</item>
     </string-array>
 
     <string-array name="uploaded_photos_options">

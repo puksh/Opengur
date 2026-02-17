@@ -176,7 +176,6 @@ public class ImageUtil {
         String threadSize = pref.getString(SettingsActivity.KEY_THREAD_SIZE, SettingsActivity.THREAD_SIZE_5);
         String cacheKey = pref.getString(SettingsActivity.KEY_CACHE_LOC, SettingsActivity.CACHE_LOC_INTERNAL);
         File baseDir = getCacheDirectory(context, cacheKey);
-        checkForOldCache(pref, baseDir);
         File dir = new File(baseDir, "image_cache");
 
 
@@ -450,23 +449,5 @@ public class ImageUtil {
         long cacheSize = FileUtil.getDirectorySize(getImageLoader(context).getDiskCache().getDirectory());
         cacheSize += VideoCache.getInstance().getCacheSize();
         return cacheSize;
-    }
-
-    /**
-     * Checks if the user is using the new cache directory of images. If they are not, the old one will be deleted for updating.
-     * <p/>
-     * TODO Delete the method after several versions
-     *
-     * @param preferences
-     * @param cacheDir
-     */
-    private static void checkForOldCache(@NonNull SharedPreferences preferences, @NonNull File cacheDir) {
-        if (!preferences.getBoolean("has_updated_cache", false)) {
-            preferences.edit().putBoolean("has_updated_cache", true).apply();
-
-            for (File f : cacheDir.listFiles()) {
-                if (!f.isDirectory()) f.delete();
-            }
-        }
     }
 }

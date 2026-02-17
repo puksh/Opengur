@@ -76,7 +76,6 @@ public class UploadAdapter extends CursorRecyclerAdapter<UploadAdapter.UploadHol
         }
 
         loader.displayImage(url, holder.image, options);
-        // TODO Album count
     }
 
     public Cursor getCursor() {
