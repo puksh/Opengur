@@ -185,6 +185,8 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
 
     boolean mIsActionBarShowing = true;
 
+    private long mLastBackPressTime = 0;
+
     String mGalleryId = null;
 
     boolean mIsAlbumLink = false;
@@ -359,6 +361,12 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onBackPressed() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - mLastBackPressTime < 500) {
+            return;
+        }
+        mLastBackPressTime = currentTime;
+
         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             return;

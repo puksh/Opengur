@@ -116,6 +116,8 @@ public class MainActivity extends BaseActivity implements FragmentListener, Navi
 
     private boolean mNagOnExit;
 
+    private long mLastBackPressTime = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -416,6 +418,12 @@ public class MainActivity extends BaseActivity implements FragmentListener, Navi
 
     @Override
     public void onBackPressed() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - mLastBackPressTime < 500) {
+            return;
+        }
+        mLastBackPressTime = currentTime;
+
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawers();
             return;

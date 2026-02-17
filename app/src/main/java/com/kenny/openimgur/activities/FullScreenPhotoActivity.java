@@ -84,6 +84,8 @@ public class FullScreenPhotoActivity extends BaseActivity implements View.OnClic
     @Nullable
     BottomSheetBehavior mBottomSheetBehavior;
 
+    private long mLastBackPressTime = 0;
+
     public static Intent createIntent(@NonNull Context context, @NonNull ImgurPhoto photo) {
         return new Intent(context, FullScreenPhotoActivity.class).putExtra(KEY_IMAGE, photo);
     }
@@ -300,6 +302,12 @@ public class FullScreenPhotoActivity extends BaseActivity implements View.OnClic
 
     @Override
     public void onBackPressed() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - mLastBackPressTime < 500) {
+            return;
+        }
+        mLastBackPressTime = currentTime;
+
         if (mBottomSheetBehavior != null && (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED || mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED)) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             return;

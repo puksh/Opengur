@@ -62,6 +62,8 @@ public class UploadActivity extends BaseActivity implements UploadListener, View
 
     private UploadPagerAdapter mAdapter;
 
+    private long mLastBackPressTime = 0;
+
     public static Intent createIntent(Context context) {
         return new Intent(context, UploadActivity.class);
     }
@@ -236,6 +238,12 @@ public class UploadActivity extends BaseActivity implements UploadListener, View
 
     @Override
     public void onBackPressed() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - mLastBackPressTime < 500) {
+            return;
+        }
+        mLastBackPressTime = currentTime;
+
         UploadFragment fragment = (UploadFragment) mAdapter.getFragmentForPosition(mPager, getFragmentManager(), 0);
 
         if (fragment != null && fragment.hasPhotosForUpload()) {

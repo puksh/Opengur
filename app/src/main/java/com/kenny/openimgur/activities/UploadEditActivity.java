@@ -58,6 +58,8 @@ public class UploadEditActivity extends BaseActivity {
 
     private Upload mUpload;
 
+    private long mLastBackPressTime = 0;
+
     public static Intent createIntent(Context context, @NonNull Upload upload) {
         return new Intent(context, UploadEditActivity.class).putExtra(KEY_UPLOAD, upload);
     }
@@ -179,6 +181,11 @@ public class UploadEditActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - mLastBackPressTime < 500) {
+            return;
+        }
+        mLastBackPressTime = currentTime;
         finishActivity();
     }
 
