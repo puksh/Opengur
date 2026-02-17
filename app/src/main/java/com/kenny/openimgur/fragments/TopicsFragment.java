@@ -244,10 +244,8 @@ public class TopicsFragment extends BaseGridFragment {
     }
 
     public void onTopicChanged(@NonNull ImgurTopic topic) {
-        if (mTopic.getId() != topic.getId()) {
+        if (mTopic == null || mTopic.getId() != topic.getId()) {
             mTopic = topic;
-            GalleryAdapter adapter = getAdapter();
-            if (adapter != null) adapter.clear();
             mMultiStateView.setViewState(MultiStateView.VIEW_STATE_LOADING);
             fetchGallery();
             saveFilterSettings();
@@ -255,7 +253,10 @@ public class TopicsFragment extends BaseGridFragment {
     }
 
     private void fetchTopics() {
-        mMultiStateView.setViewState(MultiStateView.VIEW_STATE_LOADING);
+        GalleryAdapter adapter = getAdapter();
+        if (adapter == null || adapter.isEmpty()) {
+            mMultiStateView.setViewState(MultiStateView.VIEW_STATE_LOADING);
+        }
 
         ApiClient.getService().getDefaultTopics().enqueue(new Callback<TopicResponse>() {
             @Override

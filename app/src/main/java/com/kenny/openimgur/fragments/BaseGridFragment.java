@@ -25,6 +25,7 @@ import com.kenny.openimgur.collections.SetUniqueList;
 import com.kenny.openimgur.ui.adapters.GalleryAdapter;
 import com.kenny.openimgur.util.ImageUtil;
 import com.kenny.openimgur.util.LogUtil;
+import com.kenny.openimgur.util.NetworkUtils;
 import com.kenny.openimgur.util.RequestCodes;
 import com.kenny.openimgur.util.ViewUtils;
 import com.kennyc.view.MultiStateView;
@@ -84,6 +85,8 @@ public abstract class BaseGridFragment extends BaseFragment implements Callback<
 
     ImageLoader imageLoader;
 
+    private boolean mConserveData;
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -100,6 +103,7 @@ public abstract class BaseGridFragment extends BaseFragment implements Callback<
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mAllowNSFW = app.getPreferences().getBoolean(SettingsActivity.NSFW_KEY, false);
+        mConserveData = NetworkUtils.hasDataSaver(getActivity()) || !NetworkUtils.isConnectedToWiFi(getActivity());
         ViewUtils.setRecyclerViewGridDefaults(getActivity(), mGrid);
         imageLoader = ImageUtil.getImageLoader(getActivity());
 
@@ -113,7 +117,7 @@ public abstract class BaseGridFragment extends BaseFragment implements Callback<
                 int visibleItemCount = mManager.getChildCount();
                 int totalItemCount = mManager.getItemCount();
                 int firstVisibleItemPosition = mManager.findFirstVisibleItemPosition();
-                int prefetchThreshold = Math.max(1, visibleItemCount);
+                int prefetchThreshold = Math.max(1, visibleItemCount * (mConserveData ? 3 : 2));
 
                 // Prefetch when there is roughly one screen of items left.
                 if (dy > 0 && mHasMore && totalItemCount > 0
@@ -149,6 +153,7 @@ public abstract class BaseGridFragment extends BaseFragment implements Callback<
     @Override
     public void onResume() {
         super.onResume();
+        mConserveData = NetworkUtils.hasDataSaver(getActivity()) || !NetworkUtils.isConnectedToWiFi(getActivity());
         GalleryAdapter adapter = getAdapter();
 
         if (adapter == null || adapter.isEmpty()) {
@@ -198,10 +203,19 @@ public abstract class BaseGridFragment extends BaseFragment implements Callback<
         mHasMore = true;
         mCurrentPage = 0;
         mIsLoading = true;
-        if (getAdapter() != null) getAdapter().clear();
+        GalleryAdapter adapter = getAdapter();
+        boolean hasItems = adapter != null && !adapter.isEmpty();
         if (mListener != null)
             mListener.onFragmentStateChange(FragmentListener.STATE_LOADING_STARTED);
-        mMultiStateView.setViewState(MultiStateView.VIEW_STATE_LOADING);
+        if (hasItems) {
+            mMultiStateView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
+            if (mRefreshLayout != null && !mRefreshLayout.isRefreshing()) {
+                mRefreshLayout.setRefreshing(true);
+            }
+            if (mLoadingFooter != null) mLoadingFooter.setVisibility(View.VISIBLE);
+        } else {
+            mMultiStateView.setViewState(MultiStateView.VIEW_STATE_LOADING);
+        }
         fetchGallery();
     }
 
@@ -307,6 +321,9 @@ public abstract class BaseGridFragment extends BaseFragment implements Callback<
             if (getAdapter() == null) {
                 setAdapter(new GalleryAdapter(getActivity(), SetUniqueList.decorate(galleryResponse.data), this, showPoints()));
             } else {
+                if (mCurrentPage == 0) {
+                    getAdapter().clear();
+                }
                 getAdapter().addItems(galleryResponse.data);
             }
 

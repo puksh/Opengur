@@ -49,12 +49,12 @@ public class ApiClient {
 
     private static ImgurService sService;
 
-    // 25MB
-    private static final long CACHE_SIZE = 25 * 1024 * 1024;
+    // 50MB
+    private static final long CACHE_SIZE = 50 * 1024 * 1024;
 
-    private static final int CACHE_MAX_AGE_SECONDS = 60;
+    private static final int CACHE_MAX_AGE_SECONDS = 5 * 60;
 
-    private static final long CACHE_MAX_STALE_SECONDS = TimeUnit.DAYS.toSeconds(7);
+    private static final long CACHE_MAX_STALE_SECONDS = TimeUnit.DAYS.toSeconds(14);
 
     public static final String CLIENT_ID = BuildConfig.API_CLIENT_ID;
 
@@ -85,6 +85,9 @@ public class ApiClient {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(20, TimeUnit.SECONDS)
+            .readTimeout(45, TimeUnit.SECONDS)
+            .writeTimeout(45, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
                 .addInterceptor(new TrafficStatsInterceptor())
                 .addInterceptor(new Interceptor() {
                     @Override
@@ -105,11 +108,21 @@ public class ApiClient {
                                 throw ex;
                             }
 
+                            try {
+                                return chain.proceed(request);
+                            } catch (IOException retryException) {
+                                // Fallback to cached content below.
+                            }
+
                             Request cacheRequest = request.newBuilder()
                                     .header("Cache-Control", "public, only-if-cached, max-stale=" + CACHE_MAX_STALE_SECONDS)
                                     .build();
 
-                            return chain.proceed(cacheRequest);
+                            try {
+                                return chain.proceed(cacheRequest);
+                            } catch (IOException cacheException) {
+                                throw ex;
+                            }
                         }
                     }
                 })
