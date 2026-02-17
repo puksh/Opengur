@@ -12,3 +12,4 @@ crashlytics.properties
 local.properties
 *.iml
 Thumbs.db
+nul
