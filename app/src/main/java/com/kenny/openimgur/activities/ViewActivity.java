@@ -50,7 +50,7 @@ import com.kenny.openimgur.classes.ImgurListener;
 import com.kenny.openimgur.classes.OpengurApp;
 import com.kenny.openimgur.fragments.CommentPopupFragment;
 import com.kenny.openimgur.fragments.ImgurViewFragment;
-import com.kenny.openimgur.fragments.PopupImageDialogFragment;
+import com.kenny.openimgur.activities.FullScreenPhotoActivity;
 import com.kenny.openimgur.fragments.SideGalleryFragment;
 import com.kenny.openimgur.ui.VideoView;
 import com.kenny.openimgur.ui.ViewPager;
@@ -603,9 +603,7 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
     public void onLinkTap(View view, String url) {
         if (!TextUtils.isEmpty(url) && canDoFragmentTransaction()) {
             if (isDirectMediaLink(url)) {
-                boolean isAnimated = LinkUtils.isLinkAnimated(url);
-                boolean isVideo = LinkUtils.isVideoLink(url);
-                getFragmentManager().beginTransaction().add(PopupImageDialogFragment.getInstance(url, isAnimated, true, isVideo), "popup").commitAllowingStateLoss();
+                startActivity(FullScreenPhotoActivity.createIntent(getApplicationContext(), url));
                 return;
             }
 
@@ -636,18 +634,16 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
                         url = LinkUtils.getId(url);
                     }
 
-                    getFragmentManager().beginTransaction().add(PopupImageDialogFragment.getInstance(url, LinkUtils.isLinkAnimated(url), isDirectLink, false), "popup").commitAllowingStateLoss();
+                    startActivity(FullScreenPhotoActivity.createIntent(getApplicationContext(), url));
                     break;
 
                 case DIRECT_LINK:
-                    boolean isAnimated = LinkUtils.isLinkAnimated(url);
-                    boolean isVideo = LinkUtils.isVideoLink(url);
-                    getFragmentManager().beginTransaction().add(PopupImageDialogFragment.getInstance(url, isAnimated, true, isVideo), "popup").commitAllowingStateLoss();
+                    startActivity(FullScreenPhotoActivity.createIntent(getApplicationContext(), url));
                     break;
 
                 case IMAGE:
                     String[] split = url.split("\\/");
-                    getFragmentManager().beginTransaction().add(PopupImageDialogFragment.getInstance(split[split.length - 1], false, false, false), "popup").commitAllowingStateLoss();
+                    startActivity(FullScreenPhotoActivity.createIntent(getApplicationContext(), split[split.length - 1]));
                     break;
 
                 case USER_CALLOUT:

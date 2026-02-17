@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.kenny.openimgur.R;
+import com.kenny.openimgur.activities.FullScreenPhotoActivity;
 import com.kenny.openimgur.activities.ProfileActivity;
 import com.kenny.openimgur.activities.ViewActivity;
 import com.kenny.openimgur.api.ApiClient;
@@ -179,20 +180,16 @@ public class ProfileInfoFragment extends BaseFragment implements ImgurListener {
                         url = LinkUtils.getId(url);
                     }
 
-                    getFragmentManager().beginTransaction().add(PopupImageDialogFragment.getInstance(url, LinkUtils.isLinkAnimated(url), isDirectLink, false), "popup").commitAllowingStateLoss();
+                    startActivity(FullScreenPhotoActivity.createIntent(getActivity(), url));
                     break;
 
                 case DIRECT_LINK:
-                    boolean isAnimated = LinkUtils.isLinkAnimated(url);
-                    boolean isVideo = LinkUtils.isVideoLink(url);
-                    PopupImageDialogFragment.getInstance(url, isAnimated, true, isVideo)
-                            .show(getFragmentManager(), "popup");
+                    startActivity(FullScreenPhotoActivity.createIntent(getActivity(), url));
                     break;
 
                 case IMAGE:
                     String[] split = url.split("\\/");
-                    PopupImageDialogFragment.getInstance(split[split.length - 1], false, false, false)
-                            .show(getFragmentManager(), "popup");
+                    startActivity(FullScreenPhotoActivity.createIntent(getActivity(), split[split.length - 1]));
                     break;
 
                 case USER_CALLOUT:
