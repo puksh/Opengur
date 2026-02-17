@@ -26,6 +26,7 @@ import com.kenny.openimgur.classes.ImgurPhoto;
 import com.kenny.openimgur.classes.OpengurApp;
 import com.kenny.openimgur.classes.VideoCache;
 import com.kenny.openimgur.ui.VideoView;
+import com.kenny.openimgur.ui.CustomMediaController;
 import com.kenny.openimgur.util.FileUtil;
 import com.kenny.openimgur.util.ImageUtil;
 import com.kenny.openimgur.util.LinkUtils;
@@ -351,6 +352,10 @@ public class PopupImageDialogFragment extends DialogFragment implements VideoCac
         // Needs to be set so the video is not dimmed
         mVideo.setZOrderOnTop(true);
         mImage.setVisibility(View.GONE);
+
+        CustomMediaController mediaController = new CustomMediaController(getActivity());
+        mediaController.setVideoUri(file.getAbsolutePath());
+        mVideo.setCustomMediaController(mediaController);
 
         mVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override

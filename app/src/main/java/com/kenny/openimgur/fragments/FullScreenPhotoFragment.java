@@ -31,6 +31,7 @@ import com.kenny.openimgur.classes.ImgurPhoto;
 import com.kenny.openimgur.classes.VideoCache;
 import com.kenny.openimgur.services.DownloaderService;
 import com.kenny.openimgur.ui.VideoView;
+import com.kenny.openimgur.ui.CustomMediaController;
 import com.kenny.openimgur.util.FileUtil;
 import com.kenny.openimgur.util.ImageUtil;
 import com.kenny.openimgur.util.LinkUtils;
@@ -224,6 +225,10 @@ public class FullScreenPhotoFragment extends BaseFragment {
             videoView.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.GONE);
 
+            CustomMediaController mediaController = new CustomMediaController(getActivity());
+            mediaController.setVideoUri(file.getAbsolutePath());
+            videoView.setCustomMediaController(mediaController);
+
             videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
@@ -257,6 +262,10 @@ public class FullScreenPhotoFragment extends BaseFragment {
                     multiView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
                     videoView.setVisibility(View.VISIBLE);
                     imageView.setVisibility(View.GONE);
+
+                    CustomMediaController mediaController = new CustomMediaController(getActivity());
+                    mediaController.setVideoUri(file.getAbsolutePath());
+                    videoView.setCustomMediaController(mediaController);
 
                     videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                         @Override

@@ -33,10 +33,12 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.MediaController;
 import android.widget.MediaController.MediaPlayerControl;
 
 import com.kenny.openimgur.R;
+import com.kenny.openimgur.ui.CustomMediaController;
 
 import java.io.IOException;
 import java.util.Map;
@@ -51,7 +53,7 @@ import java.util.Map;
  * <p/>
  * This is copied from AOSP so audio will NOT be paused when playing a video
  */
-public class VideoView extends SurfaceView implements MediaPlayerControl {
+public class VideoView extends SurfaceView implements MediaPlayerControl, CustomMediaController.MediaPlayerControl {
     private String TAG = "VideoView";
 
     // settable by the client
@@ -100,6 +102,8 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
 
     private MediaController mMediaController;
 
+    private CustomMediaController mCustomMediaController;
+
     private OnCompletionListener mOnCompletionListener;
 
     private MediaPlayer.OnPreparedListener mOnPreparedListener;
@@ -110,11 +114,11 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
 
     private int mSeekWhenPrepared;  // recording the seek position while preparing
 
-    private boolean mCanPause;
+    private boolean mCanPause = true;
 
-    private boolean mCanSeekBack;
+    private boolean mCanSeekBack = true;
 
-    private boolean mCanSeekForward;
+    private boolean mCanSeekForward = true;
 
     public VideoView(Context context) {
         super(context);
@@ -271,6 +275,7 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
             // target state that was there before.
             mCurrentState = STATE_PREPARING;
             attachMediaController();
+            attachCustomMediaController();
         } catch (IOException ex) {
             Log.w(TAG, "Unable to open content: " + mUri, ex);
             mCurrentState = STATE_ERROR;
@@ -300,6 +305,14 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
         attachMediaController();
     }
 
+    public void setCustomMediaController(CustomMediaController controller) {
+        if (mCustomMediaController != null) {
+            mCustomMediaController.hide();
+        }
+        mCustomMediaController = controller;
+        attachCustomMediaController();
+    }
+
     private void attachMediaController() {
         if (mMediaPlayer != null && mMediaController != null) {
             mMediaController.setMediaPlayer(this);
@@ -307,6 +320,16 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
                     (View) this.getParent() : this;
             mMediaController.setAnchorView(anchorView);
             mMediaController.setEnabled(isInPlaybackState());
+        }
+    }
+
+    private void attachCustomMediaController() {
+        if (mMediaPlayer != null && mCustomMediaController != null) {
+            mCustomMediaController.setMediaPlayer(this);
+            View anchorView = this.getParent() instanceof View ?
+                    (View) this.getParent() : this;
+            mCustomMediaController.setAnchorView((ViewGroup) anchorView);
+            mCustomMediaController.setEnabled(isInPlaybackState());
         }
     }
 
@@ -331,6 +354,9 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
             if (mMediaController != null) {
                 mMediaController.setEnabled(true);
             }
+            if (mCustomMediaController != null) {
+                mCustomMediaController.setEnabled(true);
+            }
             mVideoWidth = mp.getVideoWidth();
             mVideoHeight = mp.getVideoHeight();
 
@@ -350,11 +376,16 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
                         if (mMediaController != null) {
                             mMediaController.show();
                         }
+                        if (mCustomMediaController != null) {
+                            mCustomMediaController.show();
+                        }
                     } else if (!isPlaying() &&
                             (seekToPosition != 0 || getCurrentPosition() > 0)) {
                         if (mMediaController != null) {
-                            // Show the media controls when we're paused into a video and make 'em stick.
                             mMediaController.show(0);
+                        }
+                        if (mCustomMediaController != null) {
+                            mCustomMediaController.show(0);
                         }
                     }
                 }
@@ -376,6 +407,9 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
                     if (mMediaController != null) {
                         mMediaController.hide();
                     }
+                    if (mCustomMediaController != null) {
+                        mCustomMediaController.hide();
+                    }
                     if (mOnCompletionListener != null) {
                         mOnCompletionListener.onCompletion(mMediaPlayer);
                     }
@@ -390,6 +424,9 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
                     mTargetState = STATE_ERROR;
                     if (mMediaController != null) {
                         mMediaController.hide();
+                    }
+                    if (mCustomMediaController != null) {
+                        mCustomMediaController.hide();
                     }
 
             /* If an error handler has been supplied, use it and finish. */
@@ -508,6 +545,7 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
             // after we return from this we can't use the surface any more
             mSurfaceHolder = null;
             if (mMediaController != null) mMediaController.hide();
+            if (mCustomMediaController != null) mCustomMediaController.hide();
             release(true);
         }
     };
@@ -525,11 +563,14 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
                 mTargetState = STATE_IDLE;
             }
         }
+        if (mCustomMediaController != null) {
+            mCustomMediaController.release();
+        }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        if (isInPlaybackState() && mMediaController != null) {
+        if (isInPlaybackState() && (mMediaController != null || mCustomMediaController != null)) {
             toggleMediaControlsVisiblity();
         }
         return false;
@@ -537,7 +578,7 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
 
     @Override
     public boolean onTrackballEvent(MotionEvent ev) {
-        if (isInPlaybackState() && mMediaController != null) {
+        if (isInPlaybackState() && (mMediaController != null || mCustomMediaController != null)) {
             toggleMediaControlsVisiblity();
         }
         return false;
@@ -585,10 +626,18 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
     }
 
     private void toggleMediaControlsVisiblity() {
-        if (mMediaController.isShowing()) {
-            mMediaController.hide();
-        } else {
-            mMediaController.show();
+        if (mCustomMediaController != null) {
+            if (mCustomMediaController.isShowing()) {
+                mCustomMediaController.hide();
+            } else {
+                mCustomMediaController.show();
+            }
+        } else if (mMediaController != null) {
+            if (mMediaController.isShowing()) {
+                mMediaController.hide();
+            } else {
+                mMediaController.show();
+            }
         }
     }
 
