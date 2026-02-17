@@ -1,12 +1,16 @@
 package com.kenny.openimgur.activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -49,9 +53,15 @@ import retrofit2.Response;
  * Created by kcampagna on 12/14/14.
  */
 public class ProfileActivity extends BaseActivity {
-    private static final String LOGIN_URL = "https://api.imgur.com/oauth2/authorize?client_id=" + ApiClient.CLIENT_ID + "&response_type=token";
+    private static final String IMGUR_LOGIN_URL = "https://imgur.com/signin";
 
-    private static final String REDIRECT_URL = "https://com.kenny.openimgur";
+    private static final String IMGUR_ROOT_URL = "https://imgur.com";
+
+    private static final String IMGUR_API_URL = "https://api.imgur.com";
+
+    private static final String IMGUR_MOBILE_URL = "https://m.imgur.com";
+
+    private static final String IMGUR_COOKIES_PREF = "imgur_cookies";
 
     public static final String KEY_LOGGED_IN = "logged_in";
 
@@ -62,6 +72,8 @@ public class ProfileActivity extends BaseActivity {
     private static final String KEY_USER = "user";
 
     private static final String KEY_IS_LOGGING_IN = "is_logging_in";
+
+    private static final String KEY_WAITING_FOR_TOKEN = "waiting_for_token";
 
     @BindView(R.id.slidingTabs)
     TabLayout mSlidingTabs;
@@ -79,6 +91,8 @@ public class ProfileActivity extends BaseActivity {
 
     ProfilePager mAdapter;
 
+    private boolean mWaitingForToken;
+
     public static Intent createIntent(Context context, @Nullable String userName) {
         return createIntent(context, userName, false);
     }
@@ -95,6 +109,11 @@ public class ProfileActivity extends BaseActivity {
         setContentView(R.layout.activity_profile);
         setStatusBarColorResource(theme.darkColor);
         setupToolBar();
+
+        if (savedInstanceState != null) {
+            mWaitingForToken = savedInstanceState.getBoolean(KEY_WAITING_FOR_TOKEN, false);
+        }
+
         handleData(savedInstanceState, getIntent());
     }
 
@@ -149,6 +168,9 @@ public class ProfileActivity extends BaseActivity {
 
     public void onUserLogout() {
         mSelectedUser = null;
+        app.getPreferences().edit().remove(IMGUR_COOKIES_PREF).apply();
+        CookieManager.getInstance().removeAllCookies(null);
+        CookieManager.getInstance().flush();
         app.onLogout();
         configWebView();
         setResult(Activity.RESULT_OK, new Intent().putExtra(KEY_LOGGED_OUT, true));
@@ -190,98 +212,206 @@ public class ProfileActivity extends BaseActivity {
      */
     private void configWebView() {
         getSupportActionBar().hide();
-        mMultiView.setViewState(MultiStateView.VIEW_STATE_EMPTY);
-        WebView webView = (WebView) mMultiView.getView(MultiStateView.VIEW_STATE_EMPTY).findViewById(R.id.loginWebView);
-        webView.loadUrl(LOGIN_URL);
+        mMultiView.setViewState(MultiStateView.VIEW_STATE_LOADING);
+        mMultiView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing() && !isDestroyed()) {
+                    showWebViewOAuth();
+                }
+            }
+        }, 100);
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private void showWebViewOAuth() {
+        final WebView webView = new WebView(this);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            cookieManager.setAcceptThirdPartyCookies(webView, true);
+        }
+
+        mWaitingForToken = true;
+        
+        final AlertDialog dialog = new AlertDialog.Builder(this, theme.getAlertDialogTheme())
+                .setTitle(R.string.login_msg)
+                .setView(webView)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mWaitingForToken = false;
+                    }
+                })
+                .create();
+
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.startsWith(REDIRECT_URL)) {
+                maybeHandleWebLoginComplete(url, dialog);
+                return false;
+            }
 
-                    if (url.contains("/?error=")) {
-                        LogUtil.v(TAG, "Error received from URL " + url);
-                        view.loadUrl(LOGIN_URL);
-                        return true;
-                    }
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
 
-                    // We will extract the info from the callback url
-                    mMultiView.setViewState(MultiStateView.VIEW_STATE_LOADING);
-                    String[] outerSplit = url.split("\\#")[1].split("\\&");
-                    String username = null;
-                    String accessToken = null;
-                    String refreshToken = null;
-                    long accessTokenExpiration = 0;
-                    int index = 0;
+                maybeHandleWebLoginComplete(url, dialog);
+            }
+        });
+        
+        webView.loadUrl(IMGUR_LOGIN_URL);
+        dialog.show();
+    }
 
-                    for (String s : outerSplit) {
-                        String[] innerSplit = s.split("\\=");
+    private void maybeHandleWebLoginComplete(@Nullable String url, @NonNull AlertDialog dialog) {
+        if (!mWaitingForToken || TextUtils.isEmpty(url) || !url.contains("imgur.com")) {
+            return;
+        }
 
-                        switch (index) {
-                            // Access Token
-                            case 0:
-                                accessToken = innerSplit[1];
-                                break;
+        String cookies = getImgurCookies();
+        if (TextUtils.isEmpty(cookies) || !hasLoggedInCookie(cookies)) {
+            return;
+        }
 
-                            // Access Token Expiration
-                            case 1:
-                                long expiresIn = Long.parseLong(innerSplit[1]);
-                                accessTokenExpiration = System.currentTimeMillis() + (expiresIn * DateUtils.SECOND_IN_MILLIS);
-                                break;
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
 
-                            // Token Type, not using
-                            case 2:
-                                //NO OP
-                                break;
+        saveCookiesAndLogin(cookies, extractUsernameFromUrl(url));
+    }
 
-                            // Refresh Token
-                            case 3:
-                                refreshToken = innerSplit[1];
-                                break;
+    private String getImgurCookies() {
+        CookieManager cookieManager = CookieManager.getInstance();
+        String rootCookies = cookieManager.getCookie(IMGUR_ROOT_URL);
+        String apiCookies = cookieManager.getCookie(IMGUR_API_URL);
+        String mobileCookies = cookieManager.getCookie(IMGUR_MOBILE_URL);
 
-                            // Username
-                            case 4:
-                                username = innerSplit[1];
-                                break;
-                        }
+        StringBuilder mergedCookies = new StringBuilder();
+        appendCookies(mergedCookies, rootCookies);
+        appendCookies(mergedCookies, apiCookies);
+        appendCookies(mergedCookies, mobileCookies);
+        return mergedCookies.toString();
+    }
 
-                        index++;
-                    }
+    private void appendCookies(StringBuilder builder, @Nullable String cookies) {
+        if (TextUtils.isEmpty(cookies)) {
+            return;
+        }
 
-                    // Make sure that everything was set
-                    if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(accessToken) &&
-                            !TextUtils.isEmpty(refreshToken) && accessTokenExpiration > 0) {
-                        ImgurUser newUser = new ImgurUser(username, accessToken, refreshToken, accessTokenExpiration);
-                        app.setUser(newUser);
-                        user = newUser;
-                        mSelectedUser = newUser;
-                        OAuthInterceptor.setAccessToken(accessToken);
-                        LogUtil.v(TAG, "User " + newUser.getUsername() + " logged in");
-                        fetchProfile(mSelectedUser.getUsername());
-                        CookieManager.getInstance().removeAllCookie();
-                        view.clearHistory();
-                        view.clearCache(true);
-                        view.clearFormData();
-                        getSupportActionBar().show();
-                        getSupportActionBar().setTitle(user.getUsername());
-                        setResult(Activity.RESULT_OK, new Intent().putExtra(KEY_LOGGED_IN, true));
-                        AlarmReceiver.createNotificationAlarm(getApplicationContext());
-                    } else {
-                        ViewUtils.setErrorText(mMultiView, R.id.errorMessage, R.string.error_login_response);
-                        mMultiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
-                    }
-                } else {
-                    view.loadUrl(url);
-                }
+        if (builder.length() > 0) {
+            builder.append("; ");
+        }
+        builder.append(cookies);
+    }
 
+    private boolean hasLoggedInCookie(@NonNull String cookies) {
+        String[] parts = cookies.split(";");
+        for (String part : parts) {
+            int separator = part.indexOf('=');
+            if (separator <= 0) {
+                continue;
+            }
+
+            String cookieName = part.substring(0, separator).trim().toLowerCase();
+            if (cookieName.contains("session")
+                    || cookieName.contains("auth")
+                    || cookieName.contains("token")
+                    || cookieName.equals("sid")) {
                 return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Nullable
+    private String extractUsernameFromUrl(@NonNull String url) {
+        try {
+            Uri uri = Uri.parse(url);
+            String path = uri.getPath();
+            if (TextUtils.isEmpty(path)) {
+                return null;
+            }
+
+            String[] split = path.split("/");
+            for (int i = 0; i < split.length - 1; i++) {
+                if (("user".equalsIgnoreCase(split[i]) || "account".equalsIgnoreCase(split[i])) && !TextUtils.isEmpty(split[i + 1])) {
+                    return split[i + 1];
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+
+        return null;
+    }
+
+    private void saveCookiesAndLogin(String cookies, @Nullable String usernameHint) {
+        mWaitingForToken = false;
+        mMultiView.setViewState(MultiStateView.VIEW_STATE_LOADING);
+
+        app.getPreferences().edit().putString(IMGUR_COOKIES_PREF, cookies).apply();
+
+        fetchCurrentUserFromCookies(cookies, usernameHint);
+    }
+
+    private void fetchCurrentUserFromCookies(final String cookies, @Nullable final String usernameHint) {
+        ApiClient.getService().getProfile("me").enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if (isDestroyed() || isFinishing()) return;
+
+                if (response != null && response.body() != null && response.body().data != null) {
+                    completeCookieLogin(response.body().data.getUsername());
+                } else if (!TextUtils.isEmpty(usernameHint)) {
+                    completeCookieLogin(usernameHint);
+                } else {
+                    ViewUtils.setErrorText(mMultiView, R.id.errorMessage, R.string.login_pin_failed);
+                    mMultiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+                if (isDestroyed() || isFinishing()) return;
+                if (!TextUtils.isEmpty(usernameHint)) {
+                    completeCookieLogin(usernameHint);
+                } else {
+                    ViewUtils.setErrorText(mMultiView, R.id.errorMessage, ApiClient.getErrorCode(t));
+                    mMultiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
+                }
             }
         });
     }
 
+    private void completeCookieLogin(@NonNull String username) {
+        String fakeAccessToken = "cookie_session_" + System.currentTimeMillis();
+        String fakeRefreshToken = "cookie_refresh_" + System.currentTimeMillis();
+        long expiration = System.currentTimeMillis() + (365L * DateUtils.DAY_IN_MILLIS);
+
+        ImgurUser newUser = new ImgurUser(username, fakeAccessToken, fakeRefreshToken, expiration);
+        app.setUser(newUser);
+        user = newUser;
+        mSelectedUser = newUser;
+        OAuthInterceptor.setAccessToken(fakeAccessToken);
+        LogUtil.v(TAG, "User " + newUser.getUsername() + " logged in via cookies");
+        getSupportActionBar().show();
+        getSupportActionBar().setTitle(newUser.getUsername());
+        setResult(Activity.RESULT_OK, new Intent().putExtra(KEY_LOGGED_IN, true));
+        AlarmReceiver.createNotificationAlarm(getApplicationContext());
+        fetchProfile(newUser.getUsername());
+    }
+
     @OnClick(R.id.errorButton)
     public void retryClick() {
-        if (mSelectedUser != null) fetchProfile(mSelectedUser.getUsername());
+        if (mSelectedUser != null) {
+            fetchProfile(mSelectedUser.getUsername());
+        } else {
+            configWebView();
+        }
     }
 
     void fetchProfile(final String username) {
@@ -340,7 +470,13 @@ public class ProfileActivity extends BaseActivity {
         if (mSelectedUser != null) {
             outState.putParcelable(KEY_USER, mSelectedUser);
         }
+
+        outState.putBoolean(KEY_WAITING_FOR_TOKEN, mWaitingForToken);
     }
+
+
+
+
 
     @Override
     protected int getStyleRes() {

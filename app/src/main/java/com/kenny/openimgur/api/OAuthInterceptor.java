@@ -40,6 +40,14 @@ public class OAuthInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request original = chain.request();
         Request.Builder builder = original.newBuilder();
+        
+        OpengurApp app = OpengurApp.getInstance();
+        String cookies = app.getPreferences().getString("imgur_cookies", null);
+        
+        if (!TextUtils.isEmpty(cookies)) {
+            builder.addHeader("Cookie", cookies);
+        }
+        
         builder.addHeader(AUTHORIZATION_HEADER, getAuthorizationHeader());
         Request request = builder.method(original.method(), original.body()).build();
         Response response = chain.proceed(request);

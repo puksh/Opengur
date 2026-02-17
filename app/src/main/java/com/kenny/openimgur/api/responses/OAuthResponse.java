@@ -4,6 +4,8 @@ package com.kenny.openimgur.api.responses;
  * Created by kcampagna on 7/15/15.
  */
 public class OAuthResponse extends BaseResponse {
+    public String account_username;
+
     public String access_token;
 
     public String refresh_token;

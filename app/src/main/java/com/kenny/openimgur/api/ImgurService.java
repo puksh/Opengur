@@ -158,6 +158,10 @@ public interface ImgurService {
     Call<OAuthResponse> refreshToken(@Field("client_id") String clientId, @Field("client_secret") String clientSecret, @Field("refresh_token") String refreshToken, @Field("grant_type") String grantType);
 
     @FormUrlEncoded
+    @POST("/oauth2/token")
+    Call<OAuthResponse> exchangePinForToken(@Field("client_id") String clientId, @Field("client_secret") String clientSecret, @Field("pin") String pin, @Field("grant_type") String grantType);
+
+    @FormUrlEncoded
     @POST("/3/gallery/{id}/report")
     Call<BasicResponse> reportPost(@Path("id") String galleryId, @Field("reason") int reason);
 

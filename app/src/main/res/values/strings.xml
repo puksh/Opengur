@@ -43,6 +43,11 @@
     <string name="search">Search</string>
     <string name="options">Options</string>
     <string name="login_msg">Tap to login</string>
+    <string name="login_pin_message">Tap "Open Browser", sign in to Imgur, copy the PIN, then paste it here.</string>
+    <string name="login_open_browser">Open Browser</string>
+    <string name="login_submit_pin">Submit PIN</string>
+    <string name="login_pin_required">PIN is required</string>
+    <string name="login_pin_failed">Unable to login with PIN. Please try again.</string>
     <string name="dont_ask_again">Don\'t ask me again.</string>
     <string name="save">Save</string>
     <string name="close">Close</string>
