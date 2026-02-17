@@ -14,7 +14,6 @@ import com.kenny.openimgur.BuildConfig;
 import com.kenny.openimgur.activities.SettingsActivity;
 import com.kenny.openimgur.api.OAuthInterceptor;
 import com.kenny.openimgur.services.AlarmReceiver;
-import com.kenny.openimgur.util.FabricUtil;
 import com.kenny.openimgur.util.FileUtil;
 import com.kenny.openimgur.util.ImageUtil;
 import com.kenny.openimgur.util.LogUtil;
@@ -55,8 +54,6 @@ public class OpengurApp extends Application implements SharedPreferences.OnShare
         mUser = SqlHelper.getInstance(this).getUser();
         if (mUser != null) AlarmReceiver.createNotificationAlarm(this);
         ImageUtil.initImageLoader(getApplicationContext());
-
-        FabricUtil.init(this, mPref);
 
         // Check if for ADB logging on a non debug build
         if (!BuildConfig.DEBUG) {

@@ -24,7 +24,6 @@ import com.kenny.openimgur.activities.SettingsActivity;
 import com.kenny.openimgur.classes.ImgurTheme;
 import com.kenny.openimgur.classes.VideoCache;
 import com.kenny.openimgur.util.DBContracts;
-import com.kenny.openimgur.util.FabricUtil;
 import com.kenny.openimgur.util.FileUtil;
 import com.kenny.openimgur.util.ImageUtil;
 import com.kenny.openimgur.util.LogUtil;
@@ -57,10 +56,6 @@ public class SettingsFragment extends BasePreferenceFragment implements Preferen
         findPreference(SettingsActivity.KEY_NOTIFICATION_RINGTONE).setOnPreferenceChangeListener(this);
         findPreference(SettingsActivity.KEY_THEME_NEW).setOnPreferenceChangeListener(this);
         findPreference("privacyPolicy").setOnPreferenceClickListener(this);
-
-        if (!FabricUtil.hasFabricAvailable()) {
-            ((PreferenceCategory) findPreference("developerSettings")).removePreference(findPreference(SettingsActivity.KEY_CRASHLYTICS));
-        }
     }
 
     @Override
