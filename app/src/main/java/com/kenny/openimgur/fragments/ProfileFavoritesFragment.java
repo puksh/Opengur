@@ -183,7 +183,7 @@ public class ProfileFavoritesFragment extends BaseGridFragment implements View.O
                     }
 
                 } else {
-                    Snackbar.make(mMultiStateView, R.string.error_generic, Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(mMultiStateView, response != null ? ApiClient.getErrorCode(response.code()) : R.string.error_network, Snackbar.LENGTH_LONG).show();
                     mMultiStateView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
                 }
             }
@@ -192,7 +192,7 @@ public class ProfileFavoritesFragment extends BaseGridFragment implements View.O
             public void onFailure(Call<BasicResponse> call, Throwable t) {
                 if (!isAdded()) return;
                 LogUtil.e(TAG, "Unable to favorite item", t);
-                Snackbar.make(mMultiStateView, R.string.error_generic, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mMultiStateView, ApiClient.getErrorCode(t), Snackbar.LENGTH_LONG).show();
                 mMultiStateView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
             }
         });

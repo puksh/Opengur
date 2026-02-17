@@ -267,7 +267,7 @@ public class ProfileActivity extends BaseActivity {
                         setResult(Activity.RESULT_OK, new Intent().putExtra(KEY_LOGGED_IN, true));
                         AlarmReceiver.createNotificationAlarm(getApplicationContext());
                     } else {
-                        ViewUtils.setErrorText(mMultiView, R.id.errorMessage, R.string.error_generic);
+                        ViewUtils.setErrorText(mMultiView, R.id.errorMessage, R.string.error_login_response);
                         mMultiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
                     }
                 } else {

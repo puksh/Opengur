@@ -290,7 +290,7 @@ public abstract class BaseGridFragment extends BaseFragment implements Callback<
                 onApiFailure(ApiClient.getErrorCode(response.code()));
             }
         } else {
-            onApiFailure(R.string.error_generic);
+            onApiFailure(R.string.error_network);
         }
     }
 

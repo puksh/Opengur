@@ -307,7 +307,7 @@ public class TopicsFragment extends BaseGridFragment {
                             if (user == null || TextUtils.isEmpty(user.getAccessToken())) {
                                 ViewUtils.setErrorText(mMultiStateView, R.id.errorMessage, R.string.error_401);
                             } else {
-                                ViewUtils.setErrorText(mMultiStateView, R.id.errorMessage, R.string.error_generic);
+                                ViewUtils.setErrorText(mMultiStateView, R.id.errorMessage, R.string.error_network);
                             }
                             mMultiStateView.setViewState(MultiStateView.VIEW_STATE_ERROR);
                         }

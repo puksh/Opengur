@@ -118,7 +118,7 @@ public class FullScreenPhotoFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ViewUtils.setErrorText(multiView, R.id.errorMessage, R.string.error_generic);
+        ViewUtils.setErrorText(multiView, R.id.errorMessage, R.string.loading_image_error);
         ((Button) multiView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.errorButton)).setText(null);
 
         if (savedInstanceState != null) {

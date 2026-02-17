@@ -165,7 +165,7 @@ public class ProfileAlbumsFragment extends BaseGridFragment implements View.OnLo
 
                     Snackbar.make(mMultiStateView, R.string.profile_delete_success_album, Snackbar.LENGTH_LONG).show();
                 } else {
-                    Snackbar.make(mMultiStateView, R.string.error_generic, Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(mMultiStateView, response != null ? ApiClient.getErrorCode(response.code()) : R.string.error_network, Snackbar.LENGTH_LONG).show();
                 }
             }
 
@@ -173,7 +173,7 @@ public class ProfileAlbumsFragment extends BaseGridFragment implements View.OnLo
             public void onFailure(Call<BasicResponse> call, Throwable t) {
                 if (!isAdded()) return;
                 LogUtil.e(TAG, "Unable to delete Album", t);
-                Snackbar.make(mMultiStateView, R.string.error_generic, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mMultiStateView, ApiClient.getErrorCode(t), Snackbar.LENGTH_LONG).show();
                 mMultiStateView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
             }
         });

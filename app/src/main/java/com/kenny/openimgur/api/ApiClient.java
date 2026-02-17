@@ -19,8 +19,11 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.SSLException;
 
 import okhttp3.Cache;
 import okhttp3.Interceptor;
@@ -161,6 +164,14 @@ public class ApiClient {
      */
     @StringRes
     public static int getErrorCode(Throwable error) {
+        if (error instanceof SocketTimeoutException) {
+            return R.string.error_timeout;
+        }
+
+        if (error instanceof SSLException) {
+            return R.string.error_ssl;
+        }
+
         int statusCode = getHttpStatusCode(error);
 
         if (statusCode > 0) {

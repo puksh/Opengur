@@ -418,7 +418,7 @@ public class PopupImageDialogFragment extends DialogFragment implements VideoCac
                         displayImage(mImageUrl, photo.isAnimated());
                     }
                 } else {
-                    Toast.makeText(getActivity(), R.string.error_generic, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), response != null ? ApiClient.getErrorCode(response.code()) : R.string.error_network, Toast.LENGTH_SHORT).show();
                     dismissAllowingStateLoss();
                 }
             }
@@ -426,7 +426,7 @@ public class PopupImageDialogFragment extends DialogFragment implements VideoCac
             @Override
             public void onFailure(Call<PhotoResponse> call, Throwable t) {
                 if (!isAdded()) return;
-                Toast.makeText(getActivity(), R.string.error_generic, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), ApiClient.getErrorCode(t), Toast.LENGTH_SHORT).show();
                 dismissAllowingStateLoss();
             }
         });

@@ -448,7 +448,7 @@ public class VideoView extends SurfaceView implements MediaPlayerControl, Custom
                         mMediaPlayer.setOnErrorListener(null);
 
                         new AlertDialog.Builder(getContext())
-                                .setTitle(R.string.error_generic)
+                            .setTitle(R.string.error)
                                 .setMessage(R.string.loading_image_error)
                                 .setPositiveButton(R.string.cancel,
                                         new DialogInterface.OnClickListener() {

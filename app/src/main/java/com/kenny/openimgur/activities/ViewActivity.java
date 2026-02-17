@@ -346,7 +346,7 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
                     break;
             }
         } else if (!intent.hasExtra(KEY_OBJECTS) || !intent.hasExtra(KEY_POSITION)) {
-            Snackbar.make(mViewPager, R.string.error_generic, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(mViewPager, R.string.error_invalid_data, Snackbar.LENGTH_LONG).show();
             finish();
         } else {
             mCurrentPosition = intent.getIntExtra(KEY_POSITION, 0);
@@ -543,7 +543,7 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
 
             case R.id.commentBtn:
                 if (mPagerAdapter == null) {
-                    Snackbar.make(mViewPager, R.string.error_generic, Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(mViewPager, R.string.error_invalid_data, Snackbar.LENGTH_LONG).show();
                     break;
                 }
 
@@ -864,7 +864,7 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
                         }
 
                         if (response == null || response.body() == null) {
-                            ViewUtils.setErrorText(mMultiView, R.id.errorMessage, response != null ? ApiClient.getErrorCode(response.code()) : R.string.error_generic);
+                            ViewUtils.setErrorText(mMultiView, R.id.errorMessage, response != null ? ApiClient.getErrorCode(response.code()) : R.string.error_network);
                             mMultiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
                             return;
                         }
@@ -876,7 +876,7 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
                             String imageId = commentResponse.data.get(0).getImageId();
 
                             if (TextUtils.isEmpty(imageId) || imgurBaseObject == null) {
-                                ViewUtils.setErrorText(mMultiView, R.id.errorMessage, R.string.error_generic);
+                                ViewUtils.setErrorText(mMultiView, R.id.errorMessage, R.string.error_comments_mismatch);
                                 mMultiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
                                 return;
                             }
@@ -944,7 +944,7 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
                 @Override
                 public void onResponse(Call<AlbumResponse> call, Response<AlbumResponse> response) {
                     if (response == null || response.body() == null) {
-                        ViewUtils.setErrorText(mMultiView, R.id.errorMessage, R.string.error_generic);
+                        ViewUtils.setErrorText(mMultiView, R.id.errorMessage, response != null ? ApiClient.getErrorCode(response.code()) : R.string.error_network);
                         mMultiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
                         return;
                     }
@@ -980,7 +980,7 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
                         invalidateOptionsMenu();
                         fetchComments();
                     } else {
-                        ViewUtils.setErrorText(mMultiView, R.id.errorMessage, R.string.error_generic);
+                        ViewUtils.setErrorText(mMultiView, R.id.errorMessage, response != null ? ApiClient.getErrorCode(response.code()) : R.string.error_network);
                         mMultiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
                     }
                 }
@@ -1010,14 +1010,14 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
                     set.setDuration(1500L).setInterpolator(new OvershootInterpolator());
                     set.start();
                 } else {
-                    Snackbar.make(mViewPager, R.string.error_generic, Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(mViewPager, response != null ? ApiClient.getErrorCode(response.code()) : R.string.error_network, Snackbar.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
                 LogUtil.e(TAG, "Unable to vote on gallery", t);
-                Snackbar.make(mViewPager, R.string.error_generic, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mViewPager, ApiClient.getErrorCode(t), Snackbar.LENGTH_LONG).show();
             }
         });
     }

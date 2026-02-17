@@ -109,7 +109,7 @@ public class FullScreenPhotoActivity extends BaseActivity implements View.OnClic
         Intent intent = getIntent();
 
         if (intent == null && savedInstanceState == null) {
-            Toast.makeText(getApplicationContext(), R.string.error_generic, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.error_invalid_data, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -332,7 +332,7 @@ public class FullScreenPhotoActivity extends BaseActivity implements View.OnClic
 
     private void loadObject(@Nullable ImgurBaseObject obj, final int startingPosition) {
         if (obj == null) {
-            Toast.makeText(this, R.string.error_generic, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error_invalid_data, Toast.LENGTH_SHORT).show();
             finish();
         }
 
@@ -344,26 +344,26 @@ public class FullScreenPhotoActivity extends BaseActivity implements View.OnClic
                     if (response != null && response.body() != null && response.body().hasData()) {
                         setupPager(response.body().data, startingPosition);
                     } else {
-                        Toast.makeText(getApplicationContext(), R.string.error_generic, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), response != null ? ApiClient.getErrorCode(response.code()) : R.string.error_network, Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<AlbumResponse> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), R.string.error_generic, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), ApiClient.getErrorCode(t), Toast.LENGTH_SHORT).show();
                     finish();
                 }
             });
         } else {
-            Toast.makeText(this, R.string.error_generic, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error_invalid_data, Toast.LENGTH_SHORT).show();
             finish();
         }
     }
 
     void setupPager(@Nullable List<ImgurPhoto> photos, int startingPosition) {
         if (photos == null) {
-            Toast.makeText(getApplicationContext(), R.string.error_generic, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.error_invalid_data, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }

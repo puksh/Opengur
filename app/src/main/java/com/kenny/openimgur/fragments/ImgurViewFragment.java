@@ -599,7 +599,7 @@ public class ImgurViewFragment extends BaseFragment implements ImgurListener {
 
                 getActivity().startService(DownloaderService.createIntent(getActivity(), urls));
             } else {
-                Snackbar.make(mMultiView, R.string.error_generic, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mMultiView, R.string.error_invalid_data, Snackbar.LENGTH_LONG).show();
             }
         } else {
             LogUtil.w(TAG, "Item is not an album");
@@ -619,7 +619,7 @@ public class ImgurViewFragment extends BaseFragment implements ImgurListener {
                     mMultiView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
                     fetchTags();
                 } else {
-                    ViewUtils.setErrorText(mMultiView, R.id.errorMessage, response != null ? ApiClient.getErrorCode(response.code()) : R.string.error_generic);
+                    ViewUtils.setErrorText(mMultiView, R.id.errorMessage, response != null ? ApiClient.getErrorCode(response.code()) : R.string.error_network);
                     mMultiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
                 }
             }
@@ -670,7 +670,7 @@ public class ImgurViewFragment extends BaseFragment implements ImgurListener {
                 if (response != null && response.body() != null && response.body().data != null) {
                     setupFragmentWithObject(response.body().data);
                 } else {
-                    ViewUtils.setErrorText(mMultiView, R.id.errorMessage, R.string.error_generic);
+                    ViewUtils.setErrorText(mMultiView, R.id.errorMessage, response != null ? ApiClient.getErrorCode(response.code()) : R.string.error_network);
                     mMultiView.setViewState(MultiStateView.VIEW_STATE_ERROR);
                 }
             }
@@ -704,7 +704,7 @@ public class ImgurViewFragment extends BaseFragment implements ImgurListener {
                     mImgurObject.setIsFavorite(!mImgurObject.isFavorited());
                     getActivity().invalidateOptionsMenu();
                 } else {
-                    Snackbar.make(mMultiView, R.string.error_generic, Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(mMultiView, response != null ? ApiClient.getErrorCode(response.code()) : R.string.error_network, Snackbar.LENGTH_LONG).show();
                 }
             }
 
@@ -712,7 +712,7 @@ public class ImgurViewFragment extends BaseFragment implements ImgurListener {
             public void onFailure(Call<BasicResponse> call, Throwable t) {
                 if (!isAdded()) return;
                 LogUtil.e(TAG, "Unable to favorite item", t);
-                Snackbar.make(mMultiView, R.string.error_generic, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mMultiView, ApiClient.getErrorCode(t), Snackbar.LENGTH_LONG).show();
             }
         });
     }

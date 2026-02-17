@@ -450,7 +450,7 @@ public class UploadFragment extends BaseFragment implements View.OnClickListener
                         mMultiView.setViewState(MultiStateView.VIEW_STATE_LOADING);
                         new DecodeImagesTask(this).execute(uris);
                     } else {
-                        Snackbar.make(mMultiView, R.string.error_generic, Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(mMultiView, R.string.error_pick_image, Snackbar.LENGTH_LONG).show();
                     }
                 }
                 break;

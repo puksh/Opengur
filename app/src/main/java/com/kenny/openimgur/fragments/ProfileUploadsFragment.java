@@ -149,7 +149,7 @@ public class ProfileUploadsFragment extends BaseGridFragment implements View.OnL
 
                     Snackbar.make(mMultiStateView, R.string.profile_delete_success_image, Snackbar.LENGTH_LONG).show();
                 } else {
-                    Snackbar.make(mMultiStateView, R.string.error_generic, Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(mMultiStateView, response != null ? ApiClient.getErrorCode(response.code()) : R.string.error_network, Snackbar.LENGTH_LONG).show();
                 }
             }
 
@@ -158,7 +158,7 @@ public class ProfileUploadsFragment extends BaseGridFragment implements View.OnL
                 if (!isAdded()) return;
                 LogUtil.e(TAG, "Unable to delete photo", t);
                 mMultiStateView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
-                Snackbar.make(mMultiStateView, R.string.error_generic, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mMultiStateView, ApiClient.getErrorCode(t), Snackbar.LENGTH_LONG).show();
             }
         });
 

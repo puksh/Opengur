@@ -76,8 +76,15 @@
     later.</string>
     <string name="error_503">Imgur is currently over capacity. Boo…</string>
     <string name="error_network">Unable to connect to Imgur. Check your connection and try again.</string>
+    <string name="error_timeout">The request timed out. Please check your connection and try again.</string>
+    <string name="error_ssl">A secure connection to Imgur could not be established. Please try again later.</string>
     <string name="download_error">An error occurred while downloading</string>
     <string name="error">Error</string>
+    <string name="error_invalid_data">Required data was missing. Please go back and try again.</string>
+    <string name="error_comments_mismatch">Comments could not be loaded for this item. Please refresh and try again.</string>
+    <string name="error_login_response">Login response was incomplete. Please sign in again.</string>
+    <string name="error_pick_image">No image was selected. Please choose an image and try again.</string>
+    <string name="error_comment_context">Unable to open comment form for this item.</string>
     <string name="upload_camera_error">An error occurred while capturing your photo. Please try again</string>
     <string name="error_link_open">Unable to open link</string>
 

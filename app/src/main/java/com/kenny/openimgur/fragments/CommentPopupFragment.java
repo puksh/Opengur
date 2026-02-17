@@ -110,7 +110,7 @@ public class CommentPopupFragment extends DialogFragment implements DialogInterf
 
         if (args == null || !args.containsKey(KEY_GALLERY_ID)) {
             dismiss();
-            Toast.makeText(getActivity(), R.string.error_generic, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.error_comment_context, Toast.LENGTH_SHORT).show();
             return;
         }
 
