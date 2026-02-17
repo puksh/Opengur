@@ -21,7 +21,7 @@
         android:id="@+id/viralPopularity"
         android:title="@string/filter_viral_popularity" />
 
-    <item
+    <!--<item
         android:id="@+id/viralDay"
         android:title="@string/filter_viral_scoring_day" />
 
@@ -40,5 +40,6 @@
     <item
         android:id="@+id/viralAll"
         android:title="@string/filter_viral_scoring_all" />
+        -->
 
 </menu>

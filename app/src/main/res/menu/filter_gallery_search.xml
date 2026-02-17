@@ -11,22 +11,22 @@
 
     <item
         android:id="@+id/scoringDay"
-        android:title="@string/filter_scoring_day" />
+        android:title="@string/filter_top_day" />
 
     <item
         android:id="@+id/scoringWeek"
-        android:title="@string/filter_scoring_week" />
+        android:title="@string/filter_top_week" />
 
     <item
         android:id="@+id/scoringMonth"
-        android:title="@string/filter_scoring_month" />
+        android:title="@string/filter_top_month" />
 
     <item
         android:id="@+id/scoringYear"
-        android:title="@string/filter_scoring_year" />
+        android:title="@string/filter_top_year" />
 
     <item
         android:id="@+id/scoringAll"
-        android:title="@string/filter_scoring_all" />
+        android:title="@string/filter_top_all" />
 
 </menu>

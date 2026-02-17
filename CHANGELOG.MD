@@ -1,4 +1,55 @@
 #Open Imgur Changelog
+## Fork changelog (from `5b8d2eb04c08a4a503e0cb90e1bd5eeaae50848b`, inclusive)
+
+### 2026-02-15
+- `5b8d2eb` refactor: disable fabric analytics
+- `d5038a5` feat: build apk action
+- `dd48618` refactor: replace jcenter with google and mavenCentral in build.gradle
+- `83499b2` fix: google -> maven url
+- `443edcb` refactor: remove Fabric and Crashlytics integration, update Gradle version and repositories
+- `32741ed` refactor: fix the workflow by adding Android SDK setup and license acceptance steps
+- `05ce819` chore: update java in the action
+- `6b7e612` fix: change JDK version from 17 to 11
+- `59b237a` refactor: remove Android SDK setup step
+- `8ea5790` refactor: add flavor dimensions to product flavors in build.gradle
+- `201f279` fix: InkPageIndicator dependency
+- `c891e6b` feat: implement custom InkPageIndicator and remove 3rd party dep
+- `b021f6f` fix: package dir
+- `a95bd47` chore: bump
+- `a6f064f` chore: change strings to current repo
+- `c22f53c` chore: remove play store beta links chore: remove the unsupported dialog chore: update support contact
+- `299bf64` chore: update readme
+- `7b1a041` fix: set loading state before displaying image
+- `59a87f5` fix: try to fix topics
+- `9f7df0f` feat: release adding for github action
+- `bedc14e` feat: revert it sucked
+- `79c078f` fix: fixing the login in
+- `d79d605` fix: mp4 thumbnails
+- `f79eb84` fix: java 7 compatibility - replaced lambda expression
+- `9e558a9` revert login fix
+- `134d5ca` feat: topics are hardcoded and cached now
+- `b6fcf74` fix: Open In App now brings correctly the album/images
+
+### 2026-02-16
+- `3239eef` fix(media): handle tag array response and prevent fullscreen loading-view crashes
+- `e9dd9c0` fix: increase cache size to 25MB and improve pagination prefetching
+- `7cc5f4e` feat: add loading view for fullscreen fragment
+- `7740ded` fix: update support library version and SDK configurations to 28
+- `95a96ce` fix(gif): fix GIF handling in fullscreen and Imgur view fragments
+- `776228b` fix(link): fix video link detection in LinkUtils
+- `b10ba11` fix: handle comment request cancellation, avoid duplicate calls, optimize api calls, revert to a small preload
+- `e63df1f` feat: add TrafficStatsImageDownloader - fixes logs on api calls
+
+### 2026-02-17
+- `2962c44` fix(video): optimize video download handling and improve errors catching feat: media notification registration
+- `8e10f62` fix(api): fix caching strategy and add network interceptors for improved request handling
+- `2c277d6` chore(fullscreen): remove even more warnings and errors
+- `581f599` fix: black thumnail after returning from the fullscreen
+- `6ec294c` feat: comments viewable without logging in
+- `6064ae8` feat: videos/images in the comments
+- `6b28848` chore: bump ver
+- `721e5be` feat: add APK build workflow with variants and types
+
 <b>4.7.1</b> February 25, 2017
 - Added Privacy Policy
 - Update gradle

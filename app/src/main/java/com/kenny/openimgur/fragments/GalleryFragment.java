@@ -233,12 +233,7 @@ public class GalleryFragment extends BaseGridFragment {
     protected void fetchGallery() {
         super.fetchGallery();
         ImgurService apiService = ApiClient.getService();
-
-        if (mSort == GallerySort.HIGHEST_SCORING) {
-            apiService.getGalleryForTopSorted(mSection.getSection(), mTimeSort.getSort(), mCurrentPage).enqueue(this);
-        } else {
-            apiService.getGallery(mSection.getSection(), mSort.getSort(), mCurrentPage, mShowViral).enqueue(this);
-        }
+        apiService.getGallery(mSection.getSection(), mSort.getSort(), mCurrentPage, mShowViral).enqueue(this);
     }
 
     @Override
@@ -309,25 +304,6 @@ public class GalleryFragment extends BaseGridFragment {
                         onFilterChange(GallerySection.HOT, GallerySort.VIRAL, TimeSort.DAY, mShowViral);
                         return true;
 
-                    case R.id.viralDay:
-                        onFilterChange(GallerySection.HOT, GallerySort.HIGHEST_SCORING, TimeSort.DAY, mShowViral);
-                        return true;
-
-                    case R.id.viralWeek:
-                        onFilterChange(GallerySection.HOT, GallerySort.HIGHEST_SCORING, TimeSort.WEEK, mShowViral);
-                        return true;
-
-                    case R.id.viralMonth:
-                        onFilterChange(GallerySection.HOT, GallerySort.HIGHEST_SCORING, TimeSort.MONTH, mShowViral);
-                        return true;
-
-                    case R.id.viralYear:
-                        onFilterChange(GallerySection.HOT, GallerySort.HIGHEST_SCORING, TimeSort.YEAR, mShowViral);
-                        return true;
-
-                    case R.id.viralAll:
-                        onFilterChange(GallerySection.HOT, GallerySort.HIGHEST_SCORING, TimeSort.ALL, mShowViral);
-                        return true;
                 }
 
                 return false;
