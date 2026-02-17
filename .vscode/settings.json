@@ -1,5 +1,6 @@
 {
 	"java.project.sourcePaths": ["app/src/main/java", "app/src/main/res"],
 	"java.project.outputPath": "app/build/classes",
-	"java.project.referencedLibraries": ["app/build/outputs/aar/**/*.aar", "**/libs/**/*.jar"]
+	"java.project.referencedLibraries": ["app/build/outputs/aar/**/*.aar", "**/libs/**/*.jar"],
+	"java.configuration.updateBuildConfiguration": "interactive"
 }
