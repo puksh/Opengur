@@ -54,6 +54,11 @@ public class UploadService extends IntentService {
     // No Topic
     private static final int FALLBACK_TOPIC = 29;
 
+    private static final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+    private static final MediaType MEDIA_TYPE_GIF = MediaType.parse("image/gif");
+    private static final MediaType MEDIA_TYPE_JPEG = MediaType.parse("image/jpeg");
+    private static final MediaType MEDIA_TYPE_TEXT = MediaType.parse("text/plain");
+
     private UploadNotification mNotification;
 
     /**
@@ -94,7 +99,7 @@ public class UploadService extends IntentService {
         // Get a wake lock so any long uploads will not be interrupted
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
-        wakeLock.acquire();
+        wakeLock.acquire(10 * 60 * 1000L);
 
         try {
             mNotification = new UploadNotification(getApplicationContext());
@@ -124,27 +129,27 @@ public class UploadService extends IntentService {
                         File file = new File(u.getLocation());
 
                         if (FileUtil.isFileValid(file)) {
-                            String type;
+                            MediaType mediaType;
 
                             if (file.getAbsolutePath().endsWith("png")) {
-                                type = "image/png";
+                                mediaType = MEDIA_TYPE_PNG;
                             } else if (file.getAbsolutePath().endsWith("gif")) {
-                                type = "image/gif";
+                                mediaType = MEDIA_TYPE_GIF;
                             } else {
-                                type = "image/jpeg";
+                                mediaType = MEDIA_TYPE_JPEG;
                             }
 
-                            RequestBody uploadFile = RequestBody.create(MediaType.parse(type), file);
+                            RequestBody uploadFile = RequestBody.create(mediaType, file);
                             RequestBody uploadTitle = null;
                             RequestBody uploadDesc = null;
-                            RequestBody uploadType = RequestBody.create(MediaType.parse("text/plain"), "file");
+                            RequestBody uploadType = RequestBody.create(MEDIA_TYPE_TEXT, "file");
 
                             if (!TextUtils.isEmpty(u.getTitle())) {
-                                uploadTitle = RequestBody.create(MediaType.parse("text/plain"), u.getTitle());
+                                uploadTitle = RequestBody.create(MEDIA_TYPE_TEXT, u.getTitle());
                             }
 
                             if (!TextUtils.isEmpty(u.getDescription())) {
-                                uploadDesc = RequestBody.create(MediaType.parse("text/plain"), u.getDescription());
+                                uploadDesc = RequestBody.create(MEDIA_TYPE_TEXT, u.getDescription());
                             }
 
                             response = ApiClient.getService().uploadPhoto(uploadFile, uploadTitle, uploadDesc, uploadType).execute();

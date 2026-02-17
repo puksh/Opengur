@@ -23,6 +23,7 @@ import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by kcampagna on 6/22/14.
@@ -81,7 +82,7 @@ public class FileUtil {
 
         try {
             buffer = new BufferedOutputStream(new FileOutputStream(file));
-            byte byt[] = new byte[1024];
+            byte byt[] = new byte[8192];
             int i;
 
             for (long l = 0L; (i = in.read(byt)) != -1; l += i) {
@@ -146,7 +147,7 @@ public class FileUtil {
      * @return
      */
     public static File createFile(String extension) {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
         File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), FOLDER_NAME);
         dir.mkdirs();
         File file = new File(dir.getAbsolutePath(), timeStamp + extension);

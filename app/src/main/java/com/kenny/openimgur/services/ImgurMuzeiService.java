@@ -186,7 +186,7 @@ public class ImgurMuzeiService extends RemoteMuzeiArtSource {
 
             response = call.execute();
         } catch (Exception ex) {
-            Log.e(TAG, "Error fetching images for muzei", ex);
+            LogUtil.e(TAG, "Error fetching images for muzei", ex);
         }
 
         if (response != null && response.body() != null && !response.body().data.isEmpty()) {

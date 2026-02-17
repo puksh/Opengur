@@ -164,7 +164,7 @@ public class FullScreenPhotoActivity extends BaseActivity implements View.OnClic
 
     @Override
     protected void onDestroy() {
-        if (mHandler != null) mHandler.removeMessages(0);
+        if (mHandler != null) mHandler.removeCallbacksAndMessages(null);
         if (mGrid != null && mGrid.getAdapter() instanceof GalleryAdapter) ((GalleryAdapter) mGrid.getAdapter()).onDestroy();
         super.onDestroy();
     }

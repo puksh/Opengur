@@ -200,7 +200,7 @@ public class VideoCache {
                 connection.connect();
                 in = connection.getInputStream();
                 buffer = new BufferedOutputStream(new FileOutputStream(writeFile));
-                byte byt[] = new byte[1024];
+                byte byt[] = new byte[8192];
                 int i;
                 int total = 0;
                 int size = connection.getContentLength();

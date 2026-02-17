@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import com.kenny.openimgur.activities.SettingsActivity;
 import com.kenny.openimgur.classes.OpengurApp;
 import com.kenny.openimgur.classes.VideoCache;
+import com.kenny.openimgur.util.LogUtil;
 import com.kenny.openimgur.ui.CircleBitmapDisplayer;
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -374,7 +375,7 @@ public class ImageUtil {
      */
     public static String getThumbnail(String url, String thumbnailSize) {
         if (TextUtils.isEmpty(url) || TextUtils.isEmpty(thumbnailSize)) {
-            Log.w(TAG, "Url or thumbnailSize is empty");
+            LogUtil.w(TAG, "Url or thumbnailSize is empty");
             return null;
         }
 

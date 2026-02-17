@@ -266,13 +266,13 @@ public class UploadedPhotosFragment extends BaseFragment implements View.OnClick
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.v(TAG, "onCreateLoader");
+        LogUtil.v(TAG, "onCreateLoader");
         return id == LOADER_ID ? new PhotoCursorLoader(getActivity()) : null;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.v(TAG, "onLoadFinished");
+        LogUtil.v(TAG, "onLoadFinished");
 
         if (data == null || data.getCount() <= 0) {
             mMultiStateView.setViewState(MultiStateView.VIEW_STATE_EMPTY);
@@ -292,7 +292,7 @@ public class UploadedPhotosFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        Log.v(TAG, "onLoaderReset");
+        LogUtil.v(TAG, "onLoaderReset");
         if (mAdapter != null) mAdapter.swapCursor(null);
         if (mMultiStateView != null) mMultiStateView.setViewState(MultiStateView.VIEW_STATE_LOADING);
     }

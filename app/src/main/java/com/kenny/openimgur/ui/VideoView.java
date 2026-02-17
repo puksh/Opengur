@@ -39,6 +39,7 @@ import android.widget.MediaController.MediaPlayerControl;
 
 import com.kenny.openimgur.R;
 import com.kenny.openimgur.ui.CustomMediaController;
+import com.kenny.openimgur.util.LogUtil;
 
 import java.io.IOException;
 import java.util.Map;
@@ -277,19 +278,19 @@ public class VideoView extends SurfaceView implements MediaPlayerControl, Custom
             attachMediaController();
             attachCustomMediaController();
         } catch (IOException ex) {
-            Log.w(TAG, "Unable to open content: " + mUri, ex);
+            LogUtil.w(TAG, "Unable to open content: " + mUri, ex);
             mCurrentState = STATE_ERROR;
             mTargetState = STATE_ERROR;
             mErrorListener.onError(mMediaPlayer, MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
             return;
         } catch (IllegalArgumentException ex) {
-            Log.w(TAG, "Unable to open content: " + mUri, ex);
+            LogUtil.w(TAG, "Unable to open content: " + mUri, ex);
             mCurrentState = STATE_ERROR;
             mTargetState = STATE_ERROR;
             mErrorListener.onError(mMediaPlayer, MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
             return;
         } catch (IllegalStateException ex) {
-            Log.w(TAG, "Unable to open content: " + mUri, ex);
+            LogUtil.w(TAG, "Unable to open content: " + mUri, ex);
             mCurrentState = STATE_ERROR;
             mTargetState = STATE_ERROR;
             mErrorListener.onError(mMediaPlayer, MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
@@ -419,7 +420,7 @@ public class VideoView extends SurfaceView implements MediaPlayerControl, Custom
     private OnErrorListener mErrorListener =
             new OnErrorListener() {
                 public boolean onError(MediaPlayer mp, int framework_err, int impl_err) {
-                    Log.d(TAG, "Error: " + framework_err + "," + impl_err);
+                    LogUtil.d(TAG, "Error: " + framework_err + "," + impl_err);
                     mCurrentState = STATE_ERROR;
                     mTargetState = STATE_ERROR;
                     if (mMediaController != null) {

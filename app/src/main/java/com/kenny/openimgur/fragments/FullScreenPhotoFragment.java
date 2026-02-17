@@ -168,7 +168,7 @@ public class FullScreenPhotoFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         if (handler != null) {
-            handler.removeMessages(0);
+            handler.removeCallbacksAndMessages(null);
             handler = null;
         }
 
