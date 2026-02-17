@@ -51,6 +51,7 @@
                 android:id="@+id/mediaPreview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:minHeight="120dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter" />
 

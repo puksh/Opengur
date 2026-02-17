@@ -10,7 +10,9 @@ import com.kenny.openimgur.R;
 import com.kenny.openimgur.classes.ImgurAlbum;
 import com.kenny.openimgur.classes.ImgurPhoto;
 import com.kenny.openimgur.util.DBContracts;
+import com.kenny.openimgur.util.FileUtil;
 import com.kenny.openimgur.util.ImageUtil;
+import com.kenny.openimgur.util.LinkUtils;
 import com.kennyc.adapters.CursorRecyclerAdapter;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -64,7 +66,12 @@ public class UploadAdapter extends CursorRecyclerAdapter<UploadAdapter.UploadHol
             url = String.format(ImgurAlbum.ALBUM_COVER_URL, converId + ImgurPhoto.THUMBNAIL_GALLERY);
             holder.albumIndicator.setVisibility(View.VISIBLE);
         } else {
-            url = ImageUtil.getThumbnail(photoUrl, ImgurPhoto.THUMBNAIL_GALLERY);
+            if (LinkUtils.isVideoLink(photoUrl)) {
+                String id = photoUrl.substring(photoUrl.lastIndexOf('/') + 1, photoUrl.lastIndexOf('.'));
+                url = "https://i.imgur.com/" + id + ImgurPhoto.THUMBNAIL_GALLERY + FileUtil.EXTENSION_JPEG;
+            } else {
+                url = ImageUtil.getThumbnail(photoUrl, ImgurPhoto.THUMBNAIL_GALLERY);
+            }
             holder.albumIndicator.setVisibility(View.GONE);
         }
 

@@ -195,6 +195,16 @@ public class FullScreenPhotoFragment extends BaseFragment {
             url = url.replace(".png", ".jpeg");
         }
 
+        if (LinkUtils.isVideoLink(url)) {
+            if (photo != null && !TextUtils.isEmpty(photo.getId())) {
+                url = "https://i.imgur.com/" + photo.getId() + ImgurPhoto.THUMBNAIL_HUGE + FileUtil.EXTENSION_JPEG;
+            } else {
+                LogUtil.w(TAG, "Cannot display video file as image, calling displayVideo instead");
+                displayVideo(null);
+                return;
+            }
+        }
+
         ImageUtil.getImageLoader(getActivity()).loadImage(url, new ImageSize(1, 1), ImageUtil.getDisplayOptionsForFullscreen().build(), simpleImageLoadingListener, progressListener);
     }
 
@@ -277,10 +287,13 @@ public class FullScreenPhotoFragment extends BaseFragment {
     }
 
     void displayGif(String url) {
-        // Display our gif in a standard image view
+        if (LinkUtils.isVideoLink(url) && !url.toLowerCase().endsWith(".gif") && !url.toLowerCase().endsWith(".gifv")) {
+            LogUtil.w(TAG, "Cannot display video file as gif, calling displayVideo instead");
+            displayVideo(null);
+            return;
+        }
 
         if (getUserVisibleHint()) {
-            // Auto play the gif if we are visible
             loadGifFromCacheAsync(url);
         } else {
             videoView.setVisibility(View.GONE);

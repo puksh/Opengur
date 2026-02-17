@@ -241,7 +241,7 @@ public class CommentAdapter extends BaseRecyclerAdapter<ImgurComment> {
 
     private String getPreviewUrl(String mediaUrl) {
         if (TextUtils.isEmpty(mediaUrl)) {
-            return mediaUrl;
+            return null;
         }
 
         int queryIndex = mediaUrl.indexOf('?');
@@ -257,6 +257,8 @@ public class CommentAdapter extends BaseRecyclerAdapter<ImgurComment> {
             if (extIndex > 0) {
                 return cleanUrl.substring(0, extIndex) + ".jpg";
             }
+
+            return null;
         }
 
         return cleanUrl;

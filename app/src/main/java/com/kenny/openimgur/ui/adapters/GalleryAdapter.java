@@ -188,7 +188,12 @@ public class GalleryAdapter extends BaseRecyclerAdapter<ImgurBaseObject> {
                 galleryHolder.itemType.setBackground(null);
             }
         } else {
-            String url = ImgurBaseObject.getThumbnail(obj.getId(), obj.getLink(), ImgurPhoto.THUMBNAIL_GALLERY);
+            String url;
+            if (LinkUtils.isVideoLink(obj.getLink())) {
+                url = "https://i.imgur.com/" + obj.getId() + ImgurPhoto.THUMBNAIL_GALLERY + FileUtil.EXTENSION_JPEG;
+            } else {
+                url = ImgurBaseObject.getThumbnail(obj.getId(), obj.getLink(), ImgurPhoto.THUMBNAIL_GALLERY);
+            }
             displayImage(galleryHolder.image, url);
             galleryHolder.itemType.setVisibility(View.GONE);
         }

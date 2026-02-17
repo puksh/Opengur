@@ -314,14 +314,29 @@ public class PopupImageDialogFragment extends DialogFragment implements VideoCac
      *
      * @param url
      */
-    public void displayVideo(String url) {
-        File file = VideoCache.getInstance().getVideoFile(url);
+    public void displayVideo(final String url) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final File file = VideoCache.getInstance().getVideoFile(url);
+                final boolean isValid = FileUtil.isFileValid(file);
 
-        if (FileUtil.isFileValid(file)) {
-            displayVideo(file);
-        } else {
-            VideoCache.getInstance().putVideo(url, this);
-        }
+                if (getActivity() == null) return;
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isAdded()) return;
+
+                        if (isValid) {
+                            displayVideo(file);
+                        } else {
+                            VideoCache.getInstance().putVideo(url, PopupImageDialogFragment.this);
+                        }
+                    }
+                });
+            }
+        }).start();
     }
 
     /**
