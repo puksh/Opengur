@@ -68,7 +68,10 @@ public class GalleryAdapter extends BaseRecyclerAdapter<ImgurBaseObject> {
         SharedPreferences pref = OpengurApp.getInstance(context).getPreferences();
         mAllowNSFWThumb = pref.getBoolean(SettingsActivity.KEY_NSFW_THUMBNAILS, false);
         mThumbnailQuality = pref.getString(SettingsActivity.KEY_THUMBNAIL_QUALITY, ImgurPhoto.THUMBNAIL_GALLERY);
-        mAutoPlaySilentMovies = pref.getBoolean(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES, false);
+        boolean autoplaySilentMovies = pref.getBoolean(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES, false);
+        mAutoPlaySilentMovies = pref.contains(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES_HOME)
+            ? pref.getBoolean(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES_HOME, false)
+            : autoplaySilentMovies;
         mMosaicEnabled = pref.getBoolean(SettingsActivity.KEY_MOSAIC_VIEW, false);
         mDefaultTileHeight = getResources().getDimensionPixelSize(R.dimen.gallery_column_height);
         mGridColumns = getResources().getInteger(R.integer.gallery_num_columns);
@@ -165,6 +168,22 @@ public class GalleryAdapter extends BaseRecyclerAdapter<ImgurBaseObject> {
         } else if (obj instanceof ImgurAlbum) {
             ImgurAlbum album = ((ImgurAlbum) obj);
             displayImage(galleryHolder.image, album.getCoverUrl(mThumbnailQuality));
+            ImgurPhoto coverPhoto = album.getCoverPhoto();
+
+            if (mAutoPlaySilentMovies && coverPhoto != null && coverPhoto.isAnimated()) {
+                String photoUrl;
+
+                if (coverPhoto.hasVideoLink() && coverPhoto.isLinkAThumbnail() && ImgurPhoto.IMAGE_TYPE_GIF.equals(coverPhoto.getType())) {
+                    photoUrl = coverPhoto.getThumbnail(mThumbnailQuality, true, FileUtil.EXTENSION_GIF);
+                } else if (coverPhoto.hasVideoLink() && LinkUtils.isVideoLink(coverPhoto.getLink())) {
+                    photoUrl = coverPhoto.getThumbnail(mThumbnailQuality, true, FileUtil.EXTENSION_JPEG);
+                } else {
+                    photoUrl = coverPhoto.getThumbnail(mThumbnailQuality, false, null);
+                }
+
+                autoplayAnimatedMedia(galleryHolder, coverPhoto, photoUrl);
+            }
+
             int albumSize = album.getAlbumImageCount();
 
             if (albumSize <= 1) {

@@ -52,6 +52,13 @@
             android:defaultValue="false" />
 
         <CheckBoxPreference
+            android:key="autoplaySilentMoviesHome"
+            android:title="@string/pref_autoplay_home_title"
+            android:summaryOn="@string/pref_autoplay_home_on"
+            android:summaryOff="@string/pref_autoplay_home_off"
+            android:defaultValue="false" />
+
+        <CheckBoxPreference
             android:key="mosaicView"
             android:title="@string/pref_mosaic_view_title"
             android:summaryOn="@string/pref_mosaic_view_on"

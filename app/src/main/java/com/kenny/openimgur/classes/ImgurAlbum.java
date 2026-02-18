@@ -29,6 +29,7 @@ public class ImgurAlbum extends ImgurBaseObject {
     @SerializedName("cover_height")
     private int mCoverHeight;
 
+    @SerializedName("images")
     private List<ImgurPhoto> mAlbumPhotos;
 
     public ImgurAlbum(String id, String title, String link) {
@@ -85,6 +86,23 @@ public class ImgurAlbum extends ImgurBaseObject {
         return mAlbumPhotos;
     }
 
+    @Nullable
+    public ImgurPhoto getCoverPhoto() {
+        if (mAlbumPhotos == null || mAlbumPhotos.isEmpty()) {
+            return null;
+        }
+
+        if (!TextUtils.isEmpty(mCoverId)) {
+            for (ImgurPhoto photo : mAlbumPhotos) {
+                if (photo != null && mCoverId.equals(photo.getId())) {
+                    return photo;
+                }
+            }
+        }
+
+        return mAlbumPhotos.get(0);
+    }
+
     public int getAlbumImageCount() {
         return mAlbumPhotos != null && !mAlbumPhotos.isEmpty() ? mAlbumPhotos.size() : mAlbumImageCount;
     }
@@ -95,6 +113,19 @@ public class ImgurAlbum extends ImgurBaseObject {
 
     public int getCoverHeight() {
         return mCoverHeight;
+    }
+
+    @Override
+    public void toHttps() {
+        super.toHttps();
+
+        if (mAlbumPhotos != null) {
+            for (ImgurPhoto photo : mAlbumPhotos) {
+                if (photo != null) {
+                    photo.toHttps();
+                }
+            }
+        }
     }
 
     public void writeToParcel(Parcel out, int flags) {

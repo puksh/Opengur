@@ -146,6 +146,9 @@
     <string name="pref_autoplay_silent_title">Autoplay Silent Movies</string>
     <string name="pref_autoplay_silent_on">Autoplay GIFs and silent videos</string>
     <string name="pref_autoplay_silent_off">Do not autoplay GIFs or videos</string>
+    <string name="pref_autoplay_home_title">Autoplay on Home Feed</string>
+    <string name="pref_autoplay_home_on">Autoplay GIFs and silent videos on the home feed</string>
+    <string name="pref_autoplay_home_off">Do not autoplay GIFs or videos on the home feed</string>
     <string name="pref_mosaic_view_title">Mosaic Home Feed</string>
     <string name="pref_mosaic_view_on">Use mixed tile heights on the home feed</string>
     <string name="pref_mosaic_view_off">Use the classic uniform grid on the home feed</string>
