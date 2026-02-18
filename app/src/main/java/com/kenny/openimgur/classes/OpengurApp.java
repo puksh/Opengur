@@ -55,6 +55,7 @@ public class OpengurApp extends Application implements SharedPreferences.OnShare
         mUser = SqlHelper.getInstance(this).getUser();
         if (mUser != null) AlarmReceiver.createNotificationAlarm(this);
         ImageUtil.initImageLoader(getApplicationContext());
+        ImageUtil.warmUpGifDecoder();
 
         // Check if for ADB logging on a non debug build
         if (!BuildConfig.DEBUG) {

@@ -2,7 +2,6 @@ package com.kenny.openimgur.ui.adapters;
 
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.preference.PreferenceManager;
 import android.support.v4.util.LongSparseArray;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +24,7 @@ import com.kenny.openimgur.classes.CustomLinkMovement;
 import com.kenny.openimgur.classes.ImgurBaseObject;
 import com.kenny.openimgur.classes.ImgurComment;
 import com.kenny.openimgur.classes.ImgurListener;
+import com.kenny.openimgur.classes.OpengurApp;
 import com.kenny.openimgur.ui.VideoView;
 import com.kenny.openimgur.util.ImageUtil;
 import com.kenny.openimgur.util.LinkUtils;
@@ -78,7 +78,7 @@ public class CommentAdapter extends BaseRecyclerAdapter<ImgurComment> {
         mGreenTextColor = getColor(R.color.notoriety_positive);
         mRedTextColor = getColor(R.color.notoriety_negative);
         mCommentIndent = getDimension(R.dimen.comment_padding);
-        mAutoPlaySilentMovies = PreferenceManager.getDefaultSharedPreferences(context)
+        mAutoPlaySilentMovies = OpengurApp.getInstance(context).getPreferences()
                 .getBoolean(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES, false);
     }
 
@@ -235,27 +235,74 @@ public class CommentAdapter extends BaseRecyclerAdapter<ImgurComment> {
     private void autoplayMedia(final CommentViewHolder holder, String mediaUrl) {
         if (mediaUrl.toLowerCase().matches(".*\\.gif(?:$|[?&#/_-].*)")) {
             final ImageLoader imageLoader = ImageUtil.getImageLoader(holder.itemView.getContext());
+            final String requestedUrl = mediaUrl;
 
-            if (!ImageUtil.loadAndDisplayGif(holder.mediaPreview, mediaUrl, imageLoader)) {
-                imageLoader.loadImage(mediaUrl, new ImageLoadingListener() {
-                    @Override
-                    public void onLoadingStarted(String imageUri, View view) {
-                    }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final pl.droidsonroids.gif.GifDrawable gifDrawable = ImageUtil.getGifDrawableFromCache(requestedUrl, imageLoader);
 
-                    @Override
-                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                    }
+                    holder.itemView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Object tag = holder.mediaPlay.getTag();
 
-                    @Override
-                    public void onLoadingComplete(String imageUri, View view, android.graphics.Bitmap loadedImage) {
-                        ImageUtil.loadAndDisplayGif(holder.mediaPreview, imageUri, imageLoader);
-                    }
+                            if (!(tag instanceof String) || !requestedUrl.equals(tag)) {
+                                if (gifDrawable != null) {
+                                    gifDrawable.recycle();
+                                }
+                                return;
+                            }
 
-                    @Override
-                    public void onLoadingCancelled(String imageUri, View view) {
-                    }
-                });
-            }
+                            if (gifDrawable != null) {
+                                holder.mediaPreview.setImageDrawable(gifDrawable);
+                            } else {
+                                imageLoader.loadImage(requestedUrl, new ImageLoadingListener() {
+                                    @Override
+                                    public void onLoadingStarted(String imageUri, View view) {
+                                    }
+
+                                    @Override
+                                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                                    }
+
+                                    @Override
+                                    public void onLoadingComplete(final String imageUri, View view, android.graphics.Bitmap loadedImage) {
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                final pl.droidsonroids.gif.GifDrawable loadedGifDrawable = ImageUtil.getGifDrawableFromCache(imageUri, imageLoader);
+
+                                                holder.itemView.post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        Object currentTag = holder.mediaPlay.getTag();
+
+                                                        if (!(currentTag instanceof String) || !requestedUrl.equals(currentTag)) {
+                                                            if (loadedGifDrawable != null) {
+                                                                loadedGifDrawable.recycle();
+                                                            }
+                                                            return;
+                                                        }
+
+                                                        if (loadedGifDrawable != null) {
+                                                            holder.mediaPreview.setImageDrawable(loadedGifDrawable);
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }).start();
+                                    }
+
+                                    @Override
+                                    public void onLoadingCancelled(String imageUri, View view) {
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            }).start();
 
             holder.mediaPlay.setVisibility(View.GONE);
         } else {

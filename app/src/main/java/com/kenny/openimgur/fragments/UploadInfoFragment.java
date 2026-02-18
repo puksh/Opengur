@@ -131,29 +131,65 @@ public class UploadInfoFragment extends BaseFragment {
      * Checks if we have cached topics to display for the info fragment
      */
     private void checkForTopics() {
-        List<ImgurTopic> topics = SqlHelper.getInstance(getActivity()).getTopics();
+        final Activity activity = getActivity();
 
-        if (topics.isEmpty()) {
-            LogUtil.v(TAG, "No topics found, fetching");
-            ApiClient.getService().getDefaultTopics().enqueue(new Callback<TopicResponse>() {
-                @Override
-                public void onResponse(Call<TopicResponse> call, Response<TopicResponse> response) {
-                    if (isAdded() && response != null && response.body() != null) {
-                        SqlHelper sql = SqlHelper.getInstance(getActivity());
-                        sql.addTopics(response.body().data);
-                        List<ImgurTopic> topics = sql.getTopics();
-                        mTopicSpinner.setAdapter(new TopicsAdapter(getActivity(), topics));
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<TopicResponse> call, Throwable t) {
-                    LogUtil.e(TAG, "Failed to receive topics", t);
-                }
-            });
-        } else {
-            LogUtil.v(TAG, "Topics in database");
-            mTopicSpinner.setAdapter(new TopicsAdapter(getActivity(), topics));
+        if (activity == null) {
+            return;
         }
+
+        final SqlHelper sql = SqlHelper.getInstance(activity.getApplicationContext());
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final List<ImgurTopic> topics = sql.getTopics();
+
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isAdded()) {
+                            return;
+                        }
+
+                        if (topics.isEmpty()) {
+                            LogUtil.v(TAG, "No topics found, fetching");
+                            ApiClient.getService().getDefaultTopics().enqueue(new Callback<TopicResponse>() {
+                                @Override
+                                public void onResponse(Call<TopicResponse> call, final Response<TopicResponse> response) {
+                                    if (!isAdded() || response == null || response.body() == null) {
+                                        return;
+                                    }
+
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            sql.addTopics(response.body().data);
+                                            final List<ImgurTopic> updatedTopics = sql.getTopics();
+
+                                            activity.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if (isAdded()) {
+                                                        mTopicSpinner.setAdapter(new TopicsAdapter(activity, updatedTopics));
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }).start();
+                                }
+
+                                @Override
+                                public void onFailure(Call<TopicResponse> call, Throwable t) {
+                                    LogUtil.e(TAG, "Failed to receive topics", t);
+                                }
+                            });
+                        } else {
+                            LogUtil.v(TAG, "Topics in database");
+                            mTopicSpinner.setAdapter(new TopicsAdapter(activity, topics));
+                        }
+                    }
+                });
+            }
+        }).start();
     }
 }

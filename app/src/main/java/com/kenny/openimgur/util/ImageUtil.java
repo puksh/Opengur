@@ -15,7 +15,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.os.Environment;
-import android.preference.PreferenceManager;
+import android.os.StrictMode;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -54,6 +54,8 @@ public class ImageUtil {
     private static final String TAG = "ImageUtil";
 
     private static ImageLoader imageLoader;
+
+    private static boolean gifDecoderWarmed;
 
     /**
      * Converts a bitmap to grayscale
@@ -122,8 +124,43 @@ public class ImageUtil {
      * @return if successful
      */
     public static boolean loadAndDisplayGif(@Nullable ImageView imageView, @NonNull String url, @NonNull ImageLoader imageLoader) {
-        File file = DiskCacheUtils.findInCache(url, imageLoader.getDiskCache());
+        StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
+        File file;
+
+        try {
+            file = DiskCacheUtils.findInCache(url, imageLoader.getDiskCache());
+        } finally {
+            StrictMode.setThreadPolicy(originalPolicy);
+        }
+
         return loadAndDisplayGif(imageView, file);
+    }
+
+    @Nullable
+    public static GifDrawable getGifDrawableFromCache(@NonNull String url, @NonNull ImageLoader imageLoader) {
+        StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
+        File file;
+
+        try {
+            file = DiskCacheUtils.findInCache(url, imageLoader.getDiskCache());
+        } finally {
+            StrictMode.setThreadPolicy(originalPolicy);
+        }
+
+        if (!FileUtil.isFileValid(file)) {
+            return null;
+        }
+
+        originalPolicy = StrictMode.allowThreadDiskReads();
+
+        try {
+            return new GifDrawable(file);
+        } catch (IOException e) {
+            LogUtil.e(TAG, "Unable to play gif", e);
+            return null;
+        } finally {
+            StrictMode.setThreadPolicy(originalPolicy);
+        }
     }
 
     /**
@@ -137,17 +174,49 @@ public class ImageUtil {
         if (imageView == null) return false;
 
         if (FileUtil.isFileValid(file)) {
+            StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
             try {
                 imageView.setImageDrawable(new GifDrawable(file));
                 return true;
             } catch (IOException e) {
                 LogUtil.e(TAG, "Unable to play gif", e);
+            } finally {
+                StrictMode.setThreadPolicy(originalPolicy);
             }
         } else {
             LogUtil.w(TAG, "Gif file is invalid");
         }
 
         return false;
+    }
+
+    public static synchronized void warmUpGifDecoder() {
+        if (gifDecoderWarmed) {
+            return;
+        }
+
+        StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
+
+        try {
+            byte[] tinyGif = new byte[]{
+                    71, 73, 70, 56, 57, 97,
+                    1, 0, 1, 0,
+                    -128, 0, 0,
+                    0, 0, 0,
+                    -1, -1, -1,
+                    33, -7, 4, 1, 0, 0, 1, 0,
+                    44, 0, 0, 0, 0, 1, 0, 1, 0, 0,
+                    2, 2, 68, 1, 0,
+                    59
+            };
+            GifDrawable gifDrawable = new GifDrawable(tinyGif);
+            gifDrawable.recycle();
+            gifDecoderWarmed = true;
+        } catch (Throwable t) {
+            LogUtil.w(TAG, "Unable to warm up gif decoder", t);
+        } finally {
+            StrictMode.setThreadPolicy(originalPolicy);
+        }
     }
 
     public static ImageLoader getImageLoader(@NonNull Context context) {
@@ -172,7 +241,7 @@ public class ImageUtil {
         long discCacheSize = 1024 * 1024;
         DiskCache discCache;
         int threadPoolSize;
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences pref = OpengurApp.getInstance(context).getPreferences();
         String discCacheAllowance = pref.getString(SettingsActivity.KEY_CACHE_SIZE, SettingsActivity.CACHE_SIZE_512MB);
         String threadSize = pref.getString(SettingsActivity.KEY_THREAD_SIZE, SettingsActivity.THREAD_SIZE_5);
         String cacheKey = pref.getString(SettingsActivity.KEY_CACHE_LOC, SettingsActivity.CACHE_LOC_INTERNAL);

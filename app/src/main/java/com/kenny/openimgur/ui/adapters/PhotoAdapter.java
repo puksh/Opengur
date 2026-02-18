@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.res.ResourcesCompat;
@@ -22,6 +21,7 @@ import com.kenny.openimgur.activities.SettingsActivity;
 import com.kenny.openimgur.classes.ImgurBaseObject;
 import com.kenny.openimgur.classes.ImgurListener;
 import com.kenny.openimgur.classes.ImgurPhoto;
+import com.kenny.openimgur.classes.OpengurApp;
 import com.kenny.openimgur.ui.PointsBar;
 import com.kenny.openimgur.ui.VideoView;
 import com.kenny.openimgur.util.FileUtil;
@@ -53,7 +53,7 @@ public class PhotoAdapter extends BaseRecyclerAdapter<ImgurPhoto> {
         super(context, photos, true);
         mListener = listener;
         mImgurObject = object;
-        mAutoPlaySilentMovies = PreferenceManager.getDefaultSharedPreferences(context)
+        mAutoPlaySilentMovies = OpengurApp.getInstance(context).getPreferences()
                 .getBoolean(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES, false);
     }
 

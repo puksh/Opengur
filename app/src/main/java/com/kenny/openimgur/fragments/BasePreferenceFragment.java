@@ -1,6 +1,7 @@
 package com.kenny.openimgur.fragments;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -22,7 +23,13 @@ public abstract class BasePreferenceFragment extends PreferenceFragment implemen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mApp = OpengurApp.getInstance(getActivity());
-        addPreferencesFromResource(getPreferenceXML());
+        StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
+
+        try {
+            addPreferencesFromResource(getPreferenceXML());
+        } finally {
+            StrictMode.setThreadPolicy(originalPolicy);
+        }
     }
 
     @Override

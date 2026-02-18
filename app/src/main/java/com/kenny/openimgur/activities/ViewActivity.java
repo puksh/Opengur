@@ -16,7 +16,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -446,7 +445,7 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
         super.onPostCreate(savedInstanceState);
         if (savedInstanceState == null) {
             mCommentSort = CommentSort.getSortFromString(app.getPreferences().getString(KEY_SORT, null));
-            mLoadComments = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(KEY_LOAD_COMMENTS, true);
+            mLoadComments = app.getPreferences().getBoolean(KEY_LOAD_COMMENTS, true);
 
             // Check if the activity was opened externally by a link click
             if (!TextUtils.isEmpty(mGalleryId)) {

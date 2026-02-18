@@ -191,7 +191,9 @@ public class VideoView extends SurfaceView implements MediaPlayerControl, Custom
         mVideoWidth = 0;
         mVideoHeight = 0;
         getHolder().addCallback(mSHCallback);
-        getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        }
         setFocusable(true);
         setFocusableInTouchMode(true);
         requestFocus();

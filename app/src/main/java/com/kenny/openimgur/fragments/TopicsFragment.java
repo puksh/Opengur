@@ -233,7 +233,6 @@ public class TopicsFragment extends BaseGridFragment {
                         /* No results came back from the api, topic must have been removed.
                          This needs to be confirmed that this can happen */
             String message = getString(R.string.topics_empty_result, mTopic.getName());
-            SqlHelper.getInstance(getActivity()).deleteTopic(mTopic.getId());
             ViewUtils.setErrorText(mMultiStateView, R.id.errorMessage, message);
             mMultiStateView.setViewState(MultiStateView.VIEW_STATE_ERROR);
         }
