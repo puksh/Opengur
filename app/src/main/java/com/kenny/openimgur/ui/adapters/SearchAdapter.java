@@ -27,8 +27,9 @@ public class SearchAdapter extends SimpleCursorAdapter {
                 FLAG_REGISTER_CONTENT_OBSERVER);
 
         Resources res = context.getResources();
-        boolean isDark = OpengurApp.getInstance(context).getImgurTheme().isDarkTheme;
-        mColor = isDark ? res.getColor(R.color.bg_dark) : res.getColor(R.color.bg_light);
+        mColor = OpengurApp.getInstance(context).getImgurTheme().isDarkTheme
+            ? res.getColor(OpengurApp.getInstance(context).getImgurTheme().getDarkBackgroundColorRes())
+            : res.getColor(R.color.bg_light);
 
     }
 

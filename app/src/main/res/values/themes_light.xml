@@ -34,6 +34,13 @@
         <item name="dividerColor">@color/bg_dark</item>
     </style>
 
+    <style name="Theme_Opengur_Light.Imgur">
+        <item name="colorPrimary">@color/theme_imgur_primary</item>
+        <item name="colorPrimaryDark">@color/theme_imgur_dark</item>
+        <item name="colorAccent">@color/theme_imgur_accent</item>
+        <item name="actionModeStyle">@style/ActionMode.Green</item>
+    </style>
+
     <style name="Theme_Opengur_Light.Blue">
         <item name="colorPrimary">@color/theme_blue_primary</item>
         <item name="colorPrimaryDark">@color/theme_blue_dark</item>

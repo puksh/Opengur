@@ -11,12 +11,18 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
+import android.preference.SwitchPreference;
 import android.preference.RingtonePreference;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import com.kenny.openimgur.BuildConfig;
 import com.kenny.openimgur.R;
@@ -33,6 +39,10 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 
 public class SettingsFragment extends BasePreferenceFragment implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
+    private PreferenceCategory mAppearanceCategory;
+
+    private SwitchPreference mAmoledPreference;
+
     public static SettingsFragment createInstance() {
         return new SettingsFragment();
     }
@@ -44,6 +54,8 @@ public class SettingsFragment extends BasePreferenceFragment implements Preferen
         bindListPreference(findPreference(SettingsActivity.KEY_CACHE_LOC));
         bindListPreference(findPreference(SettingsActivity.KEY_THUMBNAIL_QUALITY));
         bindListPreference(findPreference(SettingsActivity.KEY_NOTIFICATION_FREQUENCY));
+        mAppearanceCategory = (PreferenceCategory) findPreference("appearanceSettings");
+        mAmoledPreference = (SwitchPreference) findPreference(SettingsActivity.KEY_AMOLED_THEME);
         findPreference(SettingsActivity.KEY_CURRENT_CACHE_SIZE).setOnPreferenceClickListener(this);
         findPreference("licenses").setOnPreferenceClickListener(this);
         findPreference("openSource").setOnPreferenceClickListener(this);
@@ -51,11 +63,14 @@ public class SettingsFragment extends BasePreferenceFragment implements Preferen
         findPreference("mySubreddits").setOnPreferenceClickListener(this);
         findPreference("gallerySearchHistory").setOnPreferenceClickListener(this);
         findPreference("experimentalSettings").setOnPreferenceClickListener(this);
+        findPreference(SettingsActivity.KEY_THEME_NEW).setOnPreferenceClickListener(this);
         findPreference(SettingsActivity.KEY_ADB).setOnPreferenceChangeListener(this);
         findPreference(SettingsActivity.KEY_DARK_THEME).setOnPreferenceChangeListener(this);
+        findPreference(SettingsActivity.KEY_AMOLED_THEME).setOnPreferenceChangeListener(this);
         findPreference(SettingsActivity.KEY_NOTIFICATION_RINGTONE).setOnPreferenceChangeListener(this);
-        findPreference(SettingsActivity.KEY_THEME_NEW).setOnPreferenceChangeListener(this);
         findPreference("privacyPolicy").setOnPreferenceClickListener(this);
+        updateAmoledPreference(mApp.getPreferences().getBoolean(SettingsActivity.KEY_DARK_THEME, true));
+        updateThemeSummary();
     }
 
     @Override
@@ -76,6 +91,8 @@ public class SettingsFragment extends BasePreferenceFragment implements Preferen
         if (!TextUtils.isEmpty(ringtone)) {
             findPreference(SettingsActivity.KEY_NOTIFICATION_RINGTONE).setSummary(getNotificationRingtone(ringtone));
         }
+
+        updateThemeSummary();
     }
 
     @Override
@@ -83,15 +100,7 @@ public class SettingsFragment extends BasePreferenceFragment implements Preferen
         boolean updated = super.onPreferenceChange(preference, object);
         String key = preference.getKey();
 
-        if (SettingsActivity.KEY_THEME_NEW.equals(key)) {
-            int color = (Integer) object;
-            boolean isDarkTheme = mApp.getImgurTheme().isDarkTheme;
-            ImgurTheme theme = ImgurTheme.fromPreferences(getResources(), color);
-            theme.isDarkTheme = isDarkTheme;
-            mApp.setImgurTheme(theme);
-            getActivity().recreate();
-            updated = true;
-        } else if (preference instanceof CheckBoxPreference) {
+        if (preference instanceof CheckBoxPreference || preference instanceof SwitchPreference) {
             switch (key) {
                 case SettingsActivity.KEY_ADB:
                     // Ignore if its a debug build
@@ -104,6 +113,17 @@ public class SettingsFragment extends BasePreferenceFragment implements Preferen
 
                 case SettingsActivity.KEY_DARK_THEME:
                     mApp.getImgurTheme().isDarkTheme = (Boolean) object;
+                    if (!(Boolean) object) {
+                        mApp.getImgurTheme().isAmoled = false;
+                        mApp.getPreferences().edit().putBoolean(SettingsActivity.KEY_AMOLED_THEME, false).apply();
+                    }
+                    updateAmoledPreference((Boolean) object);
+                    getActivity().recreate();
+                    updated = true;
+                    break;
+
+                case SettingsActivity.KEY_AMOLED_THEME:
+                    mApp.getImgurTheme().isAmoled = (Boolean) object;
                     getActivity().recreate();
                     updated = true;
                     break;
@@ -119,6 +139,10 @@ public class SettingsFragment extends BasePreferenceFragment implements Preferen
     @Override
     public boolean onPreferenceClick(final Preference preference) {
         switch (preference.getKey()) {
+            case SettingsActivity.KEY_THEME_NEW:
+                showThemeChooser();
+                return true;
+
             case SettingsActivity.KEY_CURRENT_CACHE_SIZE:
                 new AlertDialog.Builder(getActivity(), mApp.getImgurTheme().getAlertDialogTheme())
                         .setTitle(R.string.clear_cache)
@@ -249,5 +273,150 @@ public class SettingsFragment extends BasePreferenceFragment implements Preferen
     @Override
     protected int getPreferenceXML() {
         return R.xml.settings;
+    }
+
+    private void showThemeChooser() {
+        final ImgurTheme[] themes = new ImgurTheme[]{
+                ImgurTheme.IMGUR,
+                ImgurTheme.BLACK,
+                ImgurTheme.BLUE,
+                ImgurTheme.CYAN,
+                ImgurTheme.GREEN,
+                ImgurTheme.GREY,
+                ImgurTheme.ORANGE,
+                ImgurTheme.PINK,
+                ImgurTheme.PURPLE,
+                ImgurTheme.RED,
+                ImgurTheme.TEAL
+        };
+
+        AlertDialog dialog = new AlertDialog.Builder(getActivity(), mApp.getImgurTheme().getAlertDialogTheme())
+                .setTitle(R.string.pref_theme_title)
+                .setAdapter(new ThemeChooserAdapter(themes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which >= 0 && which < themes.length) {
+                            applyThemeSelection(themes[which]);
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+
+        if (dialog.getListView() != null) {
+            dialog.getListView().setDivider(null);
+            dialog.getListView().setDividerHeight(0);
+        }
+    }
+
+    private void applyThemeSelection(ImgurTheme selectedTheme) {
+        ImgurTheme currentTheme = mApp.getImgurTheme();
+
+        if (selectedTheme == currentTheme) {
+            return;
+        }
+
+        selectedTheme.isDarkTheme = currentTheme.isDarkTheme;
+        selectedTheme.isAmoled = currentTheme.isAmoled;
+        mApp.setImgurTheme(selectedTheme);
+        mApp.getPreferences().edit().putInt(SettingsActivity.KEY_THEME_NEW, getResources().getColor(selectedTheme.primaryColor)).apply();
+        updateThemeSummary();
+        getActivity().recreate();
+    }
+
+    private void updateThemeSummary() {
+        Preference pref = findPreference(SettingsActivity.KEY_THEME_NEW);
+
+        if (pref != null) {
+            pref.setSummary(getThemeName(mApp.getImgurTheme()));
+        }
+    }
+
+    private String getThemeName(ImgurTheme theme) {
+        switch (theme) {
+            case IMGUR:
+                return "Imgur certified™";
+            case BLACK:
+                return "Black";
+            case BLUE:
+                return "Blue";
+            case CYAN:
+                return "Cyan";
+            case GREEN:
+                return "Green";
+            case GREY:
+                return "Grey";
+            case ORANGE:
+                return "Orange";
+            case PINK:
+                return "Pink";
+            case PURPLE:
+                return "Purple";
+            case RED:
+                return "Red";
+            case TEAL:
+            default:
+                return "Teal";
+        }
+    }
+
+    private class ThemeChooserAdapter extends BaseAdapter {
+        private final ImgurTheme[] mThemes;
+
+        ThemeChooserAdapter(ImgurTheme[] themes) {
+            mThemes = themes;
+        }
+
+        @Override
+        public int getCount() {
+            return mThemes.length;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mThemes[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = convertView;
+
+            if (view == null) {
+                view = LayoutInflater.from(getActivity()).inflate(R.layout.item_theme_color_bar, parent, false);
+            }
+
+            TextView name = (TextView) view.findViewById(R.id.themeName);
+            View dark = view.findViewById(R.id.themeColorBarDark);
+            View primary = view.findViewById(R.id.themeColorBarPrimary);
+            View accent = view.findViewById(R.id.themeColorBarAccent);
+            ImgurTheme theme = mThemes[position];
+
+            name.setText(getThemeName(theme));
+            dark.setBackgroundColor(getResources().getColor(theme.darkColor));
+            primary.setBackgroundColor(getResources().getColor(theme.primaryColor));
+            accent.setBackgroundColor(getResources().getColor(theme.accentColor));
+            return view;
+        }
+    }
+
+    private void updateAmoledPreference(boolean isDarkTheme) {
+        if (mAppearanceCategory == null || mAmoledPreference == null) {
+            return;
+        }
+
+        if (isDarkTheme) {
+            if (mAppearanceCategory.findPreference(SettingsActivity.KEY_AMOLED_THEME) == null) {
+                mAppearanceCategory.addPreference(mAmoledPreference);
+            }
+        } else {
+            if (mAppearanceCategory.findPreference(SettingsActivity.KEY_AMOLED_THEME) != null) {
+                mAppearanceCategory.removePreference(mAmoledPreference);
+            }
+        }
     }
 }

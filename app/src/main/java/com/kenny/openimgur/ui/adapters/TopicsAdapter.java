@@ -23,8 +23,9 @@ public class TopicsAdapter extends ArrayAdapter<ImgurTopic> {
     public TopicsAdapter(Context context, List<ImgurTopic> topics) {
         super(context, R.layout.support_simple_spinner_dropdown_item, topics);
         Resources res = context.getResources();
-        boolean isDark = OpengurApp.getInstance(context).getImgurTheme().isDarkTheme;
-        mColor = isDark ? res.getColor(R.color.bg_dark) : res.getColor(R.color.bg_light);
+        mColor = OpengurApp.getInstance(context).getImgurTheme().isDarkTheme
+            ? res.getColor(OpengurApp.getInstance(context).getImgurTheme().getDarkBackgroundColorRes())
+            : res.getColor(R.color.bg_light);
     }
 
     @Override

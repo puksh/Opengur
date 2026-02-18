@@ -12,20 +12,23 @@ import com.kenny.openimgur.R;
  * Created by kcampagna on 12/8/14.
  */
 public enum ImgurTheme {
-    BLUE(R.style.Theme_Opengur_Light_Blue, R.style.Theme_Dark_Blue, R.color.theme_blue_primary, R.color.theme_blue_dark, R.color.theme_blue_accent),
-    ORANGE(R.style.Theme_Opengur_Light_Orange, R.style.Theme_Dark_Orange, R.color.theme_orange_primary, R.color.theme_orange_dark, R.color.theme_light_blue_accent),
-    CYAN(R.style.Theme_Opengur_Light_Cyan, R.style.Theme_Dark_Cyan, R.color.theme_cyan_primary, R.color.theme_cyan_dark, R.color.theme_cyan_accent),
-    GREEN(R.style.Theme_Opengur_Light_Green, R.style.Theme_Dark_Green, R.color.theme_green_primary, R.color.theme_green_dark, R.color.theme_green_accent),
-    TEAL(R.style.Theme_Opengur_Light_Teal, R.style.Theme_Dark_Teal, R.color.theme_teal_primary, R.color.theme_teal_dark, R.color.theme_teal_accent),
-    RED(R.style.Theme_Opengur_Light_Red, R.style.Theme_Dark_Red, R.color.theme_red_primary, R.color.theme_red_dark, R.color.theme_red_accent),
-    PINK(R.style.Theme_Opengur_Light_Pink, R.style.Theme_Dark_Pink, R.color.theme_pink_primary, R.color.theme_pink_dark, R.color.theme_pink_accent),
-    PURPLE(R.style.Theme_Opengur_Light_Purple, R.style.Theme_Dark_Purple, R.color.theme_purple_primary, R.color.theme_purple_dark, R.color.theme_purple_accent),
-    GREY(R.style.Theme_Opengur_Light_Grey, R.style.Theme_Dark_Grey, R.color.theme_grey_primary, R.color.theme_grey_dark, R.color.theme_grey_accent),
-    BLACK(R.style.Theme_Opengur_Light_Black, R.style.Theme_Dark_Black, R.color.theme_black_primary, R.color.theme_black_dark, R.color.theme_black_accent);
+    IMGUR(R.style.Theme_Opengur_Light_Imgur, R.style.Theme_Dark_Imgur, R.style.Theme_Dark_Amoled_Imgur, R.color.theme_imgur_primary, R.color.theme_imgur_dark, R.color.theme_imgur_accent),
+    BLUE(R.style.Theme_Opengur_Light_Blue, R.style.Theme_Dark_Blue, R.style.Theme_Dark_Amoled_Blue, R.color.theme_blue_primary, R.color.theme_blue_dark, R.color.theme_blue_accent),
+    ORANGE(R.style.Theme_Opengur_Light_Orange, R.style.Theme_Dark_Orange, R.style.Theme_Dark_Amoled_Orange, R.color.theme_orange_primary, R.color.theme_orange_dark, R.color.theme_light_blue_accent),
+    CYAN(R.style.Theme_Opengur_Light_Cyan, R.style.Theme_Dark_Cyan, R.style.Theme_Dark_Amoled_Cyan, R.color.theme_cyan_primary, R.color.theme_cyan_dark, R.color.theme_cyan_accent),
+    GREEN(R.style.Theme_Opengur_Light_Green, R.style.Theme_Dark_Green, R.style.Theme_Dark_Amoled_Green, R.color.theme_green_primary, R.color.theme_green_dark, R.color.theme_green_accent),
+    TEAL(R.style.Theme_Opengur_Light_Teal, R.style.Theme_Dark_Teal, R.style.Theme_Dark_Amoled_Teal, R.color.theme_teal_primary, R.color.theme_teal_dark, R.color.theme_teal_accent),
+    RED(R.style.Theme_Opengur_Light_Red, R.style.Theme_Dark_Red, R.style.Theme_Dark_Amoled_Red, R.color.theme_red_primary, R.color.theme_red_dark, R.color.theme_red_accent),
+    PINK(R.style.Theme_Opengur_Light_Pink, R.style.Theme_Dark_Pink, R.style.Theme_Dark_Amoled_Pink, R.color.theme_pink_primary, R.color.theme_pink_dark, R.color.theme_pink_accent),
+    PURPLE(R.style.Theme_Opengur_Light_Purple, R.style.Theme_Dark_Purple, R.style.Theme_Dark_Amoled_Purple, R.color.theme_purple_primary, R.color.theme_purple_dark, R.color.theme_purple_accent),
+    GREY(R.style.Theme_Opengur_Light_Grey, R.style.Theme_Dark_Grey, R.style.Theme_Dark_Amoled_Grey, R.color.theme_grey_primary, R.color.theme_grey_dark, R.color.theme_grey_accent),
+    BLACK(R.style.Theme_Opengur_Light_Black, R.style.Theme_Dark_Black, R.style.Theme_Dark_Amoled_Black, R.color.theme_black_primary, R.color.theme_black_dark, R.color.theme_black_accent);
 
     public final int theme;
 
     public final int darkTheme;
+
+    public final int amoledDarkTheme;
 
     public final int primaryColor;
 
@@ -35,8 +38,11 @@ public enum ImgurTheme {
 
     public boolean isDarkTheme = false;
 
-    ImgurTheme(@StyleRes int theme, @StyleRes int darkTheme, @ColorRes int primaryColor, @ColorRes int darkColor, @ColorRes int accentColor) {
+    public boolean isAmoled = false;
+
+    ImgurTheme(@StyleRes int theme, @StyleRes int darkTheme, @StyleRes int amoledDarkTheme, @ColorRes int primaryColor, @ColorRes int darkColor, @ColorRes int accentColor) {
         this.darkTheme = darkTheme;
+        this.amoledDarkTheme = amoledDarkTheme;
         this.theme = theme;
         this.primaryColor = primaryColor;
         this.darkColor = darkColor;
@@ -44,12 +50,30 @@ public enum ImgurTheme {
     }
 
     public void applyTheme(Resources.Theme theme) {
-        theme.applyStyle(isDarkTheme ? this.darkTheme : this.theme, true);
+        theme.applyStyle(isDarkTheme ? (isAmoled ? this.amoledDarkTheme : this.darkTheme) : this.theme, true);
+    }
+
+    @ColorRes
+    public int getDarkBackgroundColorRes() {
+        return isAmoled ? android.R.color.black : R.color.bg_dark;
+    }
+
+    @ColorRes
+    public int getCardBackgroundColorRes() {
+        return isAmoled ? android.R.color.black : R.color.card_bg_dark;
+    }
+
+    @ColorRes
+    public int getDarkDividerColorRes() {
+        return isAmoled ? android.R.color.black : R.color.primary_dark_light;
     }
 
     @StyleRes
     public int getAlertDialogTheme() {
         switch (this) {
+            case IMGUR:
+                return isDarkTheme ? R.style.Theme_AppCompat_Dialog_Alert_Accent_Green : R.style.Theme_AppCompat_Light_Dialog_Alert_Accent_Green;
+
             case BLUE:
             case ORANGE:
             case CYAN:
@@ -74,6 +98,9 @@ public enum ImgurTheme {
     @StyleRes
     public int getDialogTheme() {
         switch (this) {
+            case IMGUR:
+                return isDarkTheme ? R.style.Theme_AppCompat_Dialog_Accent_Green : R.style.Theme_AppCompat_Light_Dialog_Accent_Green;
+
             case BLUE:
             case ORANGE:
             case CYAN:
@@ -100,6 +127,11 @@ public enum ImgurTheme {
         return isDarkTheme ? R.style.BottomSheet_Dark : R.style.BottomSheet_Light;
     }
 
+    @ColorRes
+    public int getAccentColorRes() {
+        return accentColor;
+    }
+
     /**
      * Returns the {@link ColorStateList} for the NavigationView
      *
@@ -113,7 +145,7 @@ public enum ImgurTheme {
         };
 
         int[] colors = new int[]{
-                res.getColor(accentColor),
+            res.getColor(getAccentColorRes()),
                 isDarkTheme ? Color.WHITE : Color.BLACK
         };
 
@@ -130,6 +162,10 @@ public enum ImgurTheme {
         ImgurTheme copy;
 
         switch (theme) {
+            case IMGUR:
+                copy = IMGUR;
+                break;
+
             case BLUE:
                 copy = BLUE;
                 break;
@@ -162,6 +198,10 @@ public enum ImgurTheme {
                 copy = PURPLE;
                 break;
 
+            case BLACK:
+                copy = BLACK;
+                break;
+
             case GREY:
             default:
                 copy = GREY;
@@ -169,6 +209,7 @@ public enum ImgurTheme {
         }
 
         copy.isDarkTheme = theme.isDarkTheme;
+        copy.isAmoled = theme.isAmoled;
         return copy;
     }
 

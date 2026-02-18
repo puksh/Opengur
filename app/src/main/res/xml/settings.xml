@@ -2,22 +2,29 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="@string/pref_category_title">
+    <PreferenceCategory
+        android:key="appearanceSettings"
+        android:title="@string/pref_appearance_title">
 
-        <com.kennyc.colorchooser.ColorChooserPreference
+        <Preference
             android:key="color"
             android:title="@string/pref_theme_title"
-            android:positiveButtonText="@string/okay"
-            android:negativeButtonText="@string/cancel"
-            app:cc_colors="@array/pref_colors"
-            app:cc_colorNames="@array/pref_themes_items" />
+            android:summary="@string/pref_theme_summary"
+            android:persistent="false" />
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:key="darkTheme"
             android:defaultValue="true"
             android:summaryOn="@string/pref_dark_theme_on"
             android:summaryOff="@string/pref_dark_theme_off"
             android:title="@string/pref_dark_theme_title" />
+
+        <SwitchPreference
+            android:key="amoledTheme"
+            android:defaultValue="false"
+            android:summaryOn="@string/pref_amoled_theme_on"
+            android:summaryOff="@string/pref_amoled_theme_off"
+            android:title="@string/pref_amoled_theme_title" />
 
     </PreferenceCategory>
 

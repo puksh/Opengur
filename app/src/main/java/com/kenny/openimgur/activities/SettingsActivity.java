@@ -23,6 +23,8 @@ public class SettingsActivity extends BaseActivity {
 
     public static final String KEY_DARK_THEME = "darkTheme";
 
+    public static final String KEY_AMOLED_THEME = "amoledTheme";
+
     public static final String KEY_CONFIRM_EXIT = "confirmExit";
 
     public static final String KEY_THREAD_SIZE = "threadSize";

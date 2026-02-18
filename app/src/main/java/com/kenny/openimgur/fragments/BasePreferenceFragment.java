@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.view.View;
+import android.widget.ListView;
 
 import com.kenny.openimgur.classes.OpengurApp;
 
@@ -21,6 +23,19 @@ public abstract class BasePreferenceFragment extends PreferenceFragment implemen
         super.onCreate(savedInstanceState);
         mApp = OpengurApp.getInstance(getActivity());
         addPreferencesFromResource(getPreferenceXML());
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        View view = getView();
+        ListView listView = view != null ? (ListView) view.findViewById(android.R.id.list) : null;
+
+        if (listView != null) {
+            listView.setDivider(null);
+            listView.setDividerHeight(0);
+        }
     }
 
     /**

@@ -114,6 +114,8 @@ public class MainActivity extends BaseActivity implements FragmentListener, Navi
 
     private boolean mIsDarkTheme;
 
+    private boolean mIsAmoledTheme;
+
     private boolean mNagOnExit;
 
     private long mLastBackPressTime = 0;
@@ -250,7 +252,7 @@ public class MainActivity extends BaseActivity implements FragmentListener, Navi
                     .setWidth(size)
                     .setHeight(size)
                     .setShape(TextDrawable.DRAWABLE_SHAPE_OVAL)
-                    .setColor(getResources().getColor(theme.accentColor))
+                    .setColor(getResources().getColor(theme.getAccentColorRes()))
                     .setText(firstLetter)
                     .build());
 
@@ -315,6 +317,7 @@ public class MainActivity extends BaseActivity implements FragmentListener, Navi
             case R.id.nav_settings:
                 mSavedTheme = ImgurTheme.copy(theme);
                 mIsDarkTheme = app.getPreferences().getBoolean(SettingsActivity.KEY_DARK_THEME, mSavedTheme.isDarkTheme);
+                mIsAmoledTheme = app.getPreferences().getBoolean(SettingsActivity.KEY_AMOLED_THEME, mSavedTheme.isAmoled);
                 startActivityForResult(SettingsActivity.createIntent(getApplicationContext()), RequestCodes.SETTINGS);
                 break;
 
@@ -466,7 +469,7 @@ public class MainActivity extends BaseActivity implements FragmentListener, Navi
                 ImgurTheme theme = OpengurApp.getInstance(getApplicationContext()).getImgurTheme();
                 mNagOnExit = app.getPreferences().getBoolean(SettingsActivity.KEY_CONFIRM_EXIT, true);
 
-                if (mSavedTheme == null || theme != mSavedTheme || mIsDarkTheme != theme.isDarkTheme) {
+                if (mSavedTheme == null || theme != mSavedTheme || mIsDarkTheme != theme.isDarkTheme || mIsAmoledTheme != theme.isAmoled) {
                     Intent intent = getIntent();
                     overridePendingTransition(0, 0);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

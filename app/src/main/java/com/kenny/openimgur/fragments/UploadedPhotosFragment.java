@@ -102,8 +102,8 @@ public class UploadedPhotosFragment extends BaseFragment implements View.OnClick
         super.onViewCreated(view, savedInstanceState);
         ViewUtils.setRecyclerViewGridDefaults(getActivity(), mGrid);
         if (mListener != null) mListener.onUpdateActionBarTitle(getString(R.string.uploaded_photos_title));
-        mRefreshLayout.setColorSchemeColors(getResources().getColor(theme.accentColor));
-        int bgColor = theme.isDarkTheme ? R.color.bg_dark : R.color.bg_light;
+        mRefreshLayout.setColorSchemeColors(getResources().getColor(theme.getAccentColorRes()));
+        int bgColor = theme.isDarkTheme ? theme.getDarkBackgroundColorRes() : R.color.bg_light;
         mRefreshLayout.setProgressBackgroundColorSchemeColor(getResources().getColor(bgColor));
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

@@ -144,7 +144,9 @@
     <string name="pref_comments_on">Display Comments</string>
     <string name="pref_comments_off">Don\'t Display Comments</string>
     <string name="pref_category_title">Theme</string>
-    <string name="pref_theme_title">App Color Theme</string>
+    <string name="pref_appearance_title">Appearance</string>
+    <string name="pref_theme_title">Accent Color</string>
+    <string name="pref_theme_summary">Choose the app accent color</string>
     <string name="pref_adb_title">ADB Logs</string>
     <string name="pref_adb_disabled">ADB Logs disabled</string>
     <string name="pref_adb_enabled">ADB Logs enabled</string>
@@ -160,8 +162,11 @@
     <string name="pref_crashlytics_on">Anonymous usage statistics will be reported</string>
     <string name="pref_crashlytics_off">Anonymous usage statistics will not be reported</string>
     <string name="pref_dark_theme_title">Dark Theme</string>
-    <string name="pref_dark_theme_on">Use dark theme</string>
-    <string name="pref_dark_theme_off">Do not use dark theme</string>
+    <string name="pref_dark_theme_on">Dark mode enabled</string>
+    <string name="pref_dark_theme_off">Dark mode disabled</string>
+    <string name="pref_amoled_theme_title">AMOLED Black</string>
+    <string name="pref_amoled_theme_on">Use pure black backgrounds in dark mode</string>
+    <string name="pref_amoled_theme_off">Use standard dark backgrounds</string>
     <string name="pref_reddit_title">Subreddit search history</string>
     <string name="pref_reddit_desc">Clear subreddit search history</string>
     <string name="pref_reddit_deleted">Subreddit history cleared</string>

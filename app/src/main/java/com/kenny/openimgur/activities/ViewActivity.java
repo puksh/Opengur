@@ -11,7 +11,10 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -28,6 +31,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -237,6 +241,7 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view);
+        applyAmoledBarColors();
         mCommentList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         mSideGalleryFragment = (SideGalleryFragment) getFragmentManager().findFragmentById(R.id.sideGallery);
         ((Button) mMultiView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.errorButton)).setText(R.string.load_comments);
@@ -270,6 +275,28 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
 
         initSlidingView();
         handleIntent(getIntent(), savedInstanceState);
+    }
+
+    private void applyAmoledBarColors() {
+        if (!theme.isDarkTheme || !theme.isAmoled) {
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().setStatusBarColor(Color.BLACK);
+            getWindow().setNavigationBarColor(Color.BLACK);
+        }
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+        }
+
+        View topContainer = findViewById(R.id.topContainer);
+
+        if (topContainer != null) {
+            topContainer.setBackgroundColor(Color.BLACK);
+        }
     }
 
     private void initSlidingView() {

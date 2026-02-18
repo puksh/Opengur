@@ -65,7 +65,7 @@ public class ProfileInfoAdapter extends BaseRecyclerAdapter<ImgurTrophy> {
             case VIEW_TYPE_TROPHY:
             default:
                 holder = new TrophyHolder(inflateView(R.layout.trophy_item, parent));
-                ((TrophyHolder) holder).divider.setBackgroundColor(mDividerColor);
+                ((TrophyHolder) holder).divider.setVisibility(View.GONE);
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -104,6 +104,7 @@ public class ProfileInfoAdapter extends BaseRecyclerAdapter<ImgurTrophy> {
             String date = mDateFormat.format(new Date(trophy.getDate() * DateUtils.SECOND_IN_MILLIS));
             trophyHolder.trophyName.setText(String.format("%s - %s", trophy.getName(), date));
             trophyHolder.trophyDesc.setText(trophy.getDescription());
+            trophyHolder.divider.setVisibility(View.GONE);
             displayImage(trophyHolder.trophyImage, trophy.getTrophyImagePath());
         }
     }

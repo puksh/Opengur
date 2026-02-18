@@ -144,8 +144,8 @@ public abstract class BaseGridFragment extends BaseFragment implements Callback<
             }
         });
 
-        mRefreshLayout.setColorSchemeColors(getResources().getColor(theme.accentColor));
-        int bgColor = theme.isDarkTheme ? R.color.bg_dark : R.color.bg_light;
+        mRefreshLayout.setColorSchemeColors(getResources().getColor(theme.getAccentColorRes()));
+        int bgColor = theme.isDarkTheme ? theme.getDarkBackgroundColorRes() : R.color.bg_light;
         mRefreshLayout.setProgressBackgroundColorSchemeColor(getResources().getColor(bgColor));
         onRestoreSavedInstance(savedInstanceState);
     }

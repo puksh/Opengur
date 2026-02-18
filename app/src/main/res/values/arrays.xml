@@ -10,6 +10,7 @@
     </string-array>
 
     <string-array name="pref_themes_items">
+        <item>Imgur certified™</item>
         <item>Black</item>
         <item>Blue</item>
         <item>Cyan</item>
@@ -161,6 +162,7 @@
     </string-array>
 
     <string-array name="pref_colors" translatable="false">
+        <item>#2E3035</item>
         <item>#242424</item>
         <item>#2196F3</item>
         <item>#00BCD4</item>

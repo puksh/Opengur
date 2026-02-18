@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -52,6 +53,7 @@ abstract public class BaseActivity extends AppCompatActivity {
         app = OpengurApp.getInstance(getApplicationContext());
         onSetStyle(app.getImgurTheme());
         super.onCreate(savedInstanceState);
+        applyAmoledSystemBars();
         ActionBar ab = getSupportActionBar();
 
         if (ab != null) {
@@ -65,6 +67,15 @@ abstract public class BaseActivity extends AppCompatActivity {
         mIsLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         user = app.getUser();
         mIsTablet = getResources().getBoolean(R.bool.is_tablet);
+    }
+
+    private void applyAmoledSystemBars() {
+        if (theme == null || !theme.isDarkTheme || !theme.isAmoled || !isApiLevel(Build.VERSION_CODES.LOLLIPOP)) {
+            return;
+        }
+
+        getWindow().setStatusBarColor(Color.BLACK);
+        getWindow().setNavigationBarColor(Color.BLACK);
     }
 
     @Override
@@ -184,6 +195,9 @@ abstract public class BaseActivity extends AppCompatActivity {
      */
     public void setStatusBarColorResource(@ColorRes int color) {
         if (isApiLevel(Build.VERSION_CODES.LOLLIPOP)) {
+            if (theme != null && theme.isDarkTheme && theme.isAmoled) {
+                color = android.R.color.black;
+            }
             setStatusBarColor(getResources().getColor(color));
         }
     }
