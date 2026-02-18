@@ -53,6 +53,8 @@ public class SettingsActivity extends BaseActivity {
 
     public static final String KEY_AUTOPLAY_SILENT_MOVIES = "autoplaySilentMovies";
 
+    public static final String KEY_MOSAIC_VIEW = "mosaicView";
+
     // Values
     public static final String CACHE_SIZE_UNLIMITED = "unlimited";
 

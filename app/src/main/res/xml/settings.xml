@@ -52,6 +52,13 @@
             android:defaultValue="false" />
 
         <CheckBoxPreference
+            android:key="mosaicView"
+            android:title="@string/pref_mosaic_view_title"
+            android:summaryOn="@string/pref_mosaic_view_on"
+            android:summaryOff="@string/pref_mosaic_view_off"
+            android:defaultValue="false" />
+
+        <CheckBoxPreference
             android:key="autoLoadTags"
             android:summaryOn="@string/pref_tags_on"
             android:summaryOff="@string/pref_tags_off"

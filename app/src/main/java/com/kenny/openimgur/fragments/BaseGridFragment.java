@@ -11,6 +11,7 @@ import android.support.annotation.StringRes;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 import com.kenny.openimgur.R;
@@ -22,6 +23,7 @@ import com.kenny.openimgur.classes.FragmentListener;
 import com.kenny.openimgur.classes.ImgurBaseObject;
 import com.kenny.openimgur.classes.ImgurPhoto;
 import com.kenny.openimgur.collections.SetUniqueList;
+import com.kenny.openimgur.ui.GridItemDecoration;
 import com.kenny.openimgur.ui.adapters.GalleryAdapter;
 import com.kenny.openimgur.util.ImageUtil;
 import com.kenny.openimgur.util.LogUtil;
@@ -79,8 +81,6 @@ public abstract class BaseGridFragment extends BaseFragment implements Callback<
 
     protected boolean mHasMore = true;
 
-    protected GridLayoutManager mManager;
-
     private GalleryAdapter mAdapter;
 
     ImageLoader imageLoader;
@@ -104,19 +104,18 @@ public abstract class BaseGridFragment extends BaseFragment implements Callback<
         super.onViewCreated(view, savedInstanceState);
         mAllowNSFW = app.getPreferences().getBoolean(SettingsActivity.NSFW_KEY, false);
         mConserveData = NetworkUtils.hasDataSaver(getActivity()) || !NetworkUtils.isConnectedToWiFi(getActivity());
-        ViewUtils.setRecyclerViewGridDefaults(getActivity(), mGrid);
+        applyGridLayout(app.getPreferences().getBoolean(SettingsActivity.KEY_MOSAIC_VIEW, false));
         imageLoader = ImageUtil.getImageLoader(getActivity());
 
         mGrid.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (mManager == null) {
-                    mManager = (GridLayoutManager) recyclerView.getLayoutManager();
-                }
+                RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
+                if (manager == null) return;
 
-                int visibleItemCount = mManager.getChildCount();
-                int totalItemCount = mManager.getItemCount();
-                int firstVisibleItemPosition = mManager.findFirstVisibleItemPosition();
+                int visibleItemCount = manager.getChildCount();
+                int totalItemCount = manager.getItemCount();
+                int firstVisibleItemPosition = getFirstVisibleItemPosition(manager);
                 int prefetchThreshold = Math.max(1, visibleItemCount * (mConserveData ? 3 : 2));
 
                 // Prefetch when there is roughly one screen of items left.
@@ -259,8 +258,7 @@ public abstract class BaseGridFragment extends BaseFragment implements Callback<
             }
 
             outState.putParcelableArrayList(KEY_ITEMS, adapter.retainItems());
-            GridLayoutManager manager = (GridLayoutManager) mGrid.getLayoutManager();
-            outState.putInt(KEY_CURRENT_POSITION, manager.findFirstVisibleItemPosition());
+            outState.putInt(KEY_CURRENT_POSITION, getFirstVisibleItemPosition(mGrid.getLayoutManager()));
         }
     }
 
@@ -394,9 +392,10 @@ public abstract class BaseGridFragment extends BaseFragment implements Callback<
                     if (obj != null) {
                         int adapterPosition = mAdapter.indexOf(obj);
                         if (adapterPosition >= 0) {
-                            if (mManager == null) mManager = (GridLayoutManager) mGrid.getLayoutManager();
-                            int visibleItemCount = mManager.getChildCount();
-                            int firstVisibleItemPosition = mManager.findFirstVisibleItemPosition();
+                            RecyclerView.LayoutManager manager = mGrid.getLayoutManager();
+                            if (manager == null) break;
+                            int visibleItemCount = manager.getChildCount();
+                            int firstVisibleItemPosition = getFirstVisibleItemPosition(manager);
 
                             // Update the grid to the item they ended on
                             if (adapterPosition < firstVisibleItemPosition || adapterPosition > firstVisibleItemPosition + visibleItemCount) {
@@ -416,8 +415,58 @@ public abstract class BaseGridFragment extends BaseFragment implements Callback<
                     mAllowNSFW = pref.getBoolean(SettingsActivity.NSFW_KEY, false);
                     adapter.setAllowNSFW(nsfwThumb);
                     adapter.setThumbnailQuality(getActivity(), pref.getString(SettingsActivity.KEY_THUMBNAIL_QUALITY, ImgurPhoto.THUMBNAIL_GALLERY));
+                    adapter.setAutoplaySilentMovies(pref.getBoolean(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES, false));
+                    boolean mosaicEnabled = pref.getBoolean(SettingsActivity.KEY_MOSAIC_VIEW, false);
+                    adapter.setMosaicEnabled(mosaicEnabled);
+                    applyGridLayout(mosaicEnabled);
                 }
                 break;
         }
+    }
+
+    private void applyGridLayout(boolean mosaicEnabled) {
+        if (getActivity() == null || mGrid == null) return;
+
+        int numColumns = getResources().getInteger(R.integer.gallery_num_columns);
+        int gridSpacing = getResources().getDimensionPixelSize(R.dimen.grid_padding);
+
+        mGrid.setHasFixedSize(!mosaicEnabled);
+        if (mosaicEnabled) {
+            mGrid.setLayoutManager(new StaggeredGridLayoutManager(numColumns, StaggeredGridLayoutManager.VERTICAL));
+        } else {
+            mGrid.setLayoutManager(new GridLayoutManager(getActivity(), numColumns));
+        }
+
+        while (mGrid.getItemDecorationCount() > 0) {
+            mGrid.removeItemDecorationAt(0);
+        }
+
+        mGrid.addItemDecoration(new GridItemDecoration(gridSpacing, numColumns));
+    }
+
+    private int getFirstVisibleItemPosition(@Nullable RecyclerView.LayoutManager manager) {
+        if (manager instanceof GridLayoutManager) {
+            return ((GridLayoutManager) manager).findFirstVisibleItemPosition();
+        }
+
+        if (manager instanceof StaggeredGridLayoutManager) {
+            StaggeredGridLayoutManager staggered = (StaggeredGridLayoutManager) manager;
+            int[] positions = staggered.findFirstVisibleItemPositions(null);
+            int min = Integer.MAX_VALUE;
+
+            if (positions != null) {
+                for (int i = 0; i < positions.length; i++) {
+                    int position = positions[i];
+
+                    if (position >= 0 && position < min) {
+                        min = position;
+                    }
+                }
+            }
+
+            return min == Integer.MAX_VALUE ? 0 : min;
+        }
+
+        return 0;
     }
 }

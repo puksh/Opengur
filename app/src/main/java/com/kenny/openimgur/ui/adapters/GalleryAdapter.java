@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,11 +19,15 @@ import com.kenny.openimgur.classes.ImgurPhoto;
 import com.kenny.openimgur.classes.OpengurApp;
 import com.kenny.openimgur.collections.SetUniqueList;
 import com.kenny.openimgur.ui.CenteredDrawable;
+import com.kenny.openimgur.ui.VideoView;
 import com.kenny.openimgur.util.FileUtil;
 import com.kenny.openimgur.util.ImageUtil;
 import com.kenny.openimgur.util.LinkUtils;
 import com.kenny.openimgur.util.LogUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +51,16 @@ public class GalleryAdapter extends BaseRecyclerAdapter<ImgurBaseObject> {
 
     private String mThumbnailQuality;
 
+    private boolean mAutoPlaySilentMovies;
+
+    private boolean mMosaicEnabled;
+
+    private final int mDefaultTileHeight;
+
+    private final int mGridColumns;
+
+    private final int mGridSpacing;
+
     public GalleryAdapter(Context context, SetUniqueList<ImgurBaseObject> objects, View.OnClickListener listener) {
         super(context, objects, true);
         mUpvoteColor = getColor(R.color.notoriety_positive);
@@ -53,6 +68,11 @@ public class GalleryAdapter extends BaseRecyclerAdapter<ImgurBaseObject> {
         SharedPreferences pref = OpengurApp.getInstance(context).getPreferences();
         mAllowNSFWThumb = pref.getBoolean(SettingsActivity.KEY_NSFW_THUMBNAILS, false);
         mThumbnailQuality = pref.getString(SettingsActivity.KEY_THUMBNAIL_QUALITY, ImgurPhoto.THUMBNAIL_GALLERY);
+        mAutoPlaySilentMovies = pref.getBoolean(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES, false);
+        mMosaicEnabled = pref.getBoolean(SettingsActivity.KEY_MOSAIC_VIEW, false);
+        mDefaultTileHeight = getResources().getDimensionPixelSize(R.dimen.gallery_column_height);
+        mGridColumns = getResources().getInteger(R.integer.gallery_num_columns);
+        mGridSpacing = getResources().getDimensionPixelSize(R.dimen.grid_padding);
         mClickListener = listener;
     }
 
@@ -106,6 +126,10 @@ public class GalleryAdapter extends BaseRecyclerAdapter<ImgurBaseObject> {
     public void onBindViewHolder(BaseViewHolder holder, int position) {
         GalleryHolder galleryHolder = (GalleryHolder) holder;
         ImgurBaseObject obj = getItem(position);
+        applyTileHeight(galleryHolder, obj);
+        galleryHolder.video.stopPlayback();
+        galleryHolder.video.setVisibility(View.GONE);
+        galleryHolder.image.setVisibility(View.VISIBLE);
 
         // Get the appropriate photo to display
         if (obj.isNSFW() && !mAllowNSFWThumb) {
@@ -117,15 +141,19 @@ public class GalleryAdapter extends BaseRecyclerAdapter<ImgurBaseObject> {
 
             // Check if the link is a thumbed version of a large gif
             if (photoObject.hasVideoLink() && photoObject.isLinkAThumbnail() && ImgurPhoto.IMAGE_TYPE_GIF.equals(photoObject.getType())) {
-                photoUrl = photoObject.getThumbnail(ImgurPhoto.THUMBNAIL_GALLERY, true, FileUtil.EXTENSION_GIF);
+                photoUrl = photoObject.getThumbnail(mThumbnailQuality, true, FileUtil.EXTENSION_GIF);
             } else if (photoObject.hasVideoLink() && LinkUtils.isVideoLink(photoObject.getLink())) {
                 // For mp4/webm videos, use jpg thumbnail instead of the video file
-                photoUrl = photoObject.getThumbnail(ImgurPhoto.THUMBNAIL_GALLERY, true, FileUtil.EXTENSION_JPEG);
+                photoUrl = photoObject.getThumbnail(mThumbnailQuality, true, FileUtil.EXTENSION_JPEG);
             } else {
-                photoUrl = ((ImgurPhoto) obj).getThumbnail(ImgurPhoto.THUMBNAIL_GALLERY, false, null);
+                photoUrl = ((ImgurPhoto) obj).getThumbnail(mThumbnailQuality, false, null);
             }
 
             displayImage(galleryHolder.image, photoUrl);
+
+            if (mAutoPlaySilentMovies && photoObject.isAnimated()) {
+                autoplayAnimatedMedia(galleryHolder, photoObject, photoUrl);
+            }
 
             if (photoObject.isAnimated()) {
                 galleryHolder.itemType.setVisibility(View.VISIBLE);
@@ -190,9 +218,9 @@ public class GalleryAdapter extends BaseRecyclerAdapter<ImgurBaseObject> {
         } else {
             String url;
             if (LinkUtils.isVideoLink(obj.getLink())) {
-                url = "https://i.imgur.com/" + obj.getId() + ImgurPhoto.THUMBNAIL_GALLERY + FileUtil.EXTENSION_JPEG;
+                url = "https://i.imgur.com/" + obj.getId() + mThumbnailQuality + FileUtil.EXTENSION_JPEG;
             } else {
-                url = ImgurBaseObject.getThumbnail(obj.getId(), obj.getLink(), ImgurPhoto.THUMBNAIL_GALLERY);
+                url = ImgurBaseObject.getThumbnail(obj.getId(), obj.getLink(), mThumbnailQuality);
             }
             displayImage(galleryHolder.image, url);
             galleryHolder.itemType.setVisibility(View.GONE);
@@ -212,6 +240,15 @@ public class GalleryAdapter extends BaseRecyclerAdapter<ImgurBaseObject> {
             galleryHolder.score.setTextColor(mDownVoteColor);
         } else {
             galleryHolder.score.setTextColor(Color.WHITE);
+        }
+    }
+
+    @Override
+    public void onViewRecycled(BaseViewHolder holder) {
+        super.onViewRecycled(holder);
+
+        if (holder instanceof GalleryHolder) {
+            ((GalleryHolder) holder).video.stopPlayback();
         }
     }
 
@@ -240,9 +277,134 @@ public class GalleryAdapter extends BaseRecyclerAdapter<ImgurBaseObject> {
         }
     }
 
+    public void setAutoplaySilentMovies(boolean autoplaySilentMovies) {
+        if (mAutoPlaySilentMovies != autoplaySilentMovies) {
+            mAutoPlaySilentMovies = autoplaySilentMovies;
+            notifyDataSetChanged();
+        }
+    }
+
+    public void setMosaicEnabled(boolean mosaicEnabled) {
+        if (mMosaicEnabled != mosaicEnabled) {
+            mMosaicEnabled = mosaicEnabled;
+            notifyDataSetChanged();
+        }
+    }
+
+    private void applyTileHeight(@NonNull GalleryHolder holder, @NonNull ImgurBaseObject obj) {
+        int targetHeight = mDefaultTileHeight;
+
+        if (mMosaicEnabled) {
+            int columnWidth = holder.itemView.getWidth();
+
+            if (columnWidth <= 0) {
+                columnWidth = getEstimatedColumnWidth();
+            }
+
+            int minHeight = (int) (columnWidth * 0.55f);
+            int maxHeight = (int) (columnWidth * 2.2f);
+
+            if (obj instanceof ImgurPhoto) {
+                ImgurPhoto photo = (ImgurPhoto) obj;
+
+                if (photo.getWidth() > 0 && photo.getHeight() > 0) {
+                    float ratio = (float) photo.getHeight() / (float) photo.getWidth();
+                    targetHeight = Math.round(columnWidth * ratio);
+                } else {
+                    targetHeight = getHashHeight(obj, minHeight, maxHeight);
+                }
+            } else if (obj instanceof ImgurAlbum) {
+                ImgurAlbum album = (ImgurAlbum) obj;
+
+                if (album.getCoverWidth() > 0 && album.getCoverHeight() > 0) {
+                    float ratio = (float) album.getCoverHeight() / (float) album.getCoverWidth();
+                    targetHeight = Math.round(columnWidth * ratio);
+                } else {
+                    targetHeight = getHashHeight(obj, minHeight, maxHeight);
+                }
+            } else {
+                targetHeight = getHashHeight(obj, minHeight, maxHeight);
+            }
+
+            targetHeight = Math.max(minHeight, Math.min(maxHeight, targetHeight));
+        }
+
+        ViewGroup.LayoutParams itemParams = holder.itemView.getLayoutParams();
+
+        if (itemParams != null && itemParams.height != targetHeight) {
+            itemParams.height = targetHeight;
+            holder.itemView.setLayoutParams(itemParams);
+        }
+
+        ViewGroup.LayoutParams imageParams = holder.image.getLayoutParams();
+
+        if (imageParams != null && imageParams.height != targetHeight) {
+            imageParams.height = targetHeight;
+            holder.image.setLayoutParams(imageParams);
+        }
+
+        ViewGroup.LayoutParams videoParams = holder.video.getLayoutParams();
+
+        if (videoParams != null && videoParams.height != targetHeight) {
+            videoParams.height = targetHeight;
+            holder.video.setLayoutParams(videoParams);
+        }
+    }
+
+    private int getEstimatedColumnWidth() {
+        int totalWidth = getResources().getDisplayMetrics().widthPixels;
+        int totalSpacing = (mGridColumns + 1) * mGridSpacing;
+        int width = (totalWidth - totalSpacing) / Math.max(1, mGridColumns);
+        return Math.max(1, width);
+    }
+
+    private int getHashHeight(@NonNull ImgurBaseObject obj, int minHeight, int maxHeight) {
+        int range = Math.max(1, maxHeight - minHeight);
+        int hash = Math.abs(TextUtils.isEmpty(obj.getId()) ? obj.hashCode() : obj.getId().hashCode());
+        return minHeight + (hash % range);
+    }
+
+    private void autoplayAnimatedMedia(@NonNull final GalleryHolder holder, @NonNull ImgurPhoto photo, String photoUrl) {
+        if (photo.hasVideoLink() && !TextUtils.isEmpty(photo.getVideoLink())) {
+            holder.image.setVisibility(View.GONE);
+            holder.video.setVisibility(View.VISIBLE);
+            holder.video.setVideoPath(photo.getVideoLink());
+            holder.video.start();
+            return;
+        }
+
+        if (!TextUtils.isEmpty(photoUrl) && photoUrl.toLowerCase().matches(".*\\.gif(?:$|[?&#/_-].*)")) {
+            final ImageLoader imageLoader = ImageUtil.getImageLoader(holder.itemView.getContext());
+
+            if (!ImageUtil.loadAndDisplayGif(holder.image, photoUrl, imageLoader)) {
+                imageLoader.loadImage(photoUrl, new ImageLoadingListener() {
+                    @Override
+                    public void onLoadingStarted(String imageUri, View view) {
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, android.graphics.Bitmap loadedImage) {
+                        ImageUtil.loadAndDisplayGif(holder.image, imageUri, imageLoader);
+                    }
+
+                    @Override
+                    public void onLoadingCancelled(String imageUri, View view) {
+                    }
+                });
+            }
+        }
+    }
+
     public static class GalleryHolder extends BaseViewHolder {
         @BindView(R.id.image)
         ImageView image;
+
+        @BindView(R.id.mediaVideo)
+        VideoView video;
 
         @BindView(R.id.score)
         TextView score;
@@ -252,6 +414,13 @@ public class GalleryAdapter extends BaseRecyclerAdapter<ImgurBaseObject> {
 
         public GalleryHolder(View view) {
             super(view);
+            video.setOnPreparedListener(new android.media.MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(android.media.MediaPlayer mp) {
+                    mp.setLooping(true);
+                    mp.setVolume(0f, 0f);
+                }
+            });
         }
     }
 }

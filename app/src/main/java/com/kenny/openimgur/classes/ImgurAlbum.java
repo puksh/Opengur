@@ -23,6 +23,12 @@ public class ImgurAlbum extends ImgurBaseObject {
     @SerializedName("images_count")
     private int mAlbumImageCount;
 
+    @SerializedName("cover_width")
+    private int mCoverWidth;
+
+    @SerializedName("cover_height")
+    private int mCoverHeight;
+
     private List<ImgurPhoto> mAlbumPhotos;
 
     public ImgurAlbum(String id, String title, String link) {
@@ -81,6 +87,14 @@ public class ImgurAlbum extends ImgurBaseObject {
 
     public int getAlbumImageCount() {
         return mAlbumPhotos != null && !mAlbumPhotos.isEmpty() ? mAlbumPhotos.size() : mAlbumImageCount;
+    }
+
+    public int getCoverWidth() {
+        return mCoverWidth;
+    }
+
+    public int getCoverHeight() {
+        return mCoverHeight;
     }
 
     public void writeToParcel(Parcel out, int flags) {

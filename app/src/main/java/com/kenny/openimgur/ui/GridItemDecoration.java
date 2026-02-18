@@ -1,7 +1,9 @@
 package com.kenny.openimgur.ui;
 
 import android.graphics.Rect;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 /**
@@ -19,10 +21,19 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        int position = parent.getLayoutManager().getPosition(view);
-        int column = position % mNumColumns;
-        outRect.left = column * mSpace / mNumColumns;
-        outRect.right = mSpace - (column + 1) * mSpace / mNumColumns;
+        int column = 0;
+        RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
+
+        if (layoutManager instanceof StaggeredGridLayoutManager
+                && view.getLayoutParams() instanceof StaggeredGridLayoutManager.LayoutParams) {
+            column = ((StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams()).getSpanIndex();
+        } else if (layoutManager instanceof GridLayoutManager
+                && view.getLayoutParams() instanceof GridLayoutManager.LayoutParams) {
+            column = ((GridLayoutManager.LayoutParams) view.getLayoutParams()).getSpanIndex();
+        }
+
+        outRect.left = mSpace - (column * mSpace / mNumColumns);
+        outRect.right = (column + 1) * mSpace / mNumColumns;
         outRect.top = mSpace;
     }
 }
