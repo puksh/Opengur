@@ -334,22 +334,30 @@ public class SqlHelper extends SQLiteOpenHelper {
 
     /**
      * Inserts hardcoded default topics as a fallback when API fails
-     * These are the standard Imgur topics as of 2026
+     * These are ordered to match the in-app topic list preference
      */
     public void insertDefaultTopics() {
         List<ImgurTopic> defaultTopics = new ArrayList<>();
-        defaultTopics.add(new ImgurTopic(5, "Gaming", "Video games, gaming culture, and esports"));
-        defaultTopics.add(new ImgurTopic(6, "Memes", "Funny images and internet memes"));
-        defaultTopics.add(new ImgurTopic(7, "Funny Videos", "Humorous video content"));
-        defaultTopics.add(new ImgurTopic(8, "Pets", "Cats, dogs, and other adorable animals"));
-        defaultTopics.add(new ImgurTopic(11, "Art", "Creative artwork and illustrations"));
-        defaultTopics.add(new ImgurTopic(15, "Entertainment", "Movies, TV shows, and entertainment news"));
-        defaultTopics.add(new ImgurTopic(19, "Anime", "Japanese animation and manga"));
-        defaultTopics.add(new ImgurTopic(23, "Nature", "Wildlife, landscapes, and natural wonders"));
-        defaultTopics.add(new ImgurTopic(27, "Space", "Astronomy, space exploration, and the cosmos"));
-        defaultTopics.add(new ImgurTopic(31, "Food", "Culinary creations and food photography"));
-        defaultTopics.add(new ImgurTopic(35, "TIL", "Today I Learned - interesting facts and knowledge"));
-        defaultTopics.add(new ImgurTopic(39, "Travel", "Travel photography and destination guides"));
+        defaultTopics.add(new ImgurTopic(1, "Funny", "Memes, jokes, viral humor"));
+        defaultTopics.add(new ImgurTopic(2, "Memes", "Image macros, trends"));
+        defaultTopics.add(new ImgurTopic(3, "Cats", "Pet content"));
+        defaultTopics.add(new ImgurTopic(4, "Dogs", "Pet content"));
+        defaultTopics.add(new ImgurTopic(5, "Aww", "Wholesome and cute content"));
+        defaultTopics.add(new ImgurTopic(6, "Gaming", "Video games"));
+        defaultTopics.add(new ImgurTopic(7, "Anime", "Japanese animation art"));
+        defaultTopics.add(new ImgurTopic(8, "Cosplay", "Costume and fandom"));
+        defaultTopics.add(new ImgurTopic(9, "Art", "Illustrations, digital art"));
+        defaultTopics.add(new ImgurTopic(10, "Pics", "Photography"));
+        defaultTopics.add(new ImgurTopic(11, "Awesome", "Impressive content"));
+        defaultTopics.add(new ImgurTopic(12, "WTF", "Shocking content"));
+        defaultTopics.add(new ImgurTopic(13, "Reaction", "Reaction images"));
+        defaultTopics.add(new ImgurTopic(14, "Wholesome", "Positive content"));
+        defaultTopics.add(new ImgurTopic(15, "Fail", "Mishaps"));
+        defaultTopics.add(new ImgurTopic(16, "Science", "Educational"));
+        defaultTopics.add(new ImgurTopic(17, "Tech", "Gadgets, hardware"));
+        defaultTopics.add(new ImgurTopic(18, "Food", "Meals, recipes"));
+        defaultTopics.add(new ImgurTopic(19, "Movies", "Film-related"));
+        defaultTopics.add(new ImgurTopic(20, "NSFW", "Adult-oriented content"));
         addTopics(defaultTopics);
         LogUtil.v(TAG, "Inserted " + defaultTopics.size() + " default topics");
     }

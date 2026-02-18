@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -15,9 +16,11 @@ import com.kenny.openimgur.R;
 import com.kenny.openimgur.activities.MuzeiSettingsActivity;
 import com.kenny.openimgur.api.ApiClient;
 import com.kenny.openimgur.api.responses.GalleryResponse;
+import com.kenny.openimgur.api.responses.TopicGalleryResponse;
 import com.kenny.openimgur.classes.ImgurBaseObject;
 import com.kenny.openimgur.classes.ImgurFilters;
 import com.kenny.openimgur.classes.ImgurPhoto;
+import com.kenny.openimgur.classes.ImgurTopic;
 import com.kenny.openimgur.classes.OpengurApp;
 import com.kenny.openimgur.util.LogUtil;
 import com.kenny.openimgur.util.NetworkUtils;
@@ -25,6 +28,7 @@ import com.kenny.openimgur.util.SqlHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import retrofit2.Call;
@@ -41,8 +45,7 @@ public class ImgurMuzeiService extends RemoteMuzeiArtSource {
 
     private static final String FALLBACK_SUBREDDIT = "aww";
 
-    // 8 is aww
-    private static final String FALLBACK_TOPIC_ID = "8";
+    private static final String FALLBACK_TOPIC = "aww";
 
     private static final Random sRandom = new Random();
 
@@ -161,7 +164,7 @@ public class ImgurMuzeiService extends RemoteMuzeiArtSource {
 
     @Nullable
     private List<ImgurPhoto> fetchImages(String source, SharedPreferences pref, boolean allowNSFW) {
-        Response<GalleryResponse> response = null;
+        GalleryResponse galleryResponse = null;
         Call<GalleryResponse> call;
 
         try {
@@ -178,22 +181,37 @@ public class ImgurMuzeiService extends RemoteMuzeiArtSource {
             } else if (MuzeiSettingsActivity.SOURCE_USER_SUB.equals(source)) {
                 call = ApiClient.getService().getGallery(ImgurFilters.GallerySection.USER.getSection(), ImgurFilters.GallerySort.VIRAL.getSort(), 0, false);
             } else if (MuzeiSettingsActivity.SOURCE_TOPICS.equals(source)) {
-                int topicId = Integer.valueOf(pref.getString(MuzeiSettingsActivity.KEY_TOPIC, FALLBACK_TOPIC_ID));
-                call = ApiClient.getService().getTopic(topicId, ImgurFilters.GallerySort.VIRAL.getSort(), 0);
+                String topicValue = pref.getString(MuzeiSettingsActivity.KEY_TOPIC, FALLBACK_TOPIC);
+                String topicSlug = getTopicSlugFromPreference(topicValue, SqlHelper.getInstance(getApplicationContext()));
+                Response<TopicGalleryResponse> topicResponse = ApiClient.getService()
+                        .getTopic(topicSlug, ImgurFilters.GallerySort.VIRAL.getSort(), 0)
+                        .execute();
+
+                if (topicResponse != null && topicResponse.body() != null) {
+                    galleryResponse = topicResponse.body().toGalleryResponse();
+                }
+
+                call = null;
             } else {
                 call = ApiClient.getService().getGallery(ImgurFilters.GallerySection.HOT.getSection(), ImgurFilters.GallerySort.TIME.getSort(), 0, false);
             }
 
-            response = call.execute();
+            if (call != null) {
+                Response<GalleryResponse> response = call.execute();
+
+                if (response != null) {
+                    galleryResponse = response.body();
+                }
+            }
         } catch (Exception ex) {
             LogUtil.e(TAG, "Error fetching images for muzei", ex);
         }
 
-        if (response != null && response.body() != null && !response.body().data.isEmpty()) {
+        if (galleryResponse != null && !galleryResponse.data.isEmpty()) {
             // Go through the responses and exclude albums, gifs, and check NSFW status
             List<ImgurPhoto> photos = new ArrayList<>();
 
-            for (ImgurBaseObject obj : response.body().data) {
+            for (ImgurBaseObject obj : galleryResponse.data) {
                 if (obj instanceof ImgurPhoto && !((ImgurPhoto) obj).isAnimated() && (allowNSFW || !obj.isNSFW())) {
                     photos.add((ImgurPhoto) obj);
                 }
@@ -203,5 +221,26 @@ public class ImgurMuzeiService extends RemoteMuzeiArtSource {
         }
 
         return null;
+    }
+
+    @NonNull
+    private String getTopicSlugFromPreference(@Nullable String value, @NonNull SqlHelper sql) {
+        if (TextUtils.isEmpty(value)) {
+            return FALLBACK_TOPIC;
+        }
+
+        String trimmed = value.trim();
+
+        try {
+            int legacyId = Integer.parseInt(trimmed);
+            ImgurTopic legacyTopic = sql.getTopic(legacyId);
+
+            if (legacyTopic != null && !TextUtils.isEmpty(legacyTopic.getName())) {
+                return legacyTopic.getName().trim().toLowerCase(Locale.US).replace(" ", "-");
+            }
+        } catch (NumberFormatException ignored) {
+        }
+
+        return trimmed.toLowerCase(Locale.US).replace(" ", "-");
     }
 }

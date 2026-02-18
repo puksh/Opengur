@@ -10,6 +10,7 @@ import com.kenny.openimgur.api.responses.NotificationResponse;
 import com.kenny.openimgur.api.responses.OAuthResponse;
 import com.kenny.openimgur.api.responses.PhotoResponse;
 import com.kenny.openimgur.api.responses.TagResponse;
+import com.kenny.openimgur.api.responses.TopicGalleryResponse;
 import com.kenny.openimgur.api.responses.TopicResponse;
 import com.kenny.openimgur.api.responses.TrophyResponse;
 import com.kenny.openimgur.api.responses.UserResponse;
@@ -86,11 +87,11 @@ public interface ImgurService {
     @GET("/3/topics/defaults")
     Call<TopicResponse> getDefaultTopics();
 
-    @GET("/3/topics/{topic}/{sort}/{page}")
-    Call<GalleryResponse> getTopic(@Path("topic") int topicId, @Path("sort") String sort, @Path("page") int page);
+    @GET("/3/gallery/t/{topic}/{sort}/{page}")
+    Call<TopicGalleryResponse> getTopic(@Path("topic") String topic, @Path("sort") String sort, @Path("page") int page);
 
-    @GET("/3/topics/{topic}/top/{window}/{page}")
-    Call<GalleryResponse> getTopicForTopSorted(@Path("topic") int topicId, @Path("window") String window, @Path("page") int page);
+    @GET("/3/gallery/t/{topic}/top/{window}/{page}")
+    Call<TopicGalleryResponse> getTopicForTopSorted(@Path("topic") String topic, @Path("window") String window, @Path("page") int page);
 
     @GET("/3/memegen/defaults")
     Call<GalleryResponse> getDefaultMemes();

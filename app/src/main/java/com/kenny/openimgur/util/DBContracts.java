@@ -146,7 +146,28 @@ public class DBContracts {
                 COLUMN_DESC + " TEXT NOT NULL);";
 
         public static final String GET_TOPICS_SQL = "SELECT * FROM " + TABLE_NAME
-                + " ORDER BY " + COLUMN_NAME + " COLLATE NOCASE ASC";
+                + " ORDER BY CASE LOWER(" + COLUMN_NAME + ") "
+                + "WHEN 'funny' THEN 1 "
+                + "WHEN 'memes' THEN 2 "
+                + "WHEN 'cats' THEN 3 "
+                + "WHEN 'dogs' THEN 4 "
+                + "WHEN 'aww' THEN 5 "
+                + "WHEN 'gaming' THEN 6 "
+                + "WHEN 'anime' THEN 7 "
+                + "WHEN 'cosplay' THEN 8 "
+                + "WHEN 'art' THEN 9 "
+                + "WHEN 'pics' THEN 10 "
+                + "WHEN 'awesome' THEN 11 "
+                + "WHEN 'wtf' THEN 12 "
+                + "WHEN 'reaction' THEN 13 "
+                + "WHEN 'wholesome' THEN 14 "
+                + "WHEN 'fail' THEN 15 "
+                + "WHEN 'science' THEN 16 "
+                + "WHEN 'tech' THEN 17 "
+                + "WHEN 'food' THEN 18 "
+                + "WHEN 'movies' THEN 19 "
+                + "WHEN 'nsfw' THEN 20 "
+                + "ELSE 999 END, " + COLUMN_NAME + " COLLATE NOCASE ASC";
 
         public static final String GET_TOPIC_SQL = "SELECT * FROM " + TABLE_NAME + " WHERE " +
                 _ID + " = ? LIMIT 0,1";

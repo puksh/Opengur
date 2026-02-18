@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.PopupMenu;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,19 +16,21 @@ import android.view.ViewGroup;
 import com.kenny.openimgur.R;
 import com.kenny.openimgur.api.ApiClient;
 import com.kenny.openimgur.api.ImgurService;
-import com.kenny.openimgur.api.responses.TopicResponse;
+import com.kenny.openimgur.api.responses.GalleryResponse;
+import com.kenny.openimgur.api.responses.TopicGalleryResponse;
+import com.kenny.openimgur.activities.SettingsActivity;
 import com.kenny.openimgur.classes.FragmentListener;
 import com.kenny.openimgur.classes.ImgurFilters;
 import com.kenny.openimgur.classes.ImgurTopic;
-import com.kenny.openimgur.classes.ImgurUser;
-import com.kenny.openimgur.classes.OpengurApp;
 import com.kenny.openimgur.ui.adapters.GalleryAdapter;
+import com.kenny.openimgur.util.DBContracts.TopicsContract;
 import com.kenny.openimgur.util.LogUtil;
 import com.kenny.openimgur.util.SqlHelper;
 import com.kenny.openimgur.util.ViewUtils;
 import com.kennyc.view.MultiStateView;
 
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,6 +41,8 @@ import retrofit2.Response;
  */
 public class TopicsFragment extends BaseGridFragment {
     private static final String KEY_TOPIC_ID = "topics_id";
+
+    private static final String KEY_TOPIC_NAME = "topics_name";
 
     private static final String KEY_SORT = "topics_sort";
 
@@ -52,6 +55,35 @@ public class TopicsFragment extends BaseGridFragment {
     private ImgurFilters.GallerySort mSort = ImgurFilters.GallerySort.TIME;
 
     private ImgurFilters.TimeSort mTimeSort = ImgurFilters.TimeSort.DAY;
+
+    private final Callback<TopicGalleryResponse> mTopicCallback = new Callback<TopicGalleryResponse>() {
+        @Override
+        public void onResponse(Call<TopicGalleryResponse> call, Response<TopicGalleryResponse> response) {
+            if (!isAdded()) return;
+
+            if (response != null) {
+                TopicGalleryResponse topicResponse = response.body();
+
+                if (topicResponse != null) {
+                    GalleryResponse galleryResponse = topicResponse.toGalleryResponse();
+                    boolean allowNSFW = app.getPreferences().getBoolean(SettingsActivity.NSFW_KEY, false);
+                    galleryResponse.purgeNSFW(allowNSFW);
+                    onApiResult(galleryResponse);
+                } else {
+                    onApiFailure(ApiClient.getErrorCode(response.code()));
+                }
+            } else {
+                onApiFailure(R.string.error_network);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<TopicGalleryResponse> call, Throwable t) {
+            LogUtil.e(TAG, "Error fetching gallery items", t);
+            if (!isAdded()) return;
+            onApiFailure(ApiClient.getErrorCode(t));
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,9 +159,6 @@ public class TopicsFragment extends BaseGridFragment {
                 m.show();
                 return true;
 
-            case R.id.refreshTopics:
-                fetchTopics();
-                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -160,6 +189,7 @@ public class TopicsFragment extends BaseGridFragment {
     private void saveFilterSettings() {
         app.getPreferences().edit()
                 .putInt(KEY_TOPIC_ID, mTopic != null ? mTopic.getId() : -1)
+                .putString(KEY_TOPIC_NAME, mTopic != null ? mTopic.getName() : null)
                 .putString(KEY_TOP_SORT, mTimeSort.getSort())
                 .putString(KEY_SORT, mSort.getSort()).apply();
     }
@@ -176,11 +206,12 @@ public class TopicsFragment extends BaseGridFragment {
         super.fetchGallery();
 
         ImgurService apiService = ApiClient.getService();
+        String topicSlug = getTopicSlug(mTopic);
 
         if (mSort == ImgurFilters.GallerySort.HIGHEST_SCORING) {
-            apiService.getTopicForTopSorted(mTopic.getId(), mTimeSort.getSort(), mCurrentPage).enqueue(this);
+            apiService.getTopicForTopSorted(topicSlug, mTimeSort.getSort(), mCurrentPage).enqueue(mTopicCallback);
         } else {
-            apiService.getTopic(mTopic.getId(), mSort.getSort(), mCurrentPage).enqueue(this);
+            apiService.getTopic(topicSlug, mSort.getSort(), mCurrentPage).enqueue(mTopicCallback);
         }
     }
 
@@ -212,12 +243,31 @@ public class TopicsFragment extends BaseGridFragment {
     protected void onRestoreSavedInstance(Bundle savedInstanceState) {
         super.onRestoreSavedInstance(savedInstanceState);
         SqlHelper sql = SqlHelper.getInstance(getActivity());
+        sql.deleteFromTable(TopicsContract.TABLE_NAME);
+        sql.insertDefaultTopics();
 
         if (savedInstanceState == null) {
             SharedPreferences pref = app.getPreferences();
             mSort = ImgurFilters.GallerySort.getSortFromString(pref.getString(KEY_SORT, null));
             mTimeSort = ImgurFilters.TimeSort.getSortFromString(pref.getString(KEY_TOP_SORT, null));
-            mTopic = sql.getTopic(pref.getInt(KEY_TOPIC_ID, -1));
+            String topicName = pref.getString(KEY_TOPIC_NAME, null);
+
+            if (topicName != null) {
+                List<ImgurTopic> topics = sql.getTopics();
+
+                for (int i = 0; i < topics.size(); i++) {
+                    ImgurTopic topic = topics.get(i);
+
+                    if (topicName.equalsIgnoreCase(topic.getName())) {
+                        mTopic = topic;
+                        break;
+                    }
+                }
+            }
+
+            if (mTopic == null) {
+                mTopic = sql.getTopic(pref.getInt(KEY_TOPIC_ID, -1));
+            }
         } else {
             mSort = ImgurFilters.GallerySort.getSortFromString(savedInstanceState.getString(KEY_SORT, ImgurFilters.GallerySort.TIME.getSort()));
             mTimeSort = ImgurFilters.TimeSort.getSortFromString(savedInstanceState.getString(KEY_TOP_SORT, null));
@@ -258,101 +308,42 @@ public class TopicsFragment extends BaseGridFragment {
             mMultiStateView.setViewState(MultiStateView.VIEW_STATE_LOADING);
         }
 
-        ApiClient.getService().getDefaultTopics().enqueue(new Callback<TopicResponse>() {
-            @Override
-            public void onResponse(Call<TopicResponse> call, Response<TopicResponse> response) {
-                if (!isAdded()) return;
+        SqlHelper sql = SqlHelper.getInstance(getActivity());
+        sql.deleteFromTable(TopicsContract.TABLE_NAME);
+        sql.insertDefaultTopics();
+        List<ImgurTopic> topics = sql.getTopics();
 
-                if (response != null && response.body() != null && !response.body().data.isEmpty()) {
-                    List<ImgurTopic> topics = response.body().data;
-                    SqlHelper.getInstance(getActivity()).addTopics(topics);
-                    // Auto fetch the first topic
-                    if (mTopic == null) mTopic = topics.get(0);
-                    if (mListener != null) mListener.onUpdateActionBarSpinner(topics, mTopic);
+        if (!topics.isEmpty()) {
+            boolean found = false;
 
-                    if (getAdapter() == null || getAdapter().isEmpty()) {
-                        fetchGallery();
-                    } else {
-                        mMultiStateView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
-                    }
-                } else {
-                    // API returned empty data, check if we have cached topics
-                    SqlHelper sql = SqlHelper.getInstance(getActivity());
-                    List<ImgurTopic> cachedTopics = sql.getTopics();
-                    
-                    if (!cachedTopics.isEmpty()) {
-                        // Use cached topics instead of showing error
-                        LogUtil.v(TAG, "Using cached topics as API returned empty data");
-                        if (mTopic == null) mTopic = cachedTopics.get(0);
-                        if (mListener != null) mListener.onUpdateActionBarSpinner(cachedTopics, mTopic);
-                        
-                        if (getAdapter() == null || getAdapter().isEmpty()) {
-                            fetchGallery();
-                        } else {
-                            mMultiStateView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
-                        }
-                    } else {
-                        // No cached topics, insert defaults and use them
-                        LogUtil.v(TAG, "No cached topics, inserting defaults");
-                        sql.insertDefaultTopics();
-                        cachedTopics = sql.getTopics();
-                        
-                        if (!cachedTopics.isEmpty()) {
-                            if (mTopic == null) mTopic = cachedTopics.get(0);
-                            if (mListener != null) mListener.onUpdateActionBarSpinner(cachedTopics, mTopic);
-                            fetchGallery();
-                        } else {
-                            // Even defaults failed, show error
-                            OpengurApp app = OpengurApp.getInstance();
-                            ImgurUser user = app.getUser();
-                            if (user == null || TextUtils.isEmpty(user.getAccessToken())) {
-                                ViewUtils.setErrorText(mMultiStateView, R.id.errorMessage, R.string.error_401);
-                            } else {
-                                ViewUtils.setErrorText(mMultiStateView, R.id.errorMessage, R.string.error_network);
-                            }
-                            mMultiStateView.setViewState(MultiStateView.VIEW_STATE_ERROR);
-                        }
+            if (mTopic != null) {
+                for (int i = 0; i < topics.size(); i++) {
+                    if (topics.get(i).getId() == mTopic.getId()) {
+                        found = true;
+                        break;
                     }
                 }
             }
 
-            @Override
-            public void onFailure(Call<TopicResponse> call, Throwable t) {
-                if (!isAdded()) return;
-                LogUtil.e(TAG, "Unable to fetch topics", t);
-                
-                // Check if we have cached topics to fall back on
-                SqlHelper sql = SqlHelper.getInstance(getActivity());
-                List<ImgurTopic> cachedTopics = sql.getTopics();
-                
-                if (!cachedTopics.isEmpty()) {
-                    // Use cached topics instead of showing error
-                    LogUtil.v(TAG, "Using cached topics as API request failed");
-                    if (mTopic == null) mTopic = cachedTopics.get(0);
-                    if (mListener != null) mListener.onUpdateActionBarSpinner(cachedTopics, mTopic);
-                    
-                    if (getAdapter() == null || getAdapter().isEmpty()) {
-                        fetchGallery();
-                    } else {
-                        mMultiStateView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
-                    }
-                } else {
-                    // No cached topics, insert defaults and use them
-                    LogUtil.v(TAG, "API failed and no cached topics, inserting defaults");
-                    sql.insertDefaultTopics();
-                    cachedTopics = sql.getTopics();
-                    
-                    if (!cachedTopics.isEmpty()) {
-                        if (mTopic == null) mTopic = cachedTopics.get(0);
-                        if (mListener != null) mListener.onUpdateActionBarSpinner(cachedTopics, mTopic);
-                        fetchGallery();
-                    } else {
-                        // Even defaults failed, show error
-                        ViewUtils.setErrorText(mMultiStateView, R.id.errorMessage, ApiClient.getErrorCode(t));
-                        mMultiStateView.setViewState(MultiStateView.VIEW_STATE_ERROR);
-                    }
-                }
+            if (mTopic == null || !found) {
+                mTopic = topics.get(0);
             }
-        });
+
+            if (mListener != null) mListener.onUpdateActionBarSpinner(topics, mTopic);
+
+            if (getAdapter() == null || getAdapter().isEmpty()) {
+                fetchGallery();
+            } else {
+                mMultiStateView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
+            }
+        } else {
+            ViewUtils.setErrorText(mMultiStateView, R.id.errorMessage, R.string.error_network);
+            mMultiStateView.setViewState(MultiStateView.VIEW_STATE_ERROR);
+        }
+    }
+
+    @NonNull
+    private String getTopicSlug(@NonNull ImgurTopic topic) {
+        return topic.getName().trim().toLowerCase(Locale.US).replace(" ", "-");
     }
 }

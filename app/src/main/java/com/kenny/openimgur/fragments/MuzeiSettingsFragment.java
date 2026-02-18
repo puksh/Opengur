@@ -8,17 +8,13 @@ import android.preference.PreferenceScreen;
 
 import com.kenny.openimgur.R;
 import com.kenny.openimgur.activities.MuzeiSettingsActivity;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.responses.TopicResponse;
 import com.kenny.openimgur.classes.ImgurTopic;
+import com.kenny.openimgur.util.DBContracts.TopicsContract;
 import com.kenny.openimgur.util.LogUtil;
 import com.kenny.openimgur.util.SqlHelper;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.Locale;
 
 /**
  * Created by Kenny-PC on 6/21/2015.
@@ -49,43 +45,31 @@ public class MuzeiSettingsFragment extends BasePreferenceFragment {
             for (int i = 0; i < topics.size(); i++) {
                 ImgurTopic t = topics.get(i);
                 topicNames[i] = t.getName();
-                topicIds[i] = String.valueOf(t.getId());
+                topicIds[i] = t.getName().trim().toLowerCase(Locale.US).replace(" ", "-");
             }
 
             mTopicPreference.setEntries(topicNames);
             mTopicPreference.setEntryValues(topicIds);
         } else {
-            LogUtil.v(TAG, "No topics found, fetching");
-            ApiClient.getService().getDefaultTopics().enqueue(new Callback<TopicResponse>() {
-                @Override
-                public void onResponse(Call<TopicResponse> call, Response<TopicResponse> response) {
-                    if (!isAdded() || response == null || response.body() == null) return;
+            LogUtil.v(TAG, "No topics found, inserting defaults");
+            SqlHelper sql = SqlHelper.getInstance(getActivity());
+            sql.deleteFromTable(TopicsContract.TABLE_NAME);
+            sql.insertDefaultTopics();
+            topics = sql.getTopics();
 
-                    TopicResponse topicResponse = response.body();
-                    SqlHelper.getInstance(getActivity()).addTopics(topicResponse.data);
+            if (!topics.isEmpty()) {
+                String[] topicNames = new String[topics.size()];
+                String[] topicIds = new String[topics.size()];
 
-                    if (!topicResponse.data.isEmpty()) {
-                        String[] topicNames = new String[topicResponse.data.size()];
-                        String[] topicIds = new String[topicResponse.data.size()];
-
-                        for (int i = 0; i < topicResponse.data.size(); i++) {
-                            ImgurTopic t = topicResponse.data.get(i);
-                            topicNames[i] = t.getName();
-                            topicIds[i] = String.valueOf(t.getId());
-                        }
-
-                        mTopicPreference.setEntries(topicNames);
-                        mTopicPreference.setEntryValues(topicIds);
-                    } else {
-                        LogUtil.w(TAG, "Still no topics, what do we do!");
-                    }
+                for (int i = 0; i < topics.size(); i++) {
+                    ImgurTopic t = topics.get(i);
+                    topicNames[i] = t.getName();
+                    topicIds[i] = t.getName().trim().toLowerCase(Locale.US).replace(" ", "-");
                 }
 
-                @Override
-                public void onFailure(Call<TopicResponse> call, Throwable t) {
-                    LogUtil.e(TAG, "Failed to receive topics", t);
-                }
-            });
+                mTopicPreference.setEntries(topicNames);
+                mTopicPreference.setEntryValues(topicIds);
+            }
         }
 
         bindListPreference(findPreference(MuzeiSettingsActivity.KEY_SOURCE));
