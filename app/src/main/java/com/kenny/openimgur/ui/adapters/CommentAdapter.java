@@ -1,6 +1,8 @@
 package com.kenny.openimgur.ui.adapters;
 
 import android.content.Context;
+import android.media.MediaPlayer;
+import android.preference.PreferenceManager;
 import android.support.v4.util.LongSparseArray;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
@@ -18,11 +20,17 @@ import android.widget.TextView;
 import android.widget.ImageButton;
 
 import com.kenny.openimgur.R;
+import com.kenny.openimgur.activities.SettingsActivity;
 import com.kenny.openimgur.classes.CustomLinkMovement;
 import com.kenny.openimgur.classes.ImgurBaseObject;
 import com.kenny.openimgur.classes.ImgurComment;
 import com.kenny.openimgur.classes.ImgurListener;
+import com.kenny.openimgur.ui.VideoView;
+import com.kenny.openimgur.util.ImageUtil;
 import com.kenny.openimgur.util.LinkUtils;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.HashSet;
 import java.util.List;
@@ -62,12 +70,16 @@ public class CommentAdapter extends BaseRecyclerAdapter<ImgurComment> {
 
     private static final Pattern DIRECT_VIDEO_PATTERN = Pattern.compile(".*\\.(gifv|mp4|webm)(?:$|[?&#/_-].*)", Pattern.CASE_INSENSITIVE);
 
+    private final boolean mAutoPlaySilentMovies;
+
     public CommentAdapter(Context context, List<ImgurComment> comments, ImgurListener listener) {
         super(context, comments, true);
         mListener = listener;
         mGreenTextColor = getColor(R.color.notoriety_positive);
         mRedTextColor = getColor(R.color.notoriety_negative);
         mCommentIndent = getDimension(R.dimen.comment_padding);
+        mAutoPlaySilentMovies = PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES, false);
     }
 
     /**
@@ -120,6 +132,13 @@ public class CommentAdapter extends BaseRecyclerAdapter<ImgurComment> {
                 }
             }
         });
+
+        holder.mediaVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true);
+            }
+        });
         return holder;
     }
 
@@ -170,6 +189,9 @@ public class CommentAdapter extends BaseRecyclerAdapter<ImgurComment> {
             String previewUrl = getPreviewUrl(mediaUrl);
             boolean showPlayButton = LinkUtils.isLinkAnimated(mediaUrl);
             commentHolder.mediaContainer.setVisibility(View.VISIBLE);
+            commentHolder.mediaVideo.stopPlayback();
+            commentHolder.mediaVideo.setVisibility(View.GONE);
+            commentHolder.mediaPreview.setVisibility(View.VISIBLE);
             commentHolder.mediaPlay.setVisibility(showPlayButton ? View.VISIBLE : View.GONE);
             commentHolder.mediaPlay.setTag(mediaUrl);
 
@@ -178,10 +200,71 @@ public class CommentAdapter extends BaseRecyclerAdapter<ImgurComment> {
             } else {
                 commentHolder.mediaPreview.setImageDrawable(null);
             }
+
+            if (mAutoPlaySilentMovies && shouldAutoplaySilent(mediaUrl)) {
+                autoplayMedia(commentHolder, mediaUrl);
+            }
         } else {
             commentHolder.mediaContainer.setVisibility(View.GONE);
+            commentHolder.mediaVideo.stopPlayback();
+            commentHolder.mediaVideo.setVisibility(View.GONE);
+            commentHolder.mediaPreview.setVisibility(View.VISIBLE);
             commentHolder.mediaPlay.setTag(null);
             commentHolder.mediaPreview.setImageDrawable(null);
+        }
+    }
+
+    @Override
+    public void onViewRecycled(BaseViewHolder holder) {
+        super.onViewRecycled(holder);
+
+        if (holder instanceof CommentViewHolder) {
+            ((CommentViewHolder) holder).mediaVideo.stopPlayback();
+        }
+    }
+
+    private boolean shouldAutoplaySilent(String mediaUrl) {
+        if (TextUtils.isEmpty(mediaUrl)) {
+            return false;
+        }
+
+        String lower = mediaUrl.toLowerCase();
+        return lower.matches(".*\\.gif(?:$|[?&#/_-].*)") || lower.matches(".*\\.gifv(?:$|[?&#/_-].*)");
+    }
+
+    private void autoplayMedia(final CommentViewHolder holder, String mediaUrl) {
+        if (mediaUrl.toLowerCase().matches(".*\\.gif(?:$|[?&#/_-].*)")) {
+            final ImageLoader imageLoader = ImageUtil.getImageLoader(holder.itemView.getContext());
+
+            if (!ImageUtil.loadAndDisplayGif(holder.mediaPreview, mediaUrl, imageLoader)) {
+                imageLoader.loadImage(mediaUrl, new ImageLoadingListener() {
+                    @Override
+                    public void onLoadingStarted(String imageUri, View view) {
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, android.graphics.Bitmap loadedImage) {
+                        ImageUtil.loadAndDisplayGif(holder.mediaPreview, imageUri, imageLoader);
+                    }
+
+                    @Override
+                    public void onLoadingCancelled(String imageUri, View view) {
+                    }
+                });
+            }
+
+            holder.mediaPlay.setVisibility(View.GONE);
+        } else {
+            String videoUrl = mediaUrl.replaceAll("(?i)\\.gifv(?:$|[?&#/_-].*)", ".mp4");
+            holder.mediaPreview.setVisibility(View.GONE);
+            holder.mediaVideo.setVisibility(View.VISIBLE);
+            holder.mediaVideo.setVideoPath(videoUrl);
+            holder.mediaVideo.start();
+            holder.mediaPlay.setVisibility(View.GONE);
         }
     }
 
@@ -452,6 +535,9 @@ public class CommentAdapter extends BaseRecyclerAdapter<ImgurComment> {
 
         @BindView(R.id.mediaPreview)
         ImageView mediaPreview;
+
+        @BindView(R.id.mediaVideo)
+        VideoView mediaVideo;
 
         @BindView(R.id.mediaPlay)
         FloatingActionButton mediaPlay;

@@ -55,6 +55,12 @@
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter" />
 
+            <com.kenny.openimgur.ui.VideoView
+                android:id="@+id/mediaVideo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/mediaPlay"
                 android:layout_width="wrap_content"

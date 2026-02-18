@@ -143,6 +143,9 @@
     <string name="pref_comment_title">Comments</string>
     <string name="pref_comments_on">Display Comments</string>
     <string name="pref_comments_off">Don\'t Display Comments</string>
+    <string name="pref_autoplay_silent_title">Autoplay Silent Movies</string>
+    <string name="pref_autoplay_silent_on">Autoplay GIFs and silent videos</string>
+    <string name="pref_autoplay_silent_off">Do not autoplay GIFs or videos</string>
     <string name="pref_category_title">Theme</string>
     <string name="pref_appearance_title">Appearance</string>
     <string name="pref_theme_title">Accent Color</string>

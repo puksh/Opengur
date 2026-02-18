@@ -51,6 +51,8 @@ public class SettingsActivity extends BaseActivity {
 
     public static final String KEY_IMMERSIVE_MODE = "immersiveMode";
 
+    public static final String KEY_AUTOPLAY_SILENT_MOVIES = "autoplaySilentMovies";
+
     // Values
     public static final String CACHE_SIZE_UNLIMITED = "unlimited";
 

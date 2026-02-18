@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.res.ResourcesCompat;
@@ -17,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.kenny.openimgur.R;
+import com.kenny.openimgur.activities.SettingsActivity;
 import com.kenny.openimgur.classes.ImgurBaseObject;
 import com.kenny.openimgur.classes.ImgurListener;
 import com.kenny.openimgur.classes.ImgurPhoto;
@@ -45,10 +47,14 @@ public class PhotoAdapter extends BaseRecyclerAdapter<ImgurPhoto> {
 
     ImgurBaseObject mImgurObject;
 
+    private final boolean mAutoPlaySilentMovies;
+
     public PhotoAdapter(Context context, List<ImgurPhoto> photos, ImgurBaseObject object, ImgurListener listener) {
         super(context, photos, true);
         mListener = listener;
         mImgurObject = object;
+        mAutoPlaySilentMovies = PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES, false);
     }
 
     /**
@@ -173,6 +179,21 @@ public class PhotoAdapter extends BaseRecyclerAdapter<ImgurPhoto> {
             //Linkify.addLinks(photoHolder.desc, Linkify.WEB_URLS);
             //Linkify.addLinks(photoHolder.desc, LinkUtils.USER_CALLOUT_PATTERN, null);
             displayImage(photoHolder.image, url);
+
+            if (mAutoPlaySilentMovies && photo.isAnimated() && mListener != null && photoHolder.play.getVisibility() == View.VISIBLE) {
+                final PhotoViewHolder autoplayHolder = photoHolder;
+
+                autoplayHolder.itemView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (autoplayHolder.itemView.getWindowToken() != null
+                                && autoplayHolder.play.getVisibility() == View.VISIBLE
+                                && !autoplayHolder.video.isPlaying()) {
+                            mListener.onPlayTap(autoplayHolder.prog, autoplayHolder.play, autoplayHolder.image, autoplayHolder.video, autoplayHolder.itemView);
+                        }
+                    }
+                });
+            }
         }
     }
 
