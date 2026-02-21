@@ -1,9 +1,12 @@
 package com.kenny.openimgur.services;
 
 import android.app.IntentService;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +22,7 @@ import com.kenny.openimgur.classes.ImgurAlbum;
 import com.kenny.openimgur.classes.ImgurBaseObject;
 import com.kenny.openimgur.classes.ImgurPhoto;
 import com.kenny.openimgur.classes.ImgurTopic;
+import com.kenny.openimgur.classes.OpengurApp;
 import com.kenny.openimgur.classes.Upload;
 import com.kenny.openimgur.ui.BaseNotification;
 import com.kenny.openimgur.util.FileUtil;
@@ -33,6 +37,7 @@ import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import okhttp3.MultipartBody;
 import retrofit2.Response;
 
 /**
@@ -40,6 +45,7 @@ import retrofit2.Response;
  */
 public class UploadService extends IntentService {
     private static final String TAG = UploadService.class.getSimpleName();
+    public static final String ACTION_REFRESH_UPLOADS = "com.kenny.openimgur.ACTION_REFRESH_UPLOADS";
 
     private static final String KEY_UPLOADS = TAG + ".uploads";
 
@@ -114,10 +120,11 @@ public class UploadService extends IntentService {
             LogUtil.v(TAG, "Starting upload of " + totalUploads + " images");
             List<ImgurPhoto> uploadedPhotos = new ArrayList<>(totalUploads);
             SqlHelper sql = SqlHelper.getInstance(getApplicationContext());
+            mNotification.setRequestedUploads(totalUploads);
+            mNotification.onUploadStarting();
 
             for (int i = 0; i < totalUploads; i++) {
                 Upload u = uploads.get(i);
-                mNotification.onPhotoUploading(totalUploads, i + 1);
                 Response<PhotoResponse> response = null;
 
                 try {
@@ -140,6 +147,7 @@ public class UploadService extends IntentService {
                             }
 
                             RequestBody uploadFile = RequestBody.create(mediaType, file);
+                            MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", file.getName(), uploadFile);
                             RequestBody uploadTitle = null;
                             RequestBody uploadDesc = null;
                             RequestBody uploadType = RequestBody.create(MEDIA_TYPE_TEXT, "file");
@@ -152,7 +160,13 @@ public class UploadService extends IntentService {
                                 uploadDesc = RequestBody.create(MEDIA_TYPE_TEXT, u.getDescription());
                             }
 
-                            response = ApiClient.getService().uploadPhoto(uploadFile, uploadTitle, uploadDesc, uploadType).execute();
+                            response = ApiClient.getService().uploadPhoto(
+                                filePart,
+                                uploadTitle,
+                                uploadDesc,
+                                uploadType,
+                                ApiClient.CLIENT_ID
+                            ).execute();
                         } else {
                             LogUtil.w(TAG, "Unable to find file at location " + u.getLocation());
                         }
@@ -172,17 +186,27 @@ public class UploadService extends IntentService {
                 // All photos uploaded correctly
                 LogUtil.v(TAG, "All photos successfully uploaded, number of photos uploaded " + uploadedPhotos.size());
                 onPhotosUploaded(uploadedPhotos, submitToGallery, title, desc, topic);
-            } else if (uploadedPhotos.size() > 1) {
+            } else if (uploadedPhotos.size() > 0) {
                 // Some of the photos did not upload correctly
                 LogUtil.w(TAG, uploadedPhotos.size() + " of " + uploads.size() + " photos were uploaded successfully");
-                onPartialPhotoUpload(uploadedPhotos, uploads.size(), title, desc);
+                mNotification.onUploadFailed();
+                sendRefreshUploadsBroadcast();
             } else {
                 // No photos were uploaded, double you tee eff mate
                 LogUtil.w(TAG, "No photos were uploaded");
-                mNotification.onPhotoUploadFailed();
+                mNotification.onUploadFailed();
             }
         } finally {
             NetworkUtils.releaseWakeLock(wakeLock);
+        }
+    }
+
+    private void sendRefreshUploadsBroadcast() {
+        try {
+            Intent refresh = new Intent(ACTION_REFRESH_UPLOADS);
+            sendBroadcast(refresh);
+        } catch (Exception ex) {
+            LogUtil.e(TAG, "Error broadcasting upload refresh", ex);
         }
     }
 
@@ -198,7 +222,14 @@ public class UploadService extends IntentService {
         if (uploadedPhotos.size() == 1) {
             mNotification.onPartialPhotoUpload(uploadedPhotos.get(0), total);
         } else {
-            createAlbum(uploadedPhotos, false, title, desc, null);
+            boolean isAuthenticated = OpengurApp.getInstance(getApplicationContext()).getUser() != null;
+            if (isAuthenticated) {
+                createAlbum(uploadedPhotos, false, title, desc, null);
+            } else {
+                LogUtil.w(TAG, "User not authenticated, skipping album creation for partial upload");
+                mNotification.onAlbumCreationFailed();
+                sendRefreshUploadsBroadcast();
+            }
         }
     }
 
@@ -224,8 +255,14 @@ public class UploadService extends IntentService {
                 submitToGallery(title, topic != null ? topic.getId() : FALLBACK_TOPIC, photo);
             }
         } else {
-            LogUtil.v(TAG, "Creating album");
-            createAlbum(uploadedPhotos, submitToGallery, title, desc, topic);
+            boolean isAuthenticated = OpengurApp.getInstance(getApplicationContext()).getUser() != null;
+            if (isAuthenticated) {
+                LogUtil.v(TAG, "Creating album");
+                createAlbum(uploadedPhotos, submitToGallery, title, desc, topic);
+            } else {
+                LogUtil.v(TAG, "User not authenticated, skipping album creation");
+                mNotification.onSuccessfulUpload(uploadedPhotos.get(0));
+            }
         }
     }
 
@@ -309,13 +346,42 @@ public class UploadService extends IntentService {
     }
 
     private static class UploadNotification extends BaseNotification {
+        private static final String CHANNEL_UPLOADS = "uploads_status";
         private int notificationId;
+        private int mRequestedUploads = 1;
 
         public UploadNotification(Context context) {
             super(context);
             notificationId = (int) System.currentTimeMillis();
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+                if (manager != null) {
+                    NotificationChannel channel = new NotificationChannel(CHANNEL_UPLOADS, app.getString(R.string.upload), NotificationManager.IMPORTANCE_LOW);
+                    manager.createNotificationChannel(channel);
+                    builder.setChannelId(CHANNEL_UPLOADS);
+                }
+            }
+
             builder.setContentTitle(app.getString(R.string.upload_notif_starting))
                     .setContentText(app.getString(R.string.upload_notif_starting_content));
+        }
+
+        public void setRequestedUploads(int requestedUploads) {
+            mRequestedUploads = Math.max(1, requestedUploads);
+        }
+
+        public void onUploadStarting() {
+            String imageWord = mRequestedUploads == 1 ? "Image" : "Images";
+            builder.setContentTitle("Uploading (" + mRequestedUploads + ") " + imageWord + "...")
+                    .setContentText(app.getString(R.string.upload_notif_in_progress))
+                    .setProgress(0, 0, true)
+                    .setAutoCancel(false)
+                    .setOngoing(true)
+                    .setStyle(null);
+
+            postNotification();
         }
 
         /**
@@ -345,15 +411,35 @@ public class UploadService extends IntentService {
          * @param obj
          */
         public void onSuccessfulUpload(ImgurBaseObject obj) {
-            String url = obj.getLink();
-            Intent intent = NotificationReceiver.createCopyIntent(app, url, getNotificationId());
-            PendingIntent pIntent = PendingIntent.getBroadcast(app, RequestCodes.UPLOADS, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            String imageWord = mRequestedUploads == 1 ? "Image" : "Images";
 
-            builder.setContentTitle(app.getString(R.string.upload_complete))
-                    .setContentText(app.getString(R.string.upload_success, url))
-                    .addAction(R.drawable.ic_action_copy_24dp, app.getString(R.string.copy_link), pIntent)
+            builder.setContentTitle("Uploaded (" + mRequestedUploads + ") " + imageWord + "!")
+                    .setContentText(app.getString(R.string.upload_complete))
                     .setProgress(0, 0, false)
-                    .setContentInfo(null);
+                    .setAutoCancel(true)
+                    .setOngoing(false)
+                    .setContentInfo(null)
+                    .setStyle(null);
+
+            postNotification();
+            try {
+                Intent refresh = new Intent(UploadService.ACTION_REFRESH_UPLOADS);
+                app.sendBroadcast(refresh);
+            } catch (Exception ex) {
+                LogUtil.e(TAG, "Error broadcasting upload refresh", ex);
+            }
+        }
+
+        public void onUploadFailed() {
+            String imageWord = mRequestedUploads == 1 ? "image" : "images";
+
+            builder.setContentTitle("Failed to upload (" + mRequestedUploads + ") " + imageWord)
+                    .setContentText(app.getString(R.string.upload_notif_error))
+                    .setProgress(0, 0, false)
+                    .setAutoCancel(true)
+                    .setOngoing(false)
+                    .setContentInfo(null)
+                    .setStyle(null);
 
             postNotification();
         }
@@ -395,12 +481,7 @@ public class UploadService extends IntentService {
          * Called when there is an error while uploading
          */
         public void onPhotoUploadFailed() {
-            builder.setContentTitle(app.getString(R.string.error))
-                    .setContentText(app.getString(R.string.upload_notif_error))
-                    .setProgress(0, 0, false)
-                    .setAutoCancel(true);
-
-            postNotification();
+            onUploadFailed();
         }
 
         /**

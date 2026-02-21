@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kenny.openimgur.R;
 import com.kenny.openimgur.activities.FullScreenPhotoActivity;
@@ -35,6 +37,8 @@ import com.kenny.openimgur.api.ApiClient;
 import com.kenny.openimgur.api.ImgurService;
 import com.kenny.openimgur.api.responses.BasicResponse;
 import com.kenny.openimgur.classes.FragmentListener;
+import com.kenny.openimgur.classes.Upload;
+import com.kenny.openimgur.services.UploadService;
 import com.kenny.openimgur.ui.adapters.UploadAdapter;
 import com.kenny.openimgur.util.DBContracts;
 import com.kenny.openimgur.util.LogUtil;
@@ -47,11 +51,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.util.ArrayList;
+
 /**
  * Created by Kenny-PC on 1/14/2015.
  */
 public class UploadedPhotosFragment extends BaseFragment implements View.OnClickListener, View.OnLongClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     static int LOADER_ID = UploadedPhotosFragment.class.hashCode();
+    private static final int REQUEST_CODE_SELECT_IMAGE = 2001;
 
     @BindView(R.id.multiView)
     public MultiStateView mMultiStateView;
@@ -130,6 +137,14 @@ public class UploadedPhotosFragment extends BaseFragment implements View.OnClick
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.upload:
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, getString(R.string.select_image)), REQUEST_CODE_SELECT_IMAGE);
+                return true;
+
             case R.id.refresh:
                 refresh(true);
                 return true;
@@ -140,12 +155,109 @@ public class UploadedPhotosFragment extends BaseFragment implements View.OnClick
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (mAdapter == null || mAdapter.isEmpty()) {
-            refresh(false);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+            final ArrayList<Uri> uris = new ArrayList<>();
+
+            if (data.getClipData() != null) {
+                int count = data.getClipData().getItemCount();
+
+                for (int i = 0; i < count; i++) {
+                    uris.add(data.getClipData().getItemAt(i).getUri());
+                }
+            } else if (data.getData() != null) {
+                uris.add(data.getData());
+            }
+
+            if (!uris.isEmpty()) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final ArrayList<Upload> uploads = new ArrayList<>();
+
+                        for (Uri uri : uris) {
+                            String filePath = copyUriToTempFile(uri);
+
+                            if (filePath != null) {
+                                uploads.add(new Upload(filePath));
+                            }
+                        }
+
+                        if (getActivity() == null) {
+                            return;
+                        }
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!uploads.isEmpty()) {
+                                    Intent service = UploadService.createIntent(getActivity().getApplicationContext(), uploads, false, null, null, null);
+                                    getActivity().startService(service);
+                                } else {
+                                    Toast.makeText(getActivity().getApplicationContext(), R.string.error_pick_image, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                }).start();
+            }
         }
     }
+
+    private String copyUriToTempFile(Uri uri) {
+        try {
+            java.io.InputStream input = getActivity().getContentResolver().openInputStream(uri);
+            java.io.File tempFile = java.io.File.createTempFile("upload", ".jpg", getActivity().getCacheDir());
+            java.io.OutputStream output = new java.io.FileOutputStream(tempFile);
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+
+            while ((bytesRead = input.read(buffer)) != -1) {
+                output.write(buffer, 0, bytesRead);
+            }
+
+            input.close();
+            output.close();
+            return tempFile.getAbsolutePath();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refresh(true);
+        try {
+            android.content.IntentFilter f = new android.content.IntentFilter();
+            f.addAction(com.kenny.openimgur.services.UploadService.ACTION_REFRESH_UPLOADS);
+            getActivity().registerReceiver(mUploadRefreshReceiver, f);
+        } catch (Exception ex) {
+            LogUtil.e(TAG, "Error registering upload refresh receiver", ex);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        try {
+            getActivity().unregisterReceiver(mUploadRefreshReceiver);
+        } catch (Exception ignored) {
+        }
+    }
+
+    private final android.content.BroadcastReceiver mUploadRefreshReceiver = new android.content.BroadcastReceiver() {
+        @Override
+        public void onReceive(android.content.Context context, android.content.Intent intent) {
+            try {
+                refresh(true);
+            } catch (Exception ex) {
+                LogUtil.e(TAG, "Error handling upload refresh broadcast", ex);
+            }
+        }
+    };
 
     @Override
     public void onClick(View v) {

@@ -16,6 +16,7 @@ import com.kenny.openimgur.api.responses.TrophyResponse;
 import com.kenny.openimgur.api.responses.UserResponse;
 
 import okhttp3.RequestBody;
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
@@ -120,7 +121,13 @@ public interface ImgurService {
 
     @Multipart
     @POST("/3/upload")
-    Call<PhotoResponse> uploadPhoto(@Part("image") RequestBody file, @Part("title") RequestBody title, @Part("description") RequestBody description, @Part("type") RequestBody type);
+    Call<PhotoResponse> uploadPhoto(
+        @Part MultipartBody.Part image,
+        @Part("title") RequestBody title,
+        @Part("description") RequestBody description,
+        @Part("type") RequestBody type,
+        @Query("client_id") String clientId
+    );
 
     @FormUrlEncoded
     @POST("/3/upload")

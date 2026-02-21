@@ -13,7 +13,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -79,9 +78,6 @@ public class MainActivity extends BaseActivity implements FragmentListener, Navi
 
     @BindView(R.id.drawerLayout)
     DrawerLayout mDrawer;
-
-    @BindView(R.id.fab)
-    FloatingActionButton mUploadButton;
 
     @BindView(R.id.toolBar)
     Toolbar mToolBar;
@@ -357,19 +353,6 @@ public class MainActivity extends BaseActivity implements FragmentListener, Navi
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onFragmentStateChange(@FragmentState int state) {
-        switch (state) {
-            case FragmentListener.STATE_LOADING_COMPLETE:
-                mUploadButton.show();
-                break;
-
-            case FragmentListener.STATE_LOADING_STARTED:
-            case FragmentListener.STATE_ERROR:
-                mUploadButton.hide();
-                break;
-        }
-    }
 
     @Override
     public void onUpdateActionBarTitle(String title) {
@@ -395,18 +378,17 @@ public class MainActivity extends BaseActivity implements FragmentListener, Navi
     }
 
     @Override
+    public void onFragmentStateChange(int state) {
+    }
+
+    @Override
     public View getSnackbarView() {
         return mCoordinatorLayout;
     }
 
-    @OnClick(R.id.fab)
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.fab:
-                startActivity(UploadActivity.createIntent(getApplicationContext()));
-                break;
-
             case R.id.header:
                 mDrawer.closeDrawers();
                 startActivityForResult(ProfileActivity.createIntent(getApplicationContext(), null), RequestCodes.PROFILE);

@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 import com.kenny.openimgur.R;
 import com.kenny.openimgur.classes.ImgurTopic;
@@ -63,6 +64,7 @@ public class UploadActivity extends BaseActivity implements UploadListener, View
     private UploadPagerAdapter mAdapter;
 
     private long mLastBackPressTime = 0;
+    private boolean skipNag = false;
 
     public static Intent createIntent(Context context) {
         return new Intent(context, UploadActivity.class);
@@ -77,7 +79,11 @@ public class UploadActivity extends BaseActivity implements UploadListener, View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload);
         getSupportActionBar().setTitle(R.string.upload);
-        checkForNag();
+        if (!skipNag) {
+            checkForNag();
+        } else {
+            skipNag = false;
+        }
         checkIntent(getIntent());
         mIndicator.setViewPager(mPager);
         mPager.addOnPageChangeListener(this);
@@ -154,7 +160,6 @@ public class UploadActivity extends BaseActivity implements UploadListener, View
      */
     private boolean checkForNag() {
         boolean nag = app.getPreferences().getBoolean(PREF_NOTIFY_NO_USER, true);
-
         if (nag && user == null) {
             View nagView = LayoutInflater.from(this).inflate(R.layout.no_user_nag, null);
             final CheckBox cb = (CheckBox) nagView.findViewById(R.id.dontNotify);
@@ -175,14 +180,19 @@ public class UploadActivity extends BaseActivity implements UploadListener, View
                             }
                         }
                     })
-                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            startActivity(ProfileActivity.createIntent(getApplicationContext(), null, true));
-                        }
-                    })
-                    .setView(nagView)
-                    .show();
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        skipNag = true;
+                        Intent intent = new Intent();
+                        intent.setType("image/*");
+                        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_image)), REQUEST_CODE_SELECT_IMAGE);
+                    }
+                })
+                .setView(nagView)
+                .show();
 
             return true;
         }
@@ -307,4 +317,64 @@ public class UploadActivity extends BaseActivity implements UploadListener, View
             return 2;
         }
     }
+    private static final int REQUEST_CODE_SELECT_IMAGE = 1001;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == RESULT_OK && data != null) {
+            final ArrayList<Uri> uris = new ArrayList<>();
+            if (data.getClipData() != null) {
+                int count = data.getClipData().getItemCount();
+                for (int i = 0; i < count; i++) {
+                    uris.add(data.getClipData().getItemAt(i).getUri());
+                }
+            } else if (data.getData() != null) {
+                uris.add(data.getData());
+            }
+            if (!uris.isEmpty()) {
+                new Thread(new Runnable() {
+                    public void run() {
+                        final ArrayList<com.kenny.openimgur.classes.Upload> uploads = new ArrayList<>();
+                        for (Uri uri : uris) {
+                            String filePath = copyUriToTempFile(uri);
+                            if (filePath != null) {
+                                uploads.add(new com.kenny.openimgur.classes.Upload(filePath));
+                            }
+                        }
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                if (!uploads.isEmpty()) {
+                                    Intent service = com.kenny.openimgur.services.UploadService.createIntent(getApplicationContext(), uploads, false, null, null, null);
+                                    startService(service);
+                                    finish();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), R.string.error_pick_image, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                }).start();
+            }
+        }
+    }
+
+    private String copyUriToTempFile(Uri uri) {
+        try {
+            java.io.InputStream input = getContentResolver().openInputStream(uri);
+            java.io.File tempFile = java.io.File.createTempFile("upload", ".jpg", getCacheDir());
+            java.io.OutputStream output = new java.io.FileOutputStream(tempFile);
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = input.read(buffer)) != -1) {
+                output.write(buffer, 0, bytesRead);
+            }
+            input.close();
+            output.close();
+            return tempFile.getAbsolutePath();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
+

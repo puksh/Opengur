@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/upload"
+        android:title="@string/upload"
+        android:icon="@drawable/ic_action_upload_24dp"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/refresh"
         android:title="@string/refresh"
         app:showAsAction="ifRoom"

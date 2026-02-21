@@ -374,4 +374,6 @@
     <string name="transition_upload_photo" translatable="false">uploadPhoto</string>
     <string name="gallery_item_transition" translatable="false">gallery_transition</string>
 
+    <string name="select_image">Select image to upload</string>
+
 </resources>
