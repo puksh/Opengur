@@ -42,10 +42,12 @@ public class OAuthInterceptor implements Interceptor {
         Request.Builder builder = original.newBuilder();
         
         OpengurApp app = OpengurApp.getInstance();
-        String cookies = app.getPreferences().getString("imgur_cookies", null);
-        
-        if (!TextUtils.isEmpty(cookies)) {
-            builder.addHeader("Cookie", cookies);
+
+        if (!TextUtils.isEmpty(sAccessToken) && sAccessToken.startsWith("cookie_session_")) {
+            String cookies = app.getPreferences().getString("imgur_cookies", null);
+            if (!TextUtils.isEmpty(cookies)) {
+                builder.addHeader("Cookie", cookies);
+            }
         }
         
         builder.addHeader(AUTHORIZATION_HEADER, getAuthorizationHeader());
@@ -56,7 +58,7 @@ public class OAuthInterceptor implements Interceptor {
         if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED || response.code() == HttpURLConnection.HTTP_FORBIDDEN) {
             String token = sAccessToken;
 
-            if (!TextUtils.isEmpty(token)) {
+            if (!TextUtils.isEmpty(token) && !token.startsWith("cookie_session_")) {
                 LogUtil.v(TAG, "Token is no longer valid");
 
                 synchronized (sLock) {
@@ -132,7 +134,7 @@ public class OAuthInterceptor implements Interceptor {
     }
 
     private String getAuthorizationHeader() {
-        if (!TextUtils.isEmpty(sAccessToken)) {
+        if (!TextUtils.isEmpty(sAccessToken) && !sAccessToken.startsWith("cookie_session_")) {
             LogUtil.v(TAG, "Access Token present");
             return "Bearer " + sAccessToken;
         } else {
