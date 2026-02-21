@@ -283,7 +283,7 @@ public class ImgurViewFragment extends BaseFragment implements ImgurListener {
             mListView.setAdapter(mPhotoAdapter);
             mMultiView.setViewState(MultiStateView.VIEW_STATE_CONTENT);
             fetchTags();
-        } else if (((ImgurAlbum) mImgurObject).getAlbumPhotos() == null || ((ImgurAlbum) mImgurObject).getAlbumPhotos().isEmpty()) {
+        } else if (((ImgurAlbum) mImgurObject).getAlbumPhotos() == null || ((ImgurAlbum) mImgurObject).getAlbumPhotos().isEmpty() || ((ImgurAlbum) mImgurObject).getAlbumPhotos().size() < ((ImgurAlbum) mImgurObject).getAlbumImageCount()) {
             fetchAlbumImages();
         } else {
             mPhotoAdapter = new PhotoAdapter(getActivity(), ((ImgurAlbum) mImgurObject).getAlbumPhotos(), mImgurObject, this);

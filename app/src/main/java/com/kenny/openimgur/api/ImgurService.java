@@ -46,7 +46,7 @@ public interface ImgurService {
     @GET("/3/image/{id}")
     Call<PhotoResponse> getImageDetails(@Path("id") String imageId);
 
-    @GET("/3/gallery/{id}/images")
+    @GET("/3/album/{id}/images")
     Call<AlbumResponse> getAlbumImages(@Path("id") String albumId);
 
     @GET("/3/gallery/{id}/comments/{sort}")

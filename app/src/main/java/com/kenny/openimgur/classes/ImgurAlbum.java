@@ -71,11 +71,7 @@ public class ImgurAlbum extends ImgurBaseObject {
     }
 
     public void addPhotosToAlbum(List<ImgurPhoto> photos) {
-        if (mAlbumPhotos == null) {
-            mAlbumPhotos = photos;
-        } else {
-            mAlbumPhotos.addAll(photos);
-        }
+        mAlbumPhotos = photos;
 
         for (ImgurPhoto p : mAlbumPhotos) {
             p.toHttps();
@@ -104,7 +100,7 @@ public class ImgurAlbum extends ImgurBaseObject {
     }
 
     public int getAlbumImageCount() {
-        return mAlbumPhotos != null && !mAlbumPhotos.isEmpty() ? mAlbumPhotos.size() : mAlbumImageCount;
+        return mAlbumImageCount;
     }
 
     public int getCoverWidth() {
