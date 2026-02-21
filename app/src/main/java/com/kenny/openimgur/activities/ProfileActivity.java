@@ -144,6 +144,11 @@ public class ProfileActivity extends BaseActivity {
         } else if (savedInstanceState.containsKey(KEY_USER)) {
             mSelectedUser = savedInstanceState.getParcelable(KEY_USER);
             configUser(null);
+        } else if (user != null) {
+            mSelectedUser = user;
+            configUser(null);
+        } else {
+            configWebView();
         }
     }
 
@@ -269,6 +274,10 @@ public class ProfileActivity extends BaseActivity {
 
     private void maybeHandleWebLoginComplete(@Nullable String url, @NonNull AlertDialog dialog) {
         if (!mWaitingForToken || TextUtils.isEmpty(url) || !url.contains("imgur.com")) {
+            return;
+        }
+
+        if (url.contains("/signin") || url.contains("/login")) {
             return;
         }
 
