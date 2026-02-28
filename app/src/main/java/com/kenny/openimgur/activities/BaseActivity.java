@@ -25,7 +25,7 @@ import android.widget.Toast;
 import com.kenny.openimgur.R;
 import com.kenny.openimgur.classes.ImgurTheme;
 import com.kenny.openimgur.classes.ImgurUser;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.util.LogUtil;
 import com.kennyc.bottomsheet.BottomSheet;
 
@@ -37,7 +37,7 @@ import butterknife.ButterKnife;
 abstract public class BaseActivity extends AppCompatActivity {
     public final String TAG = getClass().getSimpleName();
 
-    public OpengurApp app;
+    public PokengurApp app;
 
     public ImgurUser user;
 
@@ -50,7 +50,7 @@ abstract public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         LogUtil.v(TAG, "onCreate");
-        app = OpengurApp.getInstance(getApplicationContext());
+        app = PokengurApp.getInstance(getApplicationContext());
         onSetStyle(app.getImgurTheme());
         super.onCreate(savedInstanceState);
         applyAmoledSystemBars();

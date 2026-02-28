@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -123,7 +123,7 @@ public class CommentPopupFragment extends DialogFragment implements DialogInterf
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.comment_dialog, null);
         mUnbinder = ButterKnife.bind(this, view);
 
-        return new AlertDialog.Builder(getActivity(), OpengurApp.getInstance(getActivity()).getImgurTheme().getAlertDialogTheme())
+        return new AlertDialog.Builder(getActivity(), PokengurApp.getInstance(getActivity()).getImgurTheme().getAlertDialogTheme())
                 .setTitle(R.string.comment)
                 .setNegativeButton(R.string.cancel, null)
                 .setPositiveButton(R.string.okay, this)

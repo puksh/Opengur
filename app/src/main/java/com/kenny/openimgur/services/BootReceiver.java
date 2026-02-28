@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.util.LogUtil;
 
 /**
@@ -15,7 +15,7 @@ public class BootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        OpengurApp app = OpengurApp.getInstance(context);
+        PokengurApp app = PokengurApp.getInstance(context);
 
         // We only care if we have a valid user
         if (app.getUser() != null) {

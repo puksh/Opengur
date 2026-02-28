@@ -1,4 +1,4 @@
 <paths>
-    <external-path name="Opengur" path="/Pictures" />
+    <external-path name="Pokengur" path="/Pictures" />
     <cache-path name="video_cache" path="video_cache/" />
 </paths>

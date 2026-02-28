@@ -50,7 +50,7 @@ import com.kenny.openimgur.classes.ImgurAlbum;
 import com.kenny.openimgur.classes.ImgurBaseObject;
 import com.kenny.openimgur.classes.ImgurComment;
 import com.kenny.openimgur.classes.ImgurListener;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.fragments.CommentPopupFragment;
 import com.kenny.openimgur.fragments.ImgurViewFragment;
 import com.kenny.openimgur.activities.FullScreenPhotoActivity;
@@ -1153,7 +1153,7 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
         public BrowsingAdapter(Context context, FragmentManager fm, ArrayList<ImgurBaseObject> objects) {
             super(fm);
             this.objects = objects;
-            mDisplayTags = OpengurApp.getInstance(context).getPreferences().getBoolean(SettingsActivity.KEY_TAGS, true);
+            mDisplayTags = PokengurApp.getInstance(context).getPreferences().getBoolean(SettingsActivity.KEY_TAGS, true);
         }
 
         @Override
@@ -1189,6 +1189,6 @@ public class ViewActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     protected int getStyleRes() {
-        return theme.isDarkTheme ? R.style.Theme_Opengur_Dark_View_Dark : R.style.Theme_Opengur_Light_View_Light;
+        return theme.isDarkTheme ? R.style.Theme_Pokengur_Dark_View_Dark : R.style.Theme_Pokengur_Light_View_Light;
     }
 }

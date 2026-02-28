@@ -34,7 +34,7 @@ import com.kenny.openimgur.classes.FragmentListener;
 import com.kenny.openimgur.classes.ImgurTheme;
 import com.kenny.openimgur.classes.ImgurTopic;
 import com.kenny.openimgur.classes.ImgurUser;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.fragments.BaseGridFragment;
 import com.kenny.openimgur.fragments.GalleryFragment;
 import com.kenny.openimgur.fragments.MemeFragment;
@@ -319,8 +319,8 @@ public class MainActivity extends BaseActivity implements FragmentListener, Navi
 
             case R.id.nav_feedback:
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto", "opengur@kot.li", null));
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Opengur Feedback");
+                        "mailto", "Pokengur@kot.li", null));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Pokengur Feedback");
                 share(emailIntent, R.string.send_feedback);
                 break;
 
@@ -448,7 +448,7 @@ public class MainActivity extends BaseActivity implements FragmentListener, Navi
         switch (requestCode) {
             // Set the theme if coming from the settings activity
             case RequestCodes.SETTINGS:
-                ImgurTheme theme = OpengurApp.getInstance(getApplicationContext()).getImgurTheme();
+                ImgurTheme theme = PokengurApp.getInstance(getApplicationContext()).getImgurTheme();
                 mNagOnExit = app.getPreferences().getBoolean(SettingsActivity.KEY_CONFIRM_EXIT, true);
 
                 if (mSavedTheme == null || theme != mSavedTheme || mIsDarkTheme != theme.isDarkTheme || mIsAmoledTheme != theme.isAmoled) {
@@ -470,7 +470,7 @@ public class MainActivity extends BaseActivity implements FragmentListener, Navi
             case RequestCodes.PROFILE:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     if (data.getBooleanExtra(ProfileActivity.KEY_LOGGED_IN, false)) {
-                        app = OpengurApp.getInstance(getApplicationContext());
+                        app = PokengurApp.getInstance(getApplicationContext());
                         updateUserHeader(app.getUser());
                     } else if (data.getBooleanExtra(ProfileActivity.KEY_LOGGED_OUT, false)) {
                         updateUserHeader(null);
@@ -493,6 +493,6 @@ public class MainActivity extends BaseActivity implements FragmentListener, Navi
 
     @Override
     protected int getStyleRes() {
-        return theme.isDarkTheme ? R.style.Theme_Opengur_Dark_Main_Dark : R.style.Theme_Opengur_Light_Main_Light;
+        return theme.isDarkTheme ? R.style.Theme_Pokengur_Dark_Main_Dark : R.style.Theme_Pokengur_Light_Main_Light;
     }
 }

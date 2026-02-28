@@ -14,7 +14,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.util.ColorUtils;
 
 /**
@@ -25,7 +25,7 @@ public abstract class BaseNotification {
 
     private NotificationManager mManger;
 
-    protected OpengurApp app;
+    protected PokengurApp app;
 
     protected NotificationCompat.Builder builder;
 
@@ -37,7 +37,7 @@ public abstract class BaseNotification {
 
     public BaseNotification(Context context, boolean autoBuild) {
         mManger = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        app = OpengurApp.getInstance(context);
+        app = PokengurApp.getInstance(context);
         resources = app.getResources();
 
         if (autoBuild) {

@@ -18,7 +18,7 @@ import android.text.TextUtils;
 
 import com.kenny.openimgur.R;
 import com.kenny.openimgur.classes.ImgurPhoto;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.classes.VideoCache;
 import com.kenny.openimgur.ui.BaseNotification;
 import com.kenny.openimgur.util.FileUtil;
@@ -35,7 +35,7 @@ import java.util.ArrayList;
  * Created by kcampagna on 6/30/14.
  */
 public class DownloaderService extends IntentService {
-    private static final String FOLDER_NAME = "Opengur";
+    private static final String FOLDER_NAME = "Pokengur";
 
     private static final String TAG = DownloaderService.class.getSimpleName();
 
@@ -97,7 +97,7 @@ public class DownloaderService extends IntentService {
 
                     // Single image downloads will show multiple options and a preview in the notification
                     if (!isMultiUpload) {
-                        Uri shareUri = FileProvider.getUriForFile(context, OpengurApp.AUTHORITY, savedFile);
+                        Uri shareUri = FileProvider.getUriForFile(context, PokengurApp.AUTHORITY, savedFile);
                         String photoType = LinkUtils.getImageType(url);
                         boolean isVideoLink = savedFile.getAbsolutePath().endsWith(FileUtil.EXTENSION_MP4);
 

@@ -8,7 +8,7 @@ import android.preference.PreferenceFragment;
 import android.view.View;
 import android.widget.ListView;
 
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 
 /**
  * Created by kcampagna on 4/16/15.
@@ -16,13 +16,13 @@ import com.kenny.openimgur.classes.OpengurApp;
 public abstract class BasePreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
     protected final String TAG = getClass().getSimpleName();
 
-    protected OpengurApp mApp;
+    protected PokengurApp mApp;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mApp = OpengurApp.getInstance(getActivity());
+        mApp = PokengurApp.getInstance(getActivity());
         StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskReads();
 
         try {

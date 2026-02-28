@@ -24,7 +24,7 @@ import com.kenny.openimgur.classes.CustomLinkMovement;
 import com.kenny.openimgur.classes.ImgurBaseObject;
 import com.kenny.openimgur.classes.ImgurComment;
 import com.kenny.openimgur.classes.ImgurListener;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.ui.VideoView;
 import com.kenny.openimgur.util.ImageUtil;
 import com.kenny.openimgur.util.LinkUtils;
@@ -78,7 +78,7 @@ public class CommentAdapter extends BaseRecyclerAdapter<ImgurComment> {
         mGreenTextColor = getColor(R.color.notoriety_positive);
         mRedTextColor = getColor(R.color.notoriety_negative);
         mCommentIndent = getDimension(R.dimen.comment_padding);
-        mAutoPlaySilentMovies = OpengurApp.getInstance(context).getPreferences()
+        mAutoPlaySilentMovies = PokengurApp.getInstance(context).getPreferences()
                 .getBoolean(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES, false);
     }
 

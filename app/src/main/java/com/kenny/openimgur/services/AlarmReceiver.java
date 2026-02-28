@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 import android.text.format.DateUtils;
 
 import com.kenny.openimgur.activities.SettingsActivity;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.util.LogUtil;
 import com.kenny.openimgur.util.NetworkUtils;
 import com.kenny.openimgur.util.RequestCodes;
@@ -28,7 +28,7 @@ public class AlarmReceiver extends BroadcastReceiver {
      * @param context
      */
     public static void createNotificationAlarm(Context context) {
-        SharedPreferences pref = OpengurApp.getInstance(context).getPreferences();
+        SharedPreferences pref = PokengurApp.getInstance(context).getPreferences();
         boolean enabled = pref.getBoolean(SettingsActivity.KEY_NOTIFICATIONS, true);
 
         if (enabled) {
@@ -43,7 +43,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        OpengurApp app = OpengurApp.getInstance(context);
+        PokengurApp app = PokengurApp.getInstance(context);
 
         if (app.getUser() != null && !NetworkUtils.hasDataSaver(context)) {
             LogUtil.v(TAG, "User present, fetching notifications");

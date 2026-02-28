@@ -110,3 +110,4 @@ public class SettingsActivity extends BaseActivity {
         return theme.isDarkTheme ? R.style.Theme_Opengur_Dark : R.style.Theme_Opengur_Light_DarkActionBar;
     }
 }
+PokengurPokengur

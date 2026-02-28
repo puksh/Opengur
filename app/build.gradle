@@ -25,7 +25,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.kennyc.open.imgur"
+        applicationId "com.puksh.poken.imgur"
         minSdkVersion 17
         targetSdkVersion 28
         versionCode project.ext.version_code
@@ -51,7 +51,7 @@ android {
 
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            outputFileName = "opengur-${variant.versionName}-${variant.buildType.name}.apk"
+            outputFileName = "Pokengur-${variant.versionName}-${variant.buildType.name}.apk"
         }
     }
 

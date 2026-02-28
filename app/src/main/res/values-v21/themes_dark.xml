@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Opengur.Dark" parent="Theme.AppCompat">
+    <style name="Theme.Pokengur.Dark" parent="Theme.AppCompat">
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
 
-    <style name="Theme.Opengur.Dark.Main.Dark">
+    <style name="Theme.Pokengur.Dark.Main.Dark">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowContentTransitions">true</item>
@@ -15,7 +15,7 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
 
-    <style name="Theme.Opengur.Dark.Upload">
+    <style name="Theme.Pokengur.Dark.Upload">
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>

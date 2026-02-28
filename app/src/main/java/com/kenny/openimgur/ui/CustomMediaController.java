@@ -17,7 +17,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -400,7 +400,7 @@ public class CustomMediaController extends FrameLayout {
 
             try {
                 File videoFile = new File(mVideoUri);
-                android.net.Uri contentUri = FileProvider.getUriForFile(mContext, OpengurApp.AUTHORITY, videoFile);
+                android.net.Uri contentUri = FileProvider.getUriForFile(mContext, PokengurApp.AUTHORITY, videoFile);
                 
                 android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW);
                 intent.setDataAndType(contentUri, "video/*");

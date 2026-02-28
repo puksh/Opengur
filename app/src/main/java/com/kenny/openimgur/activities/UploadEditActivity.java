@@ -215,6 +215,6 @@ public class UploadEditActivity extends BaseActivity {
 
     @Override
     protected int getStyleRes() {
-        return theme.isDarkTheme ? R.style.Theme_Opengur_Dark_Upload_Edit : R.style.Theme_Opengur_Light_DarkActionBar_Upload_Edit;
+        return theme.isDarkTheme ? R.style.Theme_Pokengur_Dark_Upload_Edit : R.style.Theme_Pokengur_Light_DarkActionBar_Upload_Edit;
     }
 }

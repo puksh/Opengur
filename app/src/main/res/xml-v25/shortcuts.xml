@@ -7,7 +7,7 @@
         android:shortcutShortLabel="@string/upload">
         <intent
             android:action="android.intent.action.SEND"
-            android:targetPackage="com.kennyc.open.imgur"
+            android:targetPackage="com.puksh.poken.imgur"
             android:targetClass="com.kenny.openimgur.activities.UploadActivity" />
     </shortcut>
 </shortcuts>

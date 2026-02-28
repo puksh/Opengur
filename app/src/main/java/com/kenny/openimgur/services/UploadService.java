@@ -22,7 +22,7 @@ import com.kenny.openimgur.classes.ImgurAlbum;
 import com.kenny.openimgur.classes.ImgurBaseObject;
 import com.kenny.openimgur.classes.ImgurPhoto;
 import com.kenny.openimgur.classes.ImgurTopic;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.classes.Upload;
 import com.kenny.openimgur.ui.BaseNotification;
 import com.kenny.openimgur.util.FileUtil;
@@ -222,7 +222,7 @@ public class UploadService extends IntentService {
         if (uploadedPhotos.size() == 1) {
             mNotification.onPartialPhotoUpload(uploadedPhotos.get(0), total);
         } else {
-            boolean isAuthenticated = OpengurApp.getInstance(getApplicationContext()).getUser() != null;
+            boolean isAuthenticated = PokengurApp.getInstance(getApplicationContext()).getUser() != null;
             if (isAuthenticated) {
                 createAlbum(uploadedPhotos, false, title, desc, null);
             } else {
@@ -255,7 +255,7 @@ public class UploadService extends IntentService {
                 submitToGallery(title, topic != null ? topic.getId() : FALLBACK_TOPIC, photo);
             }
         } else {
-            boolean isAuthenticated = OpengurApp.getInstance(getApplicationContext()).getUser() != null;
+            boolean isAuthenticated = PokengurApp.getInstance(getApplicationContext()).getUser() != null;
             if (isAuthenticated) {
                 LogUtil.v(TAG, "Creating album");
                 createAlbum(uploadedPhotos, submitToGallery, title, desc, topic);

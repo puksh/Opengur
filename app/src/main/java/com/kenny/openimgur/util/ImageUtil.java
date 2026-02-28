@@ -26,7 +26,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.kenny.openimgur.activities.SettingsActivity;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.classes.VideoCache;
 import com.kenny.openimgur.util.LogUtil;
 import com.kenny.openimgur.ui.CircleBitmapDisplayer;
@@ -241,7 +241,7 @@ public class ImageUtil {
         long discCacheSize = 1024 * 1024;
         DiskCache discCache;
         int threadPoolSize;
-        SharedPreferences pref = OpengurApp.getInstance(context).getPreferences();
+        SharedPreferences pref = PokengurApp.getInstance(context).getPreferences();
         String discCacheAllowance = pref.getString(SettingsActivity.KEY_CACHE_SIZE, SettingsActivity.CACHE_SIZE_512MB);
         String threadSize = pref.getString(SettingsActivity.KEY_THREAD_SIZE, SettingsActivity.THREAD_SIZE_5);
         String cacheKey = pref.getString(SettingsActivity.KEY_CACHE_LOC, SettingsActivity.CACHE_LOC_INTERNAL);
@@ -386,7 +386,7 @@ public class ImageUtil {
     }
 
     /**
-     * Returns the default display options for the image loader
+     * Returns the default display options for the imPokengurder
      * Resets view before loading, caches in memory and on disk.
      *
      * @return

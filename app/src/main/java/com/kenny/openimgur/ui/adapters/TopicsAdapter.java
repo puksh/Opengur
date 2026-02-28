@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.kenny.openimgur.R;
 import com.kenny.openimgur.classes.ImgurTopic;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 
 import java.util.List;
 
@@ -23,8 +23,8 @@ public class TopicsAdapter extends ArrayAdapter<ImgurTopic> {
     public TopicsAdapter(Context context, List<ImgurTopic> topics) {
         super(context, R.layout.support_simple_spinner_dropdown_item, topics);
         Resources res = context.getResources();
-        mColor = OpengurApp.getInstance(context).getImgurTheme().isDarkTheme
-            ? res.getColor(OpengurApp.getInstance(context).getImgurTheme().getDarkBackgroundColorRes())
+        mColor = PokengurApp.getInstance(context).getImgurTheme().isDarkTheme
+            ? res.getColor(PokengurApp.getInstance(context).getImgurTheme().getDarkBackgroundColorRes())
             : res.getColor(R.color.bg_light);
     }
 

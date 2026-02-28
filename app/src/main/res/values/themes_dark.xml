@@ -1,22 +1,22 @@
 <resources>
 
-    <style name="Theme.Opengur.Dark.Main" parent="Theme.AppCompat.NoActionBar">
+    <style name="Theme.Pokengur.Dark.Main" parent="Theme.AppCompat.NoActionBar">
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
 
     <!-- Needed for v21 Override -->
-    <style name="Theme.Opengur.Dark.Main.Dark" />
+    <style name="Theme.Pokengur.Dark.Main.Dark" />
 
-    <style name="Theme.Opengur.Dark.Upload" />
+    <style name="Theme.Pokengur.Dark.Upload" />
 
-    <style name="Theme.Opengur.Dark" parent="Theme.AppCompat" />
+    <style name="Theme.Pokengur.Dark" parent="Theme.AppCompat" />
 
-    <style name="Theme.Opengur.Dark.View.Dark" parent="Theme.AppCompat">
+    <style name="Theme.Pokengur.Dark.View.Dark" parent="Theme.AppCompat">
         <item name="windowActionBarOverlay">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="Theme.Opengur.Dark.Upload.Edit">
+    <style name="Theme.Pokengur.Dark.Upload.Edit">
         <item name="windowActionBarOverlay">true</item>
     </style>
 

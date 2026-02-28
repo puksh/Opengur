@@ -27,12 +27,12 @@ import java.lang.reflect.Method;
 /**
  * Created by kcampagna on 6/14/14.
  */
-public class OpengurApp extends Application implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class PokengurApp extends Application implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "OpenImgur";
 
     private static boolean USE_STRICT_MODE = BuildConfig.DEBUG;
 
-    private static OpengurApp sInstance;
+    private static PokengurApp sInstance;
 
     private SharedPreferences mPref;
 
@@ -40,7 +40,7 @@ public class OpengurApp extends Application implements SharedPreferences.OnShare
 
     private ImgurTheme mTheme = ImgurTheme.GREY;
 
-    public static final String AUTHORITY = "com.kennyc.open.imgur";
+    public static final String AUTHORITY = "com.puksh.poken.imgur";
 
     @Override
     public void onCreate() {
@@ -83,12 +83,12 @@ public class OpengurApp extends Application implements SharedPreferences.OnShare
         ImageUtil.getImageLoader(this).clearMemoryCache();
     }
 
-    public static OpengurApp getInstance() {
+    public static PokengurApp getInstance() {
         return sInstance;
     }
 
-    public static OpengurApp getInstance(Context context) {
-        return context != null ? (OpengurApp) context.getApplicationContext() : sInstance;
+    public static PokengurApp getInstance(Context context) {
+        return context != null ? (PokengurApp) context.getApplicationContext() : sInstance;
     }
 
     public SharedPreferences getPreferences() {

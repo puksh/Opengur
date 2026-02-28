@@ -37,7 +37,7 @@ import retrofit2.Response;
 public class NotificationReceiver extends BroadcastReceiver {
     private static final String TAG = "NotificationReceiver";
 
-    public static final String KEY_QUICK_REPLY_KEY = "opengur.quickreply";
+    public static final String KEY_QUICK_REPLY_KEY = "Pokengur.quickreply";
 
     private static final String KEY_ACTION = "action";
 

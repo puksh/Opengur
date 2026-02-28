@@ -25,7 +25,7 @@ import com.kenny.openimgur.classes.ImgurAlbum;
 import com.kenny.openimgur.classes.ImgurBaseObject;
 import com.kenny.openimgur.classes.ImgurComment;
 import com.kenny.openimgur.classes.ImgurPhoto;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.ui.BaseNotification;
 import com.kenny.openimgur.ui.CircleBitmapDisplayer;
 import com.kenny.openimgur.util.ImageUtil;
@@ -59,7 +59,7 @@ public class NotificationService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        OpengurApp app = OpengurApp.getInstance(getApplicationContext());
+        PokengurApp app = PokengurApp.getInstance(getApplicationContext());
         boolean enabled = app.getPreferences().getBoolean(SettingsActivity.KEY_NOTIFICATIONS, true);
 
         if (!enabled) {

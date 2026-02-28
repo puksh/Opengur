@@ -31,7 +31,7 @@ import android.view.ViewGroup;
 
 import com.kenny.openimgur.R;
 import com.kenny.openimgur.activities.UploadEditActivity;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.classes.Upload;
 import com.kenny.openimgur.classes.UploadListener;
 import com.kenny.openimgur.ui.adapters.UploadPhotoAdapter;
@@ -318,7 +318,7 @@ public class UploadFragment extends BaseFragment implements View.OnClickListener
 
         if (FileUtil.isFileValid(mTempFile)) {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getActivity(), OpengurApp.AUTHORITY, mTempFile));
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getActivity(), PokengurApp.AUTHORITY, mTempFile));
             if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
                 startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
             } else {

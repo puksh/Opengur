@@ -117,7 +117,7 @@ public class RoutingActivity extends BaseActivity {
     @Override
     protected int getStyleRes() {
         // Routing activity is barely visible so the theme won't matter
-        return R.style.Theme_Opengur_Light_DarkActionBar;
+        return R.style.Theme_Pokengur_Light_DarkActionBar;
     }
 
     private void fetchImageDetails(String id) {

@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.util.DBContracts;
 
 /**
@@ -27,8 +27,8 @@ public class SearchAdapter extends SimpleCursorAdapter {
                 FLAG_REGISTER_CONTENT_OBSERVER);
 
         Resources res = context.getResources();
-        mColor = OpengurApp.getInstance(context).getImgurTheme().isDarkTheme
-            ? res.getColor(OpengurApp.getInstance(context).getImgurTheme().getDarkBackgroundColorRes())
+        mColor = PokengurApp.getInstance(context).getImgurTheme().isDarkTheme
+            ? res.getColor(PokengurApp.getInstance(context).getImgurTheme().getDarkBackgroundColorRes())
             : res.getColor(R.color.bg_light);
 
     }

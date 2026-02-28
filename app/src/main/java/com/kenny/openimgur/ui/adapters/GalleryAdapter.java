@@ -16,7 +16,7 @@ import com.kenny.openimgur.activities.SettingsActivity;
 import com.kenny.openimgur.classes.ImgurAlbum;
 import com.kenny.openimgur.classes.ImgurBaseObject;
 import com.kenny.openimgur.classes.ImgurPhoto;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.collections.SetUniqueList;
 import com.kenny.openimgur.ui.CenteredDrawable;
 import com.kenny.openimgur.ui.VideoView;
@@ -65,7 +65,7 @@ public class GalleryAdapter extends BaseRecyclerAdapter<ImgurBaseObject> {
         super(context, objects, true);
         mUpvoteColor = getColor(R.color.notoriety_positive);
         mDownVoteColor = getColor(R.color.notoriety_negative);
-        SharedPreferences pref = OpengurApp.getInstance(context).getPreferences();
+        SharedPreferences pref = PokengurApp.getInstance(context).getPreferences();
         mAllowNSFWThumb = pref.getBoolean(SettingsActivity.KEY_NSFW_THUMBNAILS, false);
         mThumbnailQuality = pref.getString(SettingsActivity.KEY_THUMBNAIL_QUALITY, ImgurPhoto.THUMBNAIL_GALLERY);
         boolean autoplaySilentMovies = pref.getBoolean(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES, false);

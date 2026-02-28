@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import com.kenny.openimgur.api.responses.OAuthResponse;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.util.LogUtil;
 import com.kenny.openimgur.util.SqlHelper;
 
@@ -41,7 +41,7 @@ public class OAuthInterceptor implements Interceptor {
         Request original = chain.request();
         Request.Builder builder = original.newBuilder();
         
-        OpengurApp app = OpengurApp.getInstance();
+        PokengurApp app = PokengurApp.getInstance();
 
         if (!TextUtils.isEmpty(sAccessToken) && sAccessToken.startsWith("cookie_session_")) {
             String cookies = app.getPreferences().getString("imgur_cookies", null);
@@ -68,7 +68,7 @@ public class OAuthInterceptor implements Interceptor {
                     if (!TextUtils.isEmpty(currentToken) && currentToken.equals(token)) {
                         // Try 5 times to get a refresh token
                         while (mRetryAttempts < 5) {
-                            sAccessToken = refreshToken(OpengurApp.getInstance());
+                            sAccessToken = refreshToken(PokengurApp.getInstance());
 
                             if (!TextUtils.isEmpty(sAccessToken)) {
                                 break;
@@ -96,7 +96,7 @@ public class OAuthInterceptor implements Interceptor {
 
                     return chain.proceed(newRequest);
                 } else {
-                    OpengurApp.getInstance().onLogout();
+                    PokengurApp.getInstance().onLogout();
                 }
             } else {
                 LogUtil.w(TAG, "Received unauthorized status from API but no access token present... wat?");
@@ -107,7 +107,7 @@ public class OAuthInterceptor implements Interceptor {
     }
 
     @Nullable
-    private String refreshToken(OpengurApp app) {
+    private String refreshToken(PokengurApp app) {
         try {
             Call<OAuthResponse> call = ApiClient.getService().refreshToken(ApiClient.CLIENT_ID, ApiClient.CLIENT_SECRET, app.getUser().getRefreshToken(), "refresh_token");
             retrofit2.Response<OAuthResponse> response = call.execute();

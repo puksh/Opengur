@@ -50,7 +50,7 @@ public class VideoCache {
     }
 
     private VideoCache() {
-        OpengurApp app = OpengurApp.getInstance();
+        PokengurApp app = PokengurApp.getInstance();
         String cacheKey = app.getPreferences().getString(SettingsActivity.KEY_CACHE_LOC, SettingsActivity.CACHE_LOC_INTERNAL);
         StrictMode.ThreadPolicy policy = allowDiskAccess();
 

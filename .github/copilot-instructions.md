@@ -1,10 +1,10 @@
-# Opengur GitHub Instructions
+# Pokengur GitHub Instructions
 
 ## Project overview
 
 - Android app built with Gradle (legacy Android plugin style).
 - Main code package: `com.kenny.openimgur`.
-- App id: `com.kennyc.open.imgur`.
+- App id: `com.puksh.poken.imgur`.
 - Language: Java.
 - Min SDK: 17.
 - Target SDK: 28.
@@ -52,13 +52,13 @@
 
 Use your tools to be as efficient as possible, to catch every findable string and replace everything you need to replace in order to finalize changes.
 
-# Opengur GitHub Instructions
+# Pokengur GitHub Instructions
 
 ## Project overview
 
 - Android app built with Gradle (legacy Android plugin style).
 - Main code package: `com.kenny.openimgur`.
-- App id: `com.kennyc.open.imgur`.
+- App id: `com.puksh.poken.imgur`.
 - Language: Java.
 - Min SDK: 17.
 - Target SDK: 28.

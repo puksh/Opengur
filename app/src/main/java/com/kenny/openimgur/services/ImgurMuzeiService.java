@@ -21,7 +21,7 @@ import com.kenny.openimgur.classes.ImgurBaseObject;
 import com.kenny.openimgur.classes.ImgurFilters;
 import com.kenny.openimgur.classes.ImgurPhoto;
 import com.kenny.openimgur.classes.ImgurTopic;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.util.LogUtil;
 import com.kenny.openimgur.util.NetworkUtils;
 import com.kenny.openimgur.util.SqlHelper;
@@ -73,7 +73,7 @@ public class ImgurMuzeiService extends RemoteMuzeiArtSource {
             return;
         }
 
-        OpengurApp app = OpengurApp.getInstance(context);
+        PokengurApp app = PokengurApp.getInstance(context);
         SharedPreferences pref = app.getPreferences();
         boolean allowNSFW = pref.getBoolean(MuzeiSettingsActivity.KEY_NSFW, false);
         boolean wifiOnly = pref.getBoolean(MuzeiSettingsActivity.KEY_WIFI, true);

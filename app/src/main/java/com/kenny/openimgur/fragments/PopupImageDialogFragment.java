@@ -23,7 +23,7 @@ import com.kenny.openimgur.activities.FullScreenPhotoActivity;
 import com.kenny.openimgur.api.ApiClient;
 import com.kenny.openimgur.api.responses.PhotoResponse;
 import com.kenny.openimgur.classes.ImgurPhoto;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.classes.VideoCache;
 import com.kenny.openimgur.ui.VideoView;
 import com.kenny.openimgur.ui.CustomMediaController;
@@ -95,7 +95,7 @@ public class PopupImageDialogFragment extends DialogFragment implements VideoCac
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        setStyle(DialogFragment.STYLE_NO_TITLE, OpengurApp.getInstance(getActivity()).getImgurTheme().getDialogTheme());
+        setStyle(DialogFragment.STYLE_NO_TITLE, PokengurApp.getInstance(getActivity()).getImgurTheme().getDialogTheme());
         super.onCreate(savedInstanceState);
     }
 

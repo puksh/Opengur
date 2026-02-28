@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.util.ImageUtil;
 import com.kenny.openimgur.util.LogUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -30,7 +30,7 @@ public abstract class BaseRecyclerAdapter<T> extends com.kennyc.adapters.BaseRec
     public BaseRecyclerAdapter(Context context, List<T> collection, boolean hasImageLoader) {
         super(context, collection);
         if (hasImageLoader) imageLoader = ImageUtil.getImageLoader(context);
-        isDarkTheme = OpengurApp.getInstance(context).getImgurTheme().isDarkTheme;
+        isDarkTheme = PokengurApp.getInstance(context).getImgurTheme().isDarkTheme;
     }
 
     /**

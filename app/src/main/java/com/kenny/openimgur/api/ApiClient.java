@@ -11,7 +11,7 @@ import com.kenny.openimgur.BuildConfig;
 import com.kenny.openimgur.R;
 import com.kenny.openimgur.classes.ImgurBaseObject;
 import com.kenny.openimgur.classes.ImgurUser;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.util.FileUtil;
 import com.kenny.openimgur.util.NetworkUtils;
 
@@ -80,7 +80,7 @@ public class ApiClient {
     }
 
     private static OkHttpClient getClient() {
-        final OpengurApp app = OpengurApp.getInstance();
+        final PokengurApp app = PokengurApp.getInstance();
         ImgurUser user = app.getUser();
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder()

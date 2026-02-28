@@ -13,7 +13,7 @@ import com.kenny.openimgur.R;
 import com.kenny.openimgur.activities.BaseActivity;
 import com.kenny.openimgur.classes.ImgurTheme;
 import com.kenny.openimgur.classes.ImgurUser;
-import com.kenny.openimgur.classes.OpengurApp;
+import com.kenny.openimgur.classes.PokengurApp;
 import com.kenny.openimgur.util.LogUtil;
 import com.kennyc.bottomsheet.BottomSheet;
 
@@ -26,7 +26,7 @@ import butterknife.Unbinder;
 abstract public class BaseFragment extends Fragment {
     public final String TAG = getClass().getSimpleName();
 
-    public OpengurApp app;
+    public PokengurApp app;
 
     public ImgurUser user;
 
@@ -38,7 +38,7 @@ abstract public class BaseFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         LogUtil.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        app = OpengurApp.getInstance(getActivity());
+        app = PokengurApp.getInstance(getActivity());
         user = app.getUser();
         theme = app.getImgurTheme();
     }
