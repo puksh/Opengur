@@ -245,8 +245,14 @@ public class FullScreenPhotoFragment extends BaseFragment {
             });
 
             videoView.setVideoPath(file.getAbsolutePath());
-            // Check if video autoplay is disabled in settings
-            boolean disableVideoAutoplay = app.getPreferences().getBoolean(SettingsActivity.KEY_DISABLE_VIDEO_AUTOPLAY, false);
+            // Check combined autoplay mode setting (0 = Off, 1 = On, 2 = On + Home)
+            String autoplayMode = app.getPreferences().getString(SettingsActivity.KEY_AUTOPLAY_MODE, "0");
+            int mode = 0;
+            try {
+                mode = Integer.parseInt(autoplayMode);
+            } catch (NumberFormatException ignored) {
+            }
+            boolean disableVideoAutoplay = (mode == 0);
             if (getUserVisibleHint() && !disableVideoAutoplay) videoView.start();
         } else {
             VideoCache.getInstance().putVideo(url, new VideoCache.VideoCacheListener() {
@@ -285,8 +291,14 @@ public class FullScreenPhotoFragment extends BaseFragment {
                     });
 
                     videoView.setVideoPath(file.getAbsolutePath());
-                    // Check if video autoplay is disabled in settings
-                    boolean disableVideoAutoplay = app.getPreferences().getBoolean(SettingsActivity.KEY_DISABLE_VIDEO_AUTOPLAY, false);
+                    // Check combined autoplay mode setting (0 = Off, 1 = On, 2 = On + Home)
+                    String autoplayMode = app.getPreferences().getString(SettingsActivity.KEY_AUTOPLAY_MODE, "0");
+                    int mode = 0;
+                    try {
+                        mode = Integer.parseInt(autoplayMode);
+                    } catch (NumberFormatException ignored) {
+                    }
+                    boolean disableVideoAutoplay = (mode == 0);
                     if (getUserVisibleHint() && !disableVideoAutoplay) videoView.start();
                     if (loadingView != null) loadingView.setVisibility(View.GONE);
                 }
@@ -583,9 +595,15 @@ public class FullScreenPhotoFragment extends BaseFragment {
             if (gifImageView != null && gifImageView.getDrawable() instanceof GifDrawable) {
                 ((GifDrawable) gifImageView.getDrawable()).start();
             } else if (videoView != null && videoView.getDuration() > 0) {
-                // Check if video autoplay is disabled in settings
-                boolean disableVideoAutoplay = app.getPreferences().getBoolean(SettingsActivity.KEY_DISABLE_VIDEO_AUTOPLAY, false);
-                if (!disableVideoAutoplay) {
+                    // Check combined autoplay mode setting (0 = Off, 1 = On, 2 = On + Home)
+                    String autoplayMode = app.getPreferences().getString(SettingsActivity.KEY_AUTOPLAY_MODE, "0");
+                    int mode = 0;
+                    try {
+                        mode = Integer.parseInt(autoplayMode);
+                    } catch (NumberFormatException ignored) {
+                    }
+                    boolean disableVideoAutoplay = (mode == 0);
+                    if (!disableVideoAutoplay) {
                     videoView.start();
                 }
             } else {

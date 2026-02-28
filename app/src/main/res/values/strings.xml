@@ -143,12 +143,8 @@
     <string name="pref_comment_title">Comments</string>
     <string name="pref_comments_on">Display Comments</string>
     <string name="pref_comments_off">Don\'t Display Comments</string>
-    <string name="pref_autoplay_silent_title">Autoplay Silent Movies</string>
-    <string name="pref_autoplay_silent_on">Autoplay GIFs and silent videos</string>
-    <string name="pref_autoplay_silent_off">Do not autoplay GIFs or videos</string>
-    <string name="pref_autoplay_home_title">Autoplay on Home Feed</string>
-    <string name="pref_autoplay_home_on">Autoplay GIFs and silent videos on the home feed</string>
-    <string name="pref_autoplay_home_off">Do not autoplay GIFs or videos on the home feed</string>
+    <string name="pref_autoplay_mode_title">Autoplay</string>
+    <string name="pref_autoplay_mode_summary">On+Home is very battery heavy and On increases latency in image/video view</string>
     <string name="pref_mosaic_view_title">Mosaic Home Feed</string>
     <string name="pref_mosaic_view_on">Use mixed tile heights on the home feed</string>
     <string name="pref_mosaic_view_off">Use the classic uniform grid on the home feed</string>
@@ -206,9 +202,7 @@
     <string name="pref_battery_saver_title">Battery Saver Mode</string>
     <string name="pref_battery_saver_on">Reduce image quality and background activity</string>
     <string name="pref_battery_saver_off">Use normal performance settings</string>
-    <string name="pref_disable_video_autoplay_title">Disable Video Autoplay</string>
-    <string name="pref_disable_video_autoplay_on">Videos require manual playback</string>
-    <string name="pref_disable_video_autoplay_off">Videos autoplay when visible</string>
+    <!-- legacy video-autoplay strings removed; controlled by Autoplay setting -->
     <string name="pref_reduce_background_title">Reduce Background Activity</string>
     <string name="pref_reduce_background_on">Minimize background network requests</string>
     <string name="pref_reduce_background_off">Allow normal background activity</string>

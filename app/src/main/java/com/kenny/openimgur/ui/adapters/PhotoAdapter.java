@@ -53,8 +53,14 @@ public class PhotoAdapter extends BaseRecyclerAdapter<ImgurPhoto> {
         super(context, photos, true);
         mListener = listener;
         mImgurObject = object;
-        mAutoPlaySilentMovies = PokengurApp.getInstance(context).getPreferences()
-                .getBoolean(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES, false);
+        String autoplayMode = PokengurApp.getInstance(context).getPreferences()
+            .getString(SettingsActivity.KEY_AUTOPLAY_MODE, "0");
+        int mode = 0;
+        try {
+            mode = Integer.parseInt(autoplayMode);
+        } catch (NumberFormatException ignored) {
+        }
+        mAutoPlaySilentMovies = mode != 0;
     }
 
     /**

@@ -68,10 +68,14 @@ public class GalleryAdapter extends BaseRecyclerAdapter<ImgurBaseObject> {
         SharedPreferences pref = PokengurApp.getInstance(context).getPreferences();
         mAllowNSFWThumb = pref.getBoolean(SettingsActivity.KEY_NSFW_THUMBNAILS, false);
         mThumbnailQuality = pref.getString(SettingsActivity.KEY_THUMBNAIL_QUALITY, ImgurPhoto.THUMBNAIL_GALLERY);
-        boolean autoplaySilentMovies = pref.getBoolean(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES, false);
-        mAutoPlaySilentMovies = pref.contains(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES_HOME)
-            ? pref.getBoolean(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES_HOME, false)
-            : autoplaySilentMovies;
+        String autoplayMode = pref.getString(SettingsActivity.KEY_AUTOPLAY_MODE, "0");
+        int mode = 0;
+        try {
+            mode = Integer.parseInt(autoplayMode);
+        } catch (NumberFormatException ignored) {
+        }
+        // mode: 0 = Off, 1 = On (in-content), 2 = On + Home
+        mAutoPlaySilentMovies = (mode == 2);
         mMosaicEnabled = pref.getBoolean(SettingsActivity.KEY_MOSAIC_VIEW, false);
         mDefaultTileHeight = getResources().getDimensionPixelSize(R.dimen.gallery_column_height);
         mGridColumns = getResources().getInteger(R.integer.gallery_num_columns);

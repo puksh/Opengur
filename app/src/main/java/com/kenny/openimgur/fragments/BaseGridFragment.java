@@ -415,10 +415,14 @@ public abstract class BaseGridFragment extends BaseFragment implements Callback<
                     mAllowNSFW = pref.getBoolean(SettingsActivity.NSFW_KEY, false);
                     adapter.setAllowNSFW(nsfwThumb);
                     adapter.setThumbnailQuality(getActivity(), pref.getString(SettingsActivity.KEY_THUMBNAIL_QUALITY, ImgurPhoto.THUMBNAIL_GALLERY));
-                    boolean autoplaySilentMovies = pref.getBoolean(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES, false);
-                    boolean autoplaySilentMoviesHome = pref.contains(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES_HOME)
-                            ? pref.getBoolean(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES_HOME, false)
-                            : autoplaySilentMovies;
+                    String autoplayMode = pref.getString(SettingsActivity.KEY_AUTOPLAY_MODE, "0");
+                    int mode = 0;
+                    try {
+                        mode = Integer.parseInt(autoplayMode);
+                    } catch (NumberFormatException ignored) {
+                    }
+                    // mode: 0 = Off, 1 = On (in-content), 2 = On + Home
+                    boolean autoplaySilentMoviesHome = (mode == 2);
                     adapter.setAutoplaySilentMovies(autoplaySilentMoviesHome);
                     boolean mosaicEnabled = pref.getBoolean(SettingsActivity.KEY_MOSAIC_VIEW, false);
                     adapter.setMosaicEnabled(mosaicEnabled);

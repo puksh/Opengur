@@ -176,5 +176,17 @@
         <item>#da4336</item>
         <item>#009688</item>
     </string-array>
+    <!-- Autoplay mode entries (0 = Off, 1 = On, 2 = On + Homepage) -->
+    <string-array name="pref_autoplay_mode_entries">
+        <item>Off</item>
+        <item>On</item>
+        <item>On + Home</item>
+    </string-array>
+
+    <string-array name="pref_autoplay_mode_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 
 </resources>

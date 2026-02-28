@@ -78,8 +78,15 @@ public class CommentAdapter extends BaseRecyclerAdapter<ImgurComment> {
         mGreenTextColor = getColor(R.color.notoriety_positive);
         mRedTextColor = getColor(R.color.notoriety_negative);
         mCommentIndent = getDimension(R.dimen.comment_padding);
-        mAutoPlaySilentMovies = PokengurApp.getInstance(context).getPreferences()
-                .getBoolean(SettingsActivity.KEY_AUTOPLAY_SILENT_MOVIES, false);
+        String autoplayMode = PokengurApp.getInstance(context).getPreferences()
+            .getString(SettingsActivity.KEY_AUTOPLAY_MODE, "0");
+        int mode = 0;
+        try {
+            mode = Integer.parseInt(autoplayMode);
+        } catch (NumberFormatException ignored) {
+        }
+        // mode 0 = Off, 1 = On (in-content), 2 = On + Home
+        mAutoPlaySilentMovies = mode != 0;
     }
 
     /**
