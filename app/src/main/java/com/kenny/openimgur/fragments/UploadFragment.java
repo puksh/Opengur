@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 
 import android.Manifest;
@@ -29,17 +29,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.activities.UploadEditActivity;
-import com.kenny.openimgur.classes.PokengurApp;
-import com.kenny.openimgur.classes.Upload;
-import com.kenny.openimgur.classes.UploadListener;
-import com.kenny.openimgur.ui.adapters.UploadPhotoAdapter;
-import com.kenny.openimgur.util.FileUtil;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.PermissionUtils;
-import com.kenny.openimgur.util.RequestCodes;
-import com.kenny.openimgur.util.ViewUtils;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.activities.UploadEditActivity;
+import com.puksh.pokenimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.classes.Upload;
+import com.puksh.pokenimgur.classes.UploadListener;
+import com.puksh.pokenimgur.ui.adapters.UploadPhotoAdapter;
+import com.puksh.pokenimgur.util.FileUtil;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.PermissionUtils;
+import com.puksh.pokenimgur.util.RequestCodes;
+import com.puksh.pokenimgur.util.ViewUtils;
 import com.kennyc.view.MultiStateView;
 
 import java.io.File;

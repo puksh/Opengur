@@ -1,4 +1,4 @@
-package com.kenny.openimgur.activities;
+package com.puksh.pokenimgur.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -25,22 +25,22 @@ import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.OAuthInterceptor;
-import com.kenny.openimgur.api.responses.UserResponse;
-import com.kenny.openimgur.classes.ImgurUser;
-import com.kenny.openimgur.fragments.ProfileAlbumsFragment;
-import com.kenny.openimgur.fragments.ProfileCommentsFragment;
-import com.kenny.openimgur.fragments.ProfileFavoritesFragment;
-import com.kenny.openimgur.fragments.ProfileInfoFragment;
-import com.kenny.openimgur.fragments.ProfileSubmissionsFragment;
-import com.kenny.openimgur.fragments.ProfileUploadsFragment;
-import com.kenny.openimgur.services.AlarmReceiver;
-import com.kenny.openimgur.ui.ViewPager;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.SqlHelper;
-import com.kenny.openimgur.util.ViewUtils;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.OAuthInterceptor;
+import com.puksh.pokenimgur.api.responses.UserResponse;
+import com.puksh.pokenimgur.classes.ImgurUser;
+import com.puksh.pokenimgur.fragments.ProfileAlbumsFragment;
+import com.puksh.pokenimgur.fragments.ProfileCommentsFragment;
+import com.puksh.pokenimgur.fragments.ProfileFavoritesFragment;
+import com.puksh.pokenimgur.fragments.ProfileInfoFragment;
+import com.puksh.pokenimgur.fragments.ProfileSubmissionsFragment;
+import com.puksh.pokenimgur.fragments.ProfileUploadsFragment;
+import com.puksh.pokenimgur.services.AlarmReceiver;
+import com.puksh.pokenimgur.ui.ViewPager;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.SqlHelper;
+import com.puksh.pokenimgur.util.ViewUtils;
 import com.kennyc.view.MultiStateView;
 
 import butterknife.BindView;

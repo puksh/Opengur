@@ -1,4 +1,4 @@
-package com.kenny.openimgur.activities;
+package com.puksh.pokenimgur.activities;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -17,16 +17,16 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.ImgurTopic;
-import com.kenny.openimgur.classes.UploadListener;
-import com.kenny.openimgur.fragments.UploadFragment;
-import com.kenny.openimgur.fragments.UploadInfoFragment;
-import com.kenny.openimgur.services.UploadService;
-import com.kenny.openimgur.ui.FragmentPagerAdapter;
-import com.kenny.openimgur.ui.InkPageIndicator;
-import com.kenny.openimgur.ui.ViewPager;
-import com.kenny.openimgur.util.LogUtil;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.classes.ImgurTopic;
+import com.puksh.pokenimgur.classes.UploadListener;
+import com.puksh.pokenimgur.fragments.UploadFragment;
+import com.puksh.pokenimgur.fragments.UploadInfoFragment;
+import com.puksh.pokenimgur.services.UploadService;
+import com.puksh.pokenimgur.ui.FragmentPagerAdapter;
+import com.puksh.pokenimgur.ui.InkPageIndicator;
+import com.puksh.pokenimgur.ui.ViewPager;
+import com.puksh.pokenimgur.util.LogUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -335,17 +335,17 @@ public class UploadActivity extends BaseActivity implements UploadListener, View
             if (!uris.isEmpty()) {
                 new Thread(new Runnable() {
                     public void run() {
-                        final ArrayList<com.kenny.openimgur.classes.Upload> uploads = new ArrayList<>();
+                        final ArrayList<com.puksh.pokenimgur.classes.Upload> uploads = new ArrayList<>();
                         for (Uri uri : uris) {
                             String filePath = copyUriToTempFile(uri);
                             if (filePath != null) {
-                                uploads.add(new com.kenny.openimgur.classes.Upload(filePath));
+                                uploads.add(new com.puksh.pokenimgur.classes.Upload(filePath));
                             }
                         }
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 if (!uploads.isEmpty()) {
-                                    Intent service = com.kenny.openimgur.services.UploadService.createIntent(getApplicationContext(), uploads, false, null, null, null);
+                                    Intent service = com.puksh.pokenimgur.services.UploadService.createIntent(getApplicationContext(), uploads, false, null, null, null);
                                     startService(service);
                                     finish();
                                 } else {

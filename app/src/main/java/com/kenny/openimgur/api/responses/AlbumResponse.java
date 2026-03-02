@@ -1,6 +1,6 @@
-package com.kenny.openimgur.api.responses;
+package com.puksh.pokenimgur.api.responses;
 
-import com.kenny.openimgur.classes.ImgurPhoto;
+import com.puksh.pokenimgur.classes.ImgurPhoto;
 
 import java.util.List;
 

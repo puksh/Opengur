@@ -1,4 +1,4 @@
-package com.kenny.openimgur.api.responses;
+package com.puksh.pokenimgur.api.responses;
 
 /**
  * Created by kcampagna on 7/11/15.

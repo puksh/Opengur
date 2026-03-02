@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -14,8 +14,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.classes.PokengurApp;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

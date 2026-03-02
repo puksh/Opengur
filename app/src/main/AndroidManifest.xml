@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.kenny.openimgur">
+    package="com.puksh.pokenimgur">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -196,7 +196,7 @@
                 android:value="@color/theme_green_primary" />
             <meta-data
                 android:name="settingsActivity"
-                android:value="com.kenny.openimgur.activities.MuzeiSettingsActivity" />
+                android:value="com.puksh.pokenimgur.activities.MuzeiSettingsActivity" />
         </service>
 
         <receiver
@@ -207,7 +207,7 @@
             android:exported="false" />
 
         <receiver
-            android:name="com.kenny.openimgur.services.BootReceiver"
+            android:name="com.puksh.pokenimgur.services.BootReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

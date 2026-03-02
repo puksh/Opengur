@@ -1,4 +1,4 @@
-package com.kenny.openimgur.services;
+package com.puksh.pokenimgur.services;
 
 import android.app.IntentService;
 import android.app.PendingIntent;
@@ -16,17 +16,17 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.ImgurPhoto;
-import com.kenny.openimgur.classes.PokengurApp;
-import com.kenny.openimgur.classes.VideoCache;
-import com.kenny.openimgur.ui.BaseNotification;
-import com.kenny.openimgur.util.FileUtil;
-import com.kenny.openimgur.util.ImageUtil;
-import com.kenny.openimgur.util.LinkUtils;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.NetworkUtils;
-import com.kenny.openimgur.util.RequestCodes;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.classes.ImgurPhoto;
+import com.puksh.pokenimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.classes.VideoCache;
+import com.puksh.pokenimgur.ui.BaseNotification;
+import com.puksh.pokenimgur.util.FileUtil;
+import com.puksh.pokenimgur.util.ImageUtil;
+import com.puksh.pokenimgur.util.LinkUtils;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.NetworkUtils;
+import com.puksh.pokenimgur.util.RequestCodes;
 
 import java.io.File;
 import java.util.ArrayList;

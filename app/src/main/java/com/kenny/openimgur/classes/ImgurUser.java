@@ -1,4 +1,4 @@
-package com.kenny.openimgur.classes;
+package com.puksh.pokenimgur.classes;
 
 import android.database.Cursor;
 import android.os.Parcel;
@@ -7,9 +7,9 @@ import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
 
 import com.google.gson.annotations.SerializedName;
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.util.DBContracts;
-import com.kenny.openimgur.util.DBContracts.UserContract;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.util.DBContracts;
+import com.puksh.pokenimgur.util.DBContracts.UserContract;
 
 /**
  * Created by kcampagna on 7/25/14.

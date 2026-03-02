@@ -1,4 +1,4 @@
-package com.kenny.openimgur.activities;
+package com.puksh.pokenimgur.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,10 +10,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.FragmentListener;
-import com.kenny.openimgur.classes.ImgurTopic;
-import com.kenny.openimgur.fragments.GallerySearchFragment;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.classes.FragmentListener;
+import com.puksh.pokenimgur.classes.ImgurTopic;
+import com.puksh.pokenimgur.fragments.GallerySearchFragment;
 
 import java.util.List;
 

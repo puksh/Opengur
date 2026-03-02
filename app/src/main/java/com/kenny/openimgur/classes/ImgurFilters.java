@@ -1,8 +1,8 @@
-package com.kenny.openimgur.classes;
+package com.puksh.pokenimgur.classes;
 
 import android.support.annotation.StringRes;
 
-import com.kenny.openimgur.R;
+import com.puksh.pokenimgur.R;
 
 /**
  * Created by Kenny-PC on 2/7/2015.

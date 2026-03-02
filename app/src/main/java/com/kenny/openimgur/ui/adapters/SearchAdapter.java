@@ -1,4 +1,4 @@
-package com.kenny.openimgur.ui.adapters;
+package com.puksh.pokenimgur.ui.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -7,9 +7,9 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.PokengurApp;
-import com.kenny.openimgur.util.DBContracts;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.util.DBContracts;
 
 /**
  * Created by kcampagna on 3/2/15.

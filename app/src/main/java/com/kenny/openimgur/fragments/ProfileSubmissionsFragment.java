@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,10 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.classes.ImgurUser;
-import com.kenny.openimgur.util.ViewUtils;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.classes.ImgurUser;
+import com.puksh.pokenimgur.util.ViewUtils;
 import com.kennyc.view.MultiStateView;
 
 /**

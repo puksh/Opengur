@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -8,7 +8,7 @@ import android.preference.PreferenceFragment;
 import android.view.View;
 import android.widget.ListView;
 
-import com.kenny.openimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.classes.PokengurApp;
 
 /**
  * Created by kcampagna on 4/16/15.

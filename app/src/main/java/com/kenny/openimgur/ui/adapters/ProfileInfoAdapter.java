@@ -1,4 +1,4 @@
-package com.kenny.openimgur.ui.adapters;
+package com.puksh.pokenimgur.ui.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -12,11 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.CustomLinkMovement;
-import com.kenny.openimgur.classes.ImgurListener;
-import com.kenny.openimgur.classes.ImgurTrophy;
-import com.kenny.openimgur.classes.ImgurUser;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.classes.CustomLinkMovement;
+import com.puksh.pokenimgur.classes.ImgurListener;
+import com.puksh.pokenimgur.classes.ImgurTrophy;
+import com.puksh.pokenimgur.classes.ImgurUser;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

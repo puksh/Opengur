@@ -1,4 +1,4 @@
-package com.kenny.openimgur.classes;
+package com.puksh.pokenimgur.classes;
 
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;

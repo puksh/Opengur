@@ -1,4 +1,4 @@
-package com.kenny.openimgur.services;
+package com.puksh.pokenimgur.services;
 
 import android.app.IntentService;
 import android.app.PendingIntent;
@@ -17,22 +17,22 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.activities.SettingsActivity;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.responses.NotificationResponse;
-import com.kenny.openimgur.classes.ImgurAlbum;
-import com.kenny.openimgur.classes.ImgurBaseObject;
-import com.kenny.openimgur.classes.ImgurComment;
-import com.kenny.openimgur.classes.ImgurPhoto;
-import com.kenny.openimgur.classes.PokengurApp;
-import com.kenny.openimgur.ui.BaseNotification;
-import com.kenny.openimgur.ui.CircleBitmapDisplayer;
-import com.kenny.openimgur.util.ImageUtil;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.NetworkUtils;
-import com.kenny.openimgur.util.RequestCodes;
-import com.kenny.openimgur.util.SqlHelper;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.activities.SettingsActivity;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.responses.NotificationResponse;
+import com.puksh.pokenimgur.classes.ImgurAlbum;
+import com.puksh.pokenimgur.classes.ImgurBaseObject;
+import com.puksh.pokenimgur.classes.ImgurComment;
+import com.puksh.pokenimgur.classes.ImgurPhoto;
+import com.puksh.pokenimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.ui.BaseNotification;
+import com.puksh.pokenimgur.ui.CircleBitmapDisplayer;
+import com.puksh.pokenimgur.util.ImageUtil;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.NetworkUtils;
+import com.puksh.pokenimgur.util.RequestCodes;
+import com.puksh.pokenimgur.util.SqlHelper;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 
 import java.util.HashSet;

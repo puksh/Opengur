@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -30,20 +30,20 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.activities.FullScreenPhotoActivity;
-import com.kenny.openimgur.activities.ViewActivity;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.ImgurService;
-import com.kenny.openimgur.api.responses.BasicResponse;
-import com.kenny.openimgur.classes.FragmentListener;
-import com.kenny.openimgur.classes.Upload;
-import com.kenny.openimgur.services.UploadService;
-import com.kenny.openimgur.ui.adapters.UploadAdapter;
-import com.kenny.openimgur.util.DBContracts;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.SqlHelper;
-import com.kenny.openimgur.util.ViewUtils;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.activities.FullScreenPhotoActivity;
+import com.puksh.pokenimgur.activities.ViewActivity;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.ImgurService;
+import com.puksh.pokenimgur.api.responses.BasicResponse;
+import com.puksh.pokenimgur.classes.FragmentListener;
+import com.puksh.pokenimgur.classes.Upload;
+import com.puksh.pokenimgur.services.UploadService;
+import com.puksh.pokenimgur.ui.adapters.UploadAdapter;
+import com.puksh.pokenimgur.util.DBContracts;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.SqlHelper;
+import com.puksh.pokenimgur.util.ViewUtils;
 import com.kennyc.view.MultiStateView;
 
 import butterknife.BindView;
@@ -232,7 +232,7 @@ public class UploadedPhotosFragment extends BaseFragment implements View.OnClick
         refresh(true);
         try {
             android.content.IntentFilter f = new android.content.IntentFilter();
-            f.addAction(com.kenny.openimgur.services.UploadService.ACTION_REFRESH_UPLOADS);
+            f.addAction(com.puksh.pokenimgur.services.UploadService.ACTION_REFRESH_UPLOADS);
             getActivity().registerReceiver(mUploadRefreshReceiver, f);
         } catch (Exception ex) {
             LogUtil.e(TAG, "Error registering upload refresh receiver", ex);

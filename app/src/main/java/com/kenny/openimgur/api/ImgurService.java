@@ -1,19 +1,19 @@
-package com.kenny.openimgur.api;
+package com.puksh.pokenimgur.api;
 
-import com.kenny.openimgur.api.responses.AlbumResponse;
-import com.kenny.openimgur.api.responses.BasicObjectResponse;
-import com.kenny.openimgur.api.responses.BasicResponse;
-import com.kenny.openimgur.api.responses.CommentPostResponse;
-import com.kenny.openimgur.api.responses.CommentResponse;
-import com.kenny.openimgur.api.responses.GalleryResponse;
-import com.kenny.openimgur.api.responses.NotificationResponse;
-import com.kenny.openimgur.api.responses.OAuthResponse;
-import com.kenny.openimgur.api.responses.PhotoResponse;
-import com.kenny.openimgur.api.responses.TagResponse;
-import com.kenny.openimgur.api.responses.TopicGalleryResponse;
-import com.kenny.openimgur.api.responses.TopicResponse;
-import com.kenny.openimgur.api.responses.TrophyResponse;
-import com.kenny.openimgur.api.responses.UserResponse;
+import com.puksh.pokenimgur.api.responses.AlbumResponse;
+import com.puksh.pokenimgur.api.responses.BasicObjectResponse;
+import com.puksh.pokenimgur.api.responses.BasicResponse;
+import com.puksh.pokenimgur.api.responses.CommentPostResponse;
+import com.puksh.pokenimgur.api.responses.CommentResponse;
+import com.puksh.pokenimgur.api.responses.GalleryResponse;
+import com.puksh.pokenimgur.api.responses.NotificationResponse;
+import com.puksh.pokenimgur.api.responses.OAuthResponse;
+import com.puksh.pokenimgur.api.responses.PhotoResponse;
+import com.puksh.pokenimgur.api.responses.TagResponse;
+import com.puksh.pokenimgur.api.responses.TopicGalleryResponse;
+import com.puksh.pokenimgur.api.responses.TopicResponse;
+import com.puksh.pokenimgur.api.responses.TrophyResponse;
+import com.puksh.pokenimgur.api.responses.UserResponse;
 
 import okhttp3.RequestBody;
 import okhttp3.MultipartBody;

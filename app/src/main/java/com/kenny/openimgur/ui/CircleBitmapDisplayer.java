@@ -1,4 +1,4 @@
-package com.kenny.openimgur.ui;
+package com.puksh.pokenimgur.ui;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;

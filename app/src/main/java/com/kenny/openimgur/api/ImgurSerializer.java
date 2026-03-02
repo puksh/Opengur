@@ -1,4 +1,4 @@
-package com.kenny.openimgur.api;
+package com.puksh.pokenimgur.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -7,9 +7,9 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.kenny.openimgur.classes.ImgurAlbum;
-import com.kenny.openimgur.classes.ImgurBaseObject;
-import com.kenny.openimgur.classes.ImgurPhoto;
+import com.puksh.pokenimgur.classes.ImgurAlbum;
+import com.puksh.pokenimgur.classes.ImgurBaseObject;
+import com.puksh.pokenimgur.classes.ImgurPhoto;
 
 import java.lang.reflect.Type;
 

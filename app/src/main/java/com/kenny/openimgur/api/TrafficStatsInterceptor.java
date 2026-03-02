@@ -1,4 +1,4 @@
-package com.kenny.openimgur.api;
+package com.puksh.pokenimgur.api;
 
 import android.net.TrafficStats;
 

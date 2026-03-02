@@ -1,8 +1,8 @@
-package com.kenny.openimgur.activities;
+package com.puksh.pokenimgur.activities;
 
 import android.os.Bundle;
 
-import com.kenny.openimgur.R;
+import com.puksh.pokenimgur.R;
 
 /**
  * Created by Kenny-PC on 6/21/2015.

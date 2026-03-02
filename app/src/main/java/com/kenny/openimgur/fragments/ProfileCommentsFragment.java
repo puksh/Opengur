@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -15,16 +15,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.activities.ViewActivity;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.responses.CommentResponse;
-import com.kenny.openimgur.classes.ImgurComment;
-import com.kenny.openimgur.classes.ImgurFilters.CommentSort;
-import com.kenny.openimgur.classes.ImgurUser;
-import com.kenny.openimgur.ui.adapters.ProfileCommentAdapter;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.ViewUtils;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.activities.ViewActivity;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.responses.CommentResponse;
+import com.puksh.pokenimgur.classes.ImgurComment;
+import com.puksh.pokenimgur.classes.ImgurFilters.CommentSort;
+import com.puksh.pokenimgur.classes.ImgurUser;
+import com.puksh.pokenimgur.ui.adapters.ProfileCommentAdapter;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.ViewUtils;
 import com.kennyc.view.MultiStateView;
 
 import java.util.ArrayList;

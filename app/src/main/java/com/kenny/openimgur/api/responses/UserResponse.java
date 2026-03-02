@@ -1,6 +1,6 @@
-package com.kenny.openimgur.api.responses;
+package com.puksh.pokenimgur.api.responses;
 
-import com.kenny.openimgur.classes.ImgurUser;
+import com.puksh.pokenimgur.classes.ImgurUser;
 
 /**
  * Created by kcampagna on 7/12/15.

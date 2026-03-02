@@ -1,4 +1,4 @@
-package com.kenny.openimgur.ui;
+package com.puksh.pokenimgur.ui;
 
 import android.content.Context;
 import android.os.Handler;
@@ -16,8 +16,8 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.classes.PokengurApp;
 
 import java.io.File;
 import java.lang.ref.WeakReference;

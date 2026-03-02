@@ -1,4 +1,4 @@
-package com.kenny.openimgur.ui;
+package com.puksh.pokenimgur.ui;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.kenny.openimgur.R;
+import com.puksh.pokenimgur.R;
 
 /**
  * Created by kcampagna on 8/3/14.

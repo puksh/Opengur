@@ -1,4 +1,4 @@
-package com.kenny.openimgur.activities;
+package com.puksh.pokenimgur.activities;
 
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
@@ -21,10 +21,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.Upload;
-import com.kenny.openimgur.util.ImageUtil;
-import com.kenny.openimgur.util.ViewUtils;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.classes.Upload;
+import com.puksh.pokenimgur.util.ImageUtil;
+import com.puksh.pokenimgur.util.ViewUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;

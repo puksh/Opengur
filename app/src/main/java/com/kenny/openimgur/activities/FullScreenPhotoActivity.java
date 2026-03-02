@@ -1,4 +1,4 @@
-package com.kenny.openimgur.activities;
+package com.puksh.pokenimgur.activities;
 
 import android.Manifest;
 import android.app.Activity;
@@ -28,21 +28,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.responses.AlbumResponse;
-import com.kenny.openimgur.classes.ImgurAlbum;
-import com.kenny.openimgur.classes.ImgurBaseObject;
-import com.kenny.openimgur.classes.ImgurPhoto;
-import com.kenny.openimgur.collections.SetUniqueList;
-import com.kenny.openimgur.fragments.FullScreenPhotoFragment;
-import com.kenny.openimgur.services.DownloaderService;
-import com.kenny.openimgur.ui.ViewPager;
-import com.kenny.openimgur.ui.adapters.GalleryAdapter;
-import com.kenny.openimgur.util.NetworkUtils;
-import com.kenny.openimgur.util.PermissionUtils;
-import com.kenny.openimgur.util.RequestCodes;
-import com.kenny.openimgur.util.ViewUtils;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.responses.AlbumResponse;
+import com.puksh.pokenimgur.classes.ImgurAlbum;
+import com.puksh.pokenimgur.classes.ImgurBaseObject;
+import com.puksh.pokenimgur.classes.ImgurPhoto;
+import com.puksh.pokenimgur.collections.SetUniqueList;
+import com.puksh.pokenimgur.fragments.FullScreenPhotoFragment;
+import com.puksh.pokenimgur.services.DownloaderService;
+import com.puksh.pokenimgur.ui.ViewPager;
+import com.puksh.pokenimgur.ui.adapters.GalleryAdapter;
+import com.puksh.pokenimgur.util.NetworkUtils;
+import com.puksh.pokenimgur.util.PermissionUtils;
+import com.puksh.pokenimgur.util.RequestCodes;
+import com.puksh.pokenimgur.util.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;

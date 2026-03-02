@@ -1,4 +1,4 @@
-package com.kenny.openimgur.api.responses;
+package com.puksh.pokenimgur.api.responses;
 
 import android.support.annotation.NonNull;
 
@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import com.kenny.openimgur.classes.ImgurTag;
+import com.puksh.pokenimgur.classes.ImgurTag;
 
 import java.util.ArrayList;
 import java.util.List;

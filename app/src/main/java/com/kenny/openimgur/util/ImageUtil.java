@@ -1,4 +1,4 @@
-package com.kenny.openimgur.util;
+package com.puksh.pokenimgur.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -25,11 +25,11 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.kenny.openimgur.activities.SettingsActivity;
-import com.kenny.openimgur.classes.PokengurApp;
-import com.kenny.openimgur.classes.VideoCache;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.ui.CircleBitmapDisplayer;
+import com.puksh.pokenimgur.activities.SettingsActivity;
+import com.puksh.pokenimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.classes.VideoCache;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.ui.CircleBitmapDisplayer;
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache;

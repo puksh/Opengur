@@ -1,8 +1,8 @@
-package com.kenny.openimgur.util;
+package com.puksh.pokenimgur.util;
 
 import android.util.Log;
 
-import com.kenny.openimgur.BuildConfig;
+import com.puksh.pokenimgur.BuildConfig;
 
 /**
  * Created by kcampagna on 9/5/14.

@@ -1,4 +1,4 @@
-package com.kenny.openimgur.activities;
+package com.puksh.pokenimgur.activities;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -29,23 +29,23 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.FragmentListener;
-import com.kenny.openimgur.classes.ImgurTheme;
-import com.kenny.openimgur.classes.ImgurTopic;
-import com.kenny.openimgur.classes.ImgurUser;
-import com.kenny.openimgur.classes.PokengurApp;
-import com.kenny.openimgur.fragments.BaseGridFragment;
-import com.kenny.openimgur.fragments.GalleryFragment;
-import com.kenny.openimgur.fragments.MemeFragment;
-import com.kenny.openimgur.fragments.RandomFragment;
-import com.kenny.openimgur.fragments.RedditFragment;
-import com.kenny.openimgur.fragments.TopicsFragment;
-import com.kenny.openimgur.fragments.UploadedPhotosFragment;
-import com.kenny.openimgur.ui.adapters.TopicsAdapter;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.RequestCodes;
-import com.kenny.openimgur.util.SqlHelper;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.classes.FragmentListener;
+import com.puksh.pokenimgur.classes.ImgurTheme;
+import com.puksh.pokenimgur.classes.ImgurTopic;
+import com.puksh.pokenimgur.classes.ImgurUser;
+import com.puksh.pokenimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.fragments.BaseGridFragment;
+import com.puksh.pokenimgur.fragments.GalleryFragment;
+import com.puksh.pokenimgur.fragments.MemeFragment;
+import com.puksh.pokenimgur.fragments.RandomFragment;
+import com.puksh.pokenimgur.fragments.RedditFragment;
+import com.puksh.pokenimgur.fragments.TopicsFragment;
+import com.puksh.pokenimgur.fragments.UploadedPhotosFragment;
+import com.puksh.pokenimgur.ui.adapters.TopicsAdapter;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.RequestCodes;
+import com.puksh.pokenimgur.util.SqlHelper;
 
 import java.util.List;
 

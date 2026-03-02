@@ -1,4 +1,4 @@
-package com.kenny.openimgur.ui.adapters;
+package com.puksh.pokenimgur.ui.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -10,13 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.classes.ImgurAlbum;
-import com.kenny.openimgur.classes.ImgurNotification;
-import com.kenny.openimgur.classes.ImgurPhoto;
-import com.kenny.openimgur.util.ColorUtils;
-import com.kenny.openimgur.util.ImageUtil;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.classes.ImgurAlbum;
+import com.puksh.pokenimgur.classes.ImgurNotification;
+import com.puksh.pokenimgur.classes.ImgurPhoto;
+import com.puksh.pokenimgur.util.ColorUtils;
+import com.puksh.pokenimgur.util.ImageUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import java.util.ArrayList;

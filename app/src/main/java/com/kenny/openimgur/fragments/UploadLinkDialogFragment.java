@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 import android.app.DialogFragment;
 import android.graphics.Bitmap;
@@ -18,9 +18,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.ImgurHandler;
-import com.kenny.openimgur.util.ImageUtil;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.classes.ImgurHandler;
+import com.puksh.pokenimgur.util.ImageUtil;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 

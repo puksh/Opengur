@@ -1,11 +1,11 @@
-package com.kenny.openimgur.classes;
+package com.puksh.pokenimgur.classes;
 
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.kenny.openimgur.util.DBContracts;
+import com.puksh.pokenimgur.util.DBContracts;
 
 /**
  * Created by kcampagna on 2/19/15.

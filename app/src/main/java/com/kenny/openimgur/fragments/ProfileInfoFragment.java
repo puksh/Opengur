@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -16,20 +16,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.activities.FullScreenPhotoActivity;
-import com.kenny.openimgur.activities.ProfileActivity;
-import com.kenny.openimgur.activities.ViewActivity;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.responses.TrophyResponse;
-import com.kenny.openimgur.classes.CustomLinkMovement;
-import com.kenny.openimgur.classes.ImgurListener;
-import com.kenny.openimgur.classes.ImgurTrophy;
-import com.kenny.openimgur.classes.ImgurUser;
-import com.kenny.openimgur.ui.VideoView;
-import com.kenny.openimgur.ui.adapters.ProfileInfoAdapter;
-import com.kenny.openimgur.util.LinkUtils;
-import com.kenny.openimgur.util.LogUtil;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.activities.FullScreenPhotoActivity;
+import com.puksh.pokenimgur.activities.ProfileActivity;
+import com.puksh.pokenimgur.activities.ViewActivity;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.responses.TrophyResponse;
+import com.puksh.pokenimgur.classes.CustomLinkMovement;
+import com.puksh.pokenimgur.classes.ImgurListener;
+import com.puksh.pokenimgur.classes.ImgurTrophy;
+import com.puksh.pokenimgur.classes.ImgurUser;
+import com.puksh.pokenimgur.ui.VideoView;
+import com.puksh.pokenimgur.ui.adapters.ProfileInfoAdapter;
+import com.puksh.pokenimgur.util.LinkUtils;
+import com.puksh.pokenimgur.util.LogUtil;
 import com.kennyc.view.MultiStateView;
 
 import java.util.List;

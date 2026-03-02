@@ -1,4 +1,4 @@
-package com.kenny.openimgur.ui.adapters;
+package com.puksh.pokenimgur.ui.adapters;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -18,16 +18,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ImageButton;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.activities.SettingsActivity;
-import com.kenny.openimgur.classes.CustomLinkMovement;
-import com.kenny.openimgur.classes.ImgurBaseObject;
-import com.kenny.openimgur.classes.ImgurComment;
-import com.kenny.openimgur.classes.ImgurListener;
-import com.kenny.openimgur.classes.PokengurApp;
-import com.kenny.openimgur.ui.VideoView;
-import com.kenny.openimgur.util.ImageUtil;
-import com.kenny.openimgur.util.LinkUtils;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.activities.SettingsActivity;
+import com.puksh.pokenimgur.classes.CustomLinkMovement;
+import com.puksh.pokenimgur.classes.ImgurBaseObject;
+import com.puksh.pokenimgur.classes.ImgurComment;
+import com.puksh.pokenimgur.classes.ImgurListener;
+import com.puksh.pokenimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.ui.VideoView;
+import com.puksh.pokenimgur.util.ImageUtil;
+import com.puksh.pokenimgur.util.LinkUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;

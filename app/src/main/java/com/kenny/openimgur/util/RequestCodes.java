@@ -1,4 +1,4 @@
-package com.kenny.openimgur.util;
+package com.puksh.pokenimgur.util;
 
 /**
  * Created by kcampagna on 8/6/15.

@@ -1,4 +1,4 @@
-package com.kenny.openimgur.util;
+package com.puksh.pokenimgur.util;
 
 import android.app.Activity;
 import android.app.Fragment;

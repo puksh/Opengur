@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 import android.app.DialogFragment;
 import android.graphics.Bitmap;
@@ -18,18 +18,18 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.activities.FullScreenPhotoActivity;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.responses.PhotoResponse;
-import com.kenny.openimgur.classes.ImgurPhoto;
-import com.kenny.openimgur.classes.PokengurApp;
-import com.kenny.openimgur.classes.VideoCache;
-import com.kenny.openimgur.ui.VideoView;
-import com.kenny.openimgur.ui.CustomMediaController;
-import com.kenny.openimgur.util.FileUtil;
-import com.kenny.openimgur.util.ImageUtil;
-import com.kenny.openimgur.util.LinkUtils;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.activities.FullScreenPhotoActivity;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.responses.PhotoResponse;
+import com.puksh.pokenimgur.classes.ImgurPhoto;
+import com.puksh.pokenimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.classes.VideoCache;
+import com.puksh.pokenimgur.ui.VideoView;
+import com.puksh.pokenimgur.ui.CustomMediaController;
+import com.puksh.pokenimgur.util.FileUtil;
+import com.puksh.pokenimgur.util.ImageUtil;
+import com.puksh.pokenimgur.util.LinkUtils;
 import com.kennyc.view.MultiStateView;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;

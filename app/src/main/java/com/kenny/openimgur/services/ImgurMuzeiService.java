@@ -1,4 +1,4 @@
-package com.kenny.openimgur.services;
+package com.puksh.pokenimgur.services;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,19 +12,19 @@ import android.util.Log;
 
 import com.google.android.apps.muzei.api.Artwork;
 import com.google.android.apps.muzei.api.RemoteMuzeiArtSource;
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.activities.MuzeiSettingsActivity;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.responses.GalleryResponse;
-import com.kenny.openimgur.api.responses.TopicGalleryResponse;
-import com.kenny.openimgur.classes.ImgurBaseObject;
-import com.kenny.openimgur.classes.ImgurFilters;
-import com.kenny.openimgur.classes.ImgurPhoto;
-import com.kenny.openimgur.classes.ImgurTopic;
-import com.kenny.openimgur.classes.PokengurApp;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.NetworkUtils;
-import com.kenny.openimgur.util.SqlHelper;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.activities.MuzeiSettingsActivity;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.responses.GalleryResponse;
+import com.puksh.pokenimgur.api.responses.TopicGalleryResponse;
+import com.puksh.pokenimgur.classes.ImgurBaseObject;
+import com.puksh.pokenimgur.classes.ImgurFilters;
+import com.puksh.pokenimgur.classes.ImgurPhoto;
+import com.puksh.pokenimgur.classes.ImgurTopic;
+import com.puksh.pokenimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.NetworkUtils;
+import com.puksh.pokenimgur.util.SqlHelper;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.kenny.openimgur.util;
+package com.puksh.pokenimgur.util;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,23 +11,23 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
-import com.kenny.openimgur.api.responses.NotificationResponse;
-import com.kenny.openimgur.classes.ImgurAlbum;
-import com.kenny.openimgur.classes.ImgurBaseObject;
-import com.kenny.openimgur.classes.ImgurComment;
-import com.kenny.openimgur.classes.ImgurNotification;
-import com.kenny.openimgur.classes.ImgurPhoto;
-import com.kenny.openimgur.classes.ImgurTopic;
-import com.kenny.openimgur.classes.ImgurUser;
-import com.kenny.openimgur.util.DBContracts.GallerySearchContract;
-import com.kenny.openimgur.util.DBContracts.MemeContract;
-import com.kenny.openimgur.util.DBContracts.MuzeiContract;
-import com.kenny.openimgur.util.DBContracts.NotificationContract;
-import com.kenny.openimgur.util.DBContracts.ProfileContract;
-import com.kenny.openimgur.util.DBContracts.SubRedditContract;
-import com.kenny.openimgur.util.DBContracts.TopicsContract;
-import com.kenny.openimgur.util.DBContracts.UploadContract;
-import com.kenny.openimgur.util.DBContracts.UserContract;
+import com.puksh.pokenimgur.api.responses.NotificationResponse;
+import com.puksh.pokenimgur.classes.ImgurAlbum;
+import com.puksh.pokenimgur.classes.ImgurBaseObject;
+import com.puksh.pokenimgur.classes.ImgurComment;
+import com.puksh.pokenimgur.classes.ImgurNotification;
+import com.puksh.pokenimgur.classes.ImgurPhoto;
+import com.puksh.pokenimgur.classes.ImgurTopic;
+import com.puksh.pokenimgur.classes.ImgurUser;
+import com.puksh.pokenimgur.util.DBContracts.GallerySearchContract;
+import com.puksh.pokenimgur.util.DBContracts.MemeContract;
+import com.puksh.pokenimgur.util.DBContracts.MuzeiContract;
+import com.puksh.pokenimgur.util.DBContracts.NotificationContract;
+import com.puksh.pokenimgur.util.DBContracts.ProfileContract;
+import com.puksh.pokenimgur.util.DBContracts.SubRedditContract;
+import com.puksh.pokenimgur.util.DBContracts.TopicsContract;
+import com.puksh.pokenimgur.util.DBContracts.UploadContract;
+import com.puksh.pokenimgur.util.DBContracts.UserContract;
 
 import java.util.ArrayList;
 import java.util.Collections;

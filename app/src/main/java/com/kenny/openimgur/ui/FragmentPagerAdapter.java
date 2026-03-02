@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kenny.openimgur.ui;
+package com.puksh.pokenimgur.ui;
 
 import android.app.Fragment;
 import android.app.FragmentManager;

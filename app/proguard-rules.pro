@@ -1,6 +1,6 @@
 # Application classes that will be serialized/deserialized over Gson/Retrofit
--keep class com.kenny.openimgur.api.** { *; }
--keep class com.kenny.openimgur.classes.** { *; }
+-keep class com.puksh.pokenimgur.api.** { *; }
+-keep class com.puksh.pokenimgur.classes.** { *; }
 
 # Retrofit 2
 -dontwarn retrofit2.**

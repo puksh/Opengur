@@ -1,4 +1,4 @@
-package com.kenny.openimgur.services;
+package com.puksh.pokenimgur.services;
 
 import android.Manifest;
 import android.app.NotificationManager;
@@ -14,16 +14,16 @@ import android.support.v4.app.RemoteInput;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.activities.NotificationActivity;
-import com.kenny.openimgur.activities.ViewActivity;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.responses.BasicResponse;
-import com.kenny.openimgur.classes.ImgurBaseObject;
-import com.kenny.openimgur.classes.ImgurComment;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.PermissionUtils;
-import com.kenny.openimgur.util.SqlHelper;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.activities.NotificationActivity;
+import com.puksh.pokenimgur.activities.ViewActivity;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.responses.BasicResponse;
+import com.puksh.pokenimgur.classes.ImgurBaseObject;
+import com.puksh.pokenimgur.classes.ImgurComment;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.PermissionUtils;
+import com.puksh.pokenimgur.util.SqlHelper;
 
 import java.io.File;
 

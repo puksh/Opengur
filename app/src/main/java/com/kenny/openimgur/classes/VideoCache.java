@@ -1,4 +1,4 @@
-package com.kenny.openimgur.classes;
+package com.puksh.pokenimgur.classes;
 
 import android.os.AsyncTask;
 import android.os.StrictMode;
@@ -7,10 +7,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.kenny.openimgur.activities.SettingsActivity;
-import com.kenny.openimgur.util.FileUtil;
-import com.kenny.openimgur.util.ImageUtil;
-import com.kenny.openimgur.util.LogUtil;
+import com.puksh.pokenimgur.activities.SettingsActivity;
+import com.puksh.pokenimgur.util.FileUtil;
+import com.puksh.pokenimgur.util.ImageUtil;
+import com.puksh.pokenimgur.util.LogUtil;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 
 import java.io.BufferedOutputStream;

@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -6,12 +6,12 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.activities.MuzeiSettingsActivity;
-import com.kenny.openimgur.classes.ImgurTopic;
-import com.kenny.openimgur.util.DBContracts.TopicsContract;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.SqlHelper;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.activities.MuzeiSettingsActivity;
+import com.puksh.pokenimgur.classes.ImgurTopic;
+import com.puksh.pokenimgur.util.DBContracts.TopicsContract;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.SqlHelper;
 
 import java.util.List;
 import java.util.Locale;

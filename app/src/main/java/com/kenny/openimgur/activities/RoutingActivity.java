@@ -1,16 +1,16 @@
-package com.kenny.openimgur.activities;
+package com.puksh.pokenimgur.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.responses.PhotoResponse;
-import com.kenny.openimgur.classes.ImgurPhoto;
-import com.kenny.openimgur.util.LinkUtils;
-import com.kenny.openimgur.util.LogUtil;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.responses.PhotoResponse;
+import com.puksh.pokenimgur.classes.ImgurPhoto;
+import com.puksh.pokenimgur.util.LinkUtils;
+import com.puksh.pokenimgur.util.LogUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;

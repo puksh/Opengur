@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,18 +14,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.activities.MemeActivity;
-import com.kenny.openimgur.ui.adapters.GalleryAdapter;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.responses.GalleryResponse;
-import com.kenny.openimgur.classes.ImgurBaseObject;
-import com.kenny.openimgur.collections.SetUniqueList;
-import com.kenny.openimgur.util.DBContracts;
-import com.kenny.openimgur.util.FileUtil;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.RequestCodes;
-import com.kenny.openimgur.util.SqlHelper;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.activities.MemeActivity;
+import com.puksh.pokenimgur.ui.adapters.GalleryAdapter;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.responses.GalleryResponse;
+import com.puksh.pokenimgur.classes.ImgurBaseObject;
+import com.puksh.pokenimgur.collections.SetUniqueList;
+import com.puksh.pokenimgur.util.DBContracts;
+import com.puksh.pokenimgur.util.FileUtil;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.RequestCodes;
+import com.puksh.pokenimgur.util.SqlHelper;
 import com.kennyc.view.MultiStateView;
 
 import java.io.File;

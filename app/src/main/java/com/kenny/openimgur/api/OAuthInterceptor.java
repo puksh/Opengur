@@ -1,13 +1,13 @@
-package com.kenny.openimgur.api;
+package com.puksh.pokenimgur.api;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
-import com.kenny.openimgur.api.responses.OAuthResponse;
-import com.kenny.openimgur.classes.PokengurApp;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.SqlHelper;
+import com.puksh.pokenimgur.api.responses.OAuthResponse;
+import com.puksh.pokenimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.SqlHelper;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

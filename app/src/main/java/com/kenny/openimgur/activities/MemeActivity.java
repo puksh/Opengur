@@ -1,4 +1,4 @@
-package com.kenny.openimgur.activities;
+package com.puksh.pokenimgur.activities;
 
 import android.Manifest;
 import android.animation.ObjectAnimator;
@@ -25,15 +25,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.ImgurBaseObject;
-import com.kenny.openimgur.classes.ImgurPhoto;
-import com.kenny.openimgur.util.FileUtil;
-import com.kenny.openimgur.util.ImageUtil;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.PermissionUtils;
-import com.kenny.openimgur.util.RequestCodes;
-import com.kenny.openimgur.util.ViewUtils;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.classes.ImgurBaseObject;
+import com.puksh.pokenimgur.classes.ImgurPhoto;
+import com.puksh.pokenimgur.util.FileUtil;
+import com.puksh.pokenimgur.util.ImageUtil;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.PermissionUtils;
+import com.puksh.pokenimgur.util.RequestCodes;
+import com.puksh.pokenimgur.util.ViewUtils;
 import com.kennyc.bottomsheet.BottomSheet;
 import com.kennyc.bottomsheet.BottomSheetListener;
 import com.kennyc.view.MultiStateView;

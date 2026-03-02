@@ -1,10 +1,10 @@
-package com.kenny.openimgur.activities;
+package com.puksh.pokenimgur.activities;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.kenny.openimgur.R;
+import com.puksh.pokenimgur.R;
 
 /**
  * Created by kcampagna on 6/30/14.

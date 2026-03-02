@@ -1,4 +1,4 @@
-package com.kenny.openimgur.activities;
+package com.puksh.pokenimgur.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,16 +16,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.responses.BasicResponse;
-import com.kenny.openimgur.api.responses.NotificationResponse;
-import com.kenny.openimgur.classes.ImgurNotification;
-import com.kenny.openimgur.ui.adapters.NotificationAdapter;
-import com.kenny.openimgur.util.DBContracts;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.SqlHelper;
-import com.kenny.openimgur.util.ViewUtils;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.responses.BasicResponse;
+import com.puksh.pokenimgur.api.responses.NotificationResponse;
+import com.puksh.pokenimgur.classes.ImgurNotification;
+import com.puksh.pokenimgur.ui.adapters.NotificationAdapter;
+import com.puksh.pokenimgur.util.DBContracts;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.SqlHelper;
+import com.puksh.pokenimgur.util.ViewUtils;
 import com.kennyc.view.MultiStateView;
 
 import java.util.List;

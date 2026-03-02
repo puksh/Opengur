@@ -1,8 +1,8 @@
-package com.kenny.openimgur.api.responses;
+package com.puksh.pokenimgur.api.responses;
 
 import android.support.annotation.NonNull;
 
-import com.kenny.openimgur.classes.ImgurTopic;
+import com.puksh.pokenimgur.classes.ImgurTopic;
 
 import java.util.ArrayList;
 import java.util.List;

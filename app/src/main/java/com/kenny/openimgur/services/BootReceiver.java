@@ -1,11 +1,11 @@
-package com.kenny.openimgur.services;
+package com.puksh.pokenimgur.services;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.kenny.openimgur.classes.PokengurApp;
-import com.kenny.openimgur.util.LogUtil;
+import com.puksh.pokenimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.util.LogUtil;
 
 /**
  * Created by kcampagna on 8/12/15.

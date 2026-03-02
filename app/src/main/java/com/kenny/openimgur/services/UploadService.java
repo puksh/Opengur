@@ -1,4 +1,4 @@
-package com.kenny.openimgur.services;
+package com.puksh.pokenimgur.services;
 
 import android.app.IntentService;
 import android.app.NotificationChannel;
@@ -13,23 +13,23 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.responses.BasicObjectResponse;
-import com.kenny.openimgur.api.responses.BasicResponse;
-import com.kenny.openimgur.api.responses.PhotoResponse;
-import com.kenny.openimgur.classes.ImgurAlbum;
-import com.kenny.openimgur.classes.ImgurBaseObject;
-import com.kenny.openimgur.classes.ImgurPhoto;
-import com.kenny.openimgur.classes.ImgurTopic;
-import com.kenny.openimgur.classes.PokengurApp;
-import com.kenny.openimgur.classes.Upload;
-import com.kenny.openimgur.ui.BaseNotification;
-import com.kenny.openimgur.util.FileUtil;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.NetworkUtils;
-import com.kenny.openimgur.util.RequestCodes;
-import com.kenny.openimgur.util.SqlHelper;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.responses.BasicObjectResponse;
+import com.puksh.pokenimgur.api.responses.BasicResponse;
+import com.puksh.pokenimgur.api.responses.PhotoResponse;
+import com.puksh.pokenimgur.classes.ImgurAlbum;
+import com.puksh.pokenimgur.classes.ImgurBaseObject;
+import com.puksh.pokenimgur.classes.ImgurPhoto;
+import com.puksh.pokenimgur.classes.ImgurTopic;
+import com.puksh.pokenimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.classes.Upload;
+import com.puksh.pokenimgur.ui.BaseNotification;
+import com.puksh.pokenimgur.util.FileUtil;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.NetworkUtils;
+import com.puksh.pokenimgur.util.RequestCodes;
+import com.puksh.pokenimgur.util.SqlHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ import retrofit2.Response;
  */
 public class UploadService extends IntentService {
     private static final String TAG = UploadService.class.getSimpleName();
-    public static final String ACTION_REFRESH_UPLOADS = "com.kenny.openimgur.ACTION_REFRESH_UPLOADS";
+    public static final String ACTION_REFRESH_UPLOADS = "com.puksh.pokenimgur.ACTION_REFRESH_UPLOADS";
 
     private static final String KEY_UPLOADS = TAG + ".uploads";
 

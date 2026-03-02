@@ -1,4 +1,4 @@
-package com.kenny.openimgur.classes;
+package com.puksh.pokenimgur.classes;
 
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.kenny.openimgur.ui.VideoView;
+import com.puksh.pokenimgur.ui.VideoView;
 
 public interface ImgurListener {
     void onPhotoTap(View view);

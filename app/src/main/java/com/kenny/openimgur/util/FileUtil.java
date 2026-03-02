@@ -1,4 +1,4 @@
-package com.kenny.openimgur.util;
+package com.puksh.pokenimgur.util;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.kenny.openimgur.classes.ImgurPhoto;
+import com.puksh.pokenimgur.classes.ImgurPhoto;
 
 import java.io.BufferedOutputStream;
 import java.io.Closeable;

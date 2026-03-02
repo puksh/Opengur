@@ -1,4 +1,4 @@
-package com.kenny.openimgur.classes;
+package com.puksh.pokenimgur.classes;
 
 import android.Manifest;
 import android.app.Application;
@@ -10,15 +10,15 @@ import android.os.UserManager;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
-import com.kenny.openimgur.BuildConfig;
-import com.kenny.openimgur.activities.SettingsActivity;
-import com.kenny.openimgur.api.OAuthInterceptor;
-import com.kenny.openimgur.services.AlarmReceiver;
-import com.kenny.openimgur.util.FileUtil;
-import com.kenny.openimgur.util.ImageUtil;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.PermissionUtils;
-import com.kenny.openimgur.util.SqlHelper;
+import com.puksh.pokenimgur.BuildConfig;
+import com.puksh.pokenimgur.activities.SettingsActivity;
+import com.puksh.pokenimgur.api.OAuthInterceptor;
+import com.puksh.pokenimgur.services.AlarmReceiver;
+import com.puksh.pokenimgur.util.FileUtil;
+import com.puksh.pokenimgur.util.ImageUtil;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.PermissionUtils;
+import com.puksh.pokenimgur.util.SqlHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;

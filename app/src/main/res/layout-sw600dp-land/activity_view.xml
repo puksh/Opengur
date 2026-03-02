@@ -10,7 +10,7 @@
         android:layout_weight="1">
 
         <!-- MAIN CONTENT -->
-        <com.kenny.openimgur.ui.ViewPager
+        <com.puksh.pokenimgur.ui.ViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -52,7 +52,7 @@
 
     <fragment
         android:id="@+id/sideGallery"
-        android:name="com.kenny.openimgur.fragments.SideGalleryFragment"
+        android:name="com.puksh.pokenimgur.fragments.SideGalleryFragment"
         android:layout_width="200dp"
         android:layout_height="match_parent"
         android:layout_marginTop="?actionBarSize" />

@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -9,12 +9,12 @@ import android.support.annotation.StringRes;
 import android.view.View;
 import android.widget.Toast;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.activities.BaseActivity;
-import com.kenny.openimgur.classes.ImgurTheme;
-import com.kenny.openimgur.classes.ImgurUser;
-import com.kenny.openimgur.classes.PokengurApp;
-import com.kenny.openimgur.util.LogUtil;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.activities.BaseActivity;
+import com.puksh.pokenimgur.classes.ImgurTheme;
+import com.puksh.pokenimgur.classes.ImgurUser;
+import com.puksh.pokenimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.util.LogUtil;
 import com.kennyc.bottomsheet.BottomSheet;
 
 import butterknife.ButterKnife;

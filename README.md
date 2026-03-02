@@ -1,8 +1,8 @@
-# [Opengur](https://kennyc1012.github.io/Opengur/)
+# [Pokengur]
 
 Open source Imgur Android App [(created by Kennyc1012)](https://github.com/Kennyc1012/Opengur)
 
-<img src="https://github.com/puksh/Opengur/raw/master/assets/ss1.png" height="400px"/>
+<img src="https://github.com/puksh/Pokengur/raw/master/assets/ss1.png" height="400px"/>
 
 # Features
 
@@ -18,15 +18,15 @@ Open source Imgur Android App [(created by Kennyc1012)](https://github.com/Kenny
 
 # What's New
 
-Check the [Changelog](https://github.com/puksh/Opengur/blob/master/CHANGELOG.MD) for the changes of each version
+Check the [Changelog](https://github.com/puksh/Pokengur/blob/master/CHANGELOG.MD) for the changes of each version
 
 # Building
 
-Check out the [wiki](https://github.com/puksh/Opengur/wiki) for instructions on building Open Imgur
+Check out the [wiki](https://github.com/puksh/Pokengur/wiki) for instructions on building Open Imgur
 
 # Contribution
 
-Pull requests are welcomed and encouraged. If you experience any bugs, please [file an issue](https://github.com/puksh/Opengur/issues/new)
+Pull requests are welcomed and encouraged. If you experience any bugs, please [file an issue](https://github.com/puksh/Pokengur/issues/new)
 
 # License
 

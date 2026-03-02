@@ -1,4 +1,4 @@
-package com.kenny.openimgur.collections;
+package com.puksh.pokenimgur.collections;
 // GenericsNote: Converted.
 /*
  *  Copyright 2001-2004 The Apache Software Foundation

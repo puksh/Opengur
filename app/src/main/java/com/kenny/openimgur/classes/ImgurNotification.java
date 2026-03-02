@@ -1,11 +1,11 @@
-package com.kenny.openimgur.classes;
+package com.puksh.pokenimgur.classes;
 
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.format.DateUtils;
 
-import com.kenny.openimgur.util.DBContracts;
+import com.puksh.pokenimgur.util.DBContracts;
 
 /**
  * Created by Kenny-PC on 8/8/2015.

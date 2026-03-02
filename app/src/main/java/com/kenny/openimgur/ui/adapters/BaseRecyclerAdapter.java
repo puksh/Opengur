@@ -1,13 +1,13 @@
-package com.kenny.openimgur.ui.adapters;
+package com.puksh.pokenimgur.ui.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.kenny.openimgur.classes.PokengurApp;
-import com.kenny.openimgur.util.ImageUtil;
-import com.kenny.openimgur.util.LogUtil;
+import com.puksh.pokenimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.util.ImageUtil;
+import com.puksh.pokenimgur.util.LogUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 

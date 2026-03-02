@@ -1,4 +1,4 @@
-package com.kenny.openimgur.ui.adapters;
+package com.puksh.pokenimgur.ui.adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,19 +11,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.activities.SettingsActivity;
-import com.kenny.openimgur.classes.ImgurAlbum;
-import com.kenny.openimgur.classes.ImgurBaseObject;
-import com.kenny.openimgur.classes.ImgurPhoto;
-import com.kenny.openimgur.classes.PokengurApp;
-import com.kenny.openimgur.collections.SetUniqueList;
-import com.kenny.openimgur.ui.CenteredDrawable;
-import com.kenny.openimgur.ui.VideoView;
-import com.kenny.openimgur.util.FileUtil;
-import com.kenny.openimgur.util.ImageUtil;
-import com.kenny.openimgur.util.LinkUtils;
-import com.kenny.openimgur.util.LogUtil;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.activities.SettingsActivity;
+import com.puksh.pokenimgur.classes.ImgurAlbum;
+import com.puksh.pokenimgur.classes.ImgurBaseObject;
+import com.puksh.pokenimgur.classes.ImgurPhoto;
+import com.puksh.pokenimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.collections.SetUniqueList;
+import com.puksh.pokenimgur.ui.CenteredDrawable;
+import com.puksh.pokenimgur.ui.VideoView;
+import com.puksh.pokenimgur.util.FileUtil;
+import com.puksh.pokenimgur.util.ImageUtil;
+import com.puksh.pokenimgur.util.LinkUtils;
+import com.puksh.pokenimgur.util.LogUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;

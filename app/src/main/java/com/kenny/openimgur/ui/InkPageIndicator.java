@@ -1,4 +1,4 @@
-package com.kenny.openimgur.ui;
+package com.puksh.pokenimgur.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -14,7 +14,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
-import com.kenny.openimgur.R;
+import com.puksh.pokenimgur.R;
 
 /**
  * Custom InkPageIndicator implementation compatible with API 17+

@@ -1,4 +1,4 @@
-package com.kenny.openimgur.util;
+package com.puksh.pokenimgur.util;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,8 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.ui.GridItemDecoration;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.ui.GridItemDecoration;
 import com.kennyc.view.MultiStateView;
 
 import java.lang.ref.WeakReference;

@@ -1,4 +1,4 @@
-package com.kenny.openimgur.classes;
+package com.puksh.pokenimgur.classes;
 
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.support.annotation.ColorRes;
 import android.support.annotation.StyleRes;
 
-import com.kenny.openimgur.R;
+import com.puksh.pokenimgur.R;
 
 /**
  * Created by kcampagna on 12/8/14.

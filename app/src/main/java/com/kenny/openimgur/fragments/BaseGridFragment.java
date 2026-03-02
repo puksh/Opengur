@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,22 +14,22 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.activities.SettingsActivity;
-import com.kenny.openimgur.activities.ViewActivity;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.responses.GalleryResponse;
-import com.kenny.openimgur.classes.FragmentListener;
-import com.kenny.openimgur.classes.ImgurBaseObject;
-import com.kenny.openimgur.classes.ImgurPhoto;
-import com.kenny.openimgur.collections.SetUniqueList;
-import com.kenny.openimgur.ui.GridItemDecoration;
-import com.kenny.openimgur.ui.adapters.GalleryAdapter;
-import com.kenny.openimgur.util.ImageUtil;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.NetworkUtils;
-import com.kenny.openimgur.util.RequestCodes;
-import com.kenny.openimgur.util.ViewUtils;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.activities.SettingsActivity;
+import com.puksh.pokenimgur.activities.ViewActivity;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.responses.GalleryResponse;
+import com.puksh.pokenimgur.classes.FragmentListener;
+import com.puksh.pokenimgur.classes.ImgurBaseObject;
+import com.puksh.pokenimgur.classes.ImgurPhoto;
+import com.puksh.pokenimgur.collections.SetUniqueList;
+import com.puksh.pokenimgur.ui.GridItemDecoration;
+import com.puksh.pokenimgur.ui.adapters.GalleryAdapter;
+import com.puksh.pokenimgur.util.ImageUtil;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.NetworkUtils;
+import com.puksh.pokenimgur.util.RequestCodes;
+import com.puksh.pokenimgur.util.ViewUtils;
 import com.kennyc.view.MultiStateView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 

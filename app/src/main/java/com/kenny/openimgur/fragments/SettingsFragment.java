@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -24,16 +24,16 @@ import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.kenny.openimgur.BuildConfig;
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.activities.SettingsActivity;
-import com.kenny.openimgur.classes.ImgurTheme;
-import com.kenny.openimgur.classes.VideoCache;
-import com.kenny.openimgur.util.DBContracts;
-import com.kenny.openimgur.util.FileUtil;
-import com.kenny.openimgur.util.ImageUtil;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.SqlHelper;
+import com.puksh.pokenimgur.BuildConfig;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.activities.SettingsActivity;
+import com.puksh.pokenimgur.classes.ImgurTheme;
+import com.puksh.pokenimgur.classes.VideoCache;
+import com.puksh.pokenimgur.util.DBContracts;
+import com.puksh.pokenimgur.util.FileUtil;
+import com.puksh.pokenimgur.util.ImageUtil;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.SqlHelper;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -169,7 +169,7 @@ public class SettingsFragment extends BasePreferenceFragment implements Preferen
                 return true;
 
             case "openSource":
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/puksh/Opengur"));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/puksh/Pokengur"));
 
                 if (browserIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                     startActivity(browserIntent);
@@ -195,7 +195,7 @@ public class SettingsFragment extends BasePreferenceFragment implements Preferen
                 return true;
 
             case "privacyPolicy":
-                Intent privacyIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/puksh/Opengur/blob/master/Privacy_Policy.md"));
+                Intent privacyIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/puksh/Pokengur/blob/master/Privacy_Policy.md"));
 
                 if (privacyIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                     startActivity(privacyIntent);
@@ -206,7 +206,7 @@ public class SettingsFragment extends BasePreferenceFragment implements Preferen
                             .setView(wv)
                             .show();
 
-                    wv.loadUrl("https://github.com/puksh/Opengur/blob/master/Privacy_Policy.md");
+                    wv.loadUrl("https://github.com/puksh/Pokengur/blob/master/Privacy_Policy.md");
                 }
                 return true;
         }

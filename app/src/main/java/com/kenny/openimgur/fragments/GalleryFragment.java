@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -19,18 +19,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FilterQueryProvider;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.activities.GallerySearchActivity;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.ImgurService;
-import com.kenny.openimgur.classes.FragmentListener;
-import com.kenny.openimgur.classes.ImgurFilters.GallerySection;
-import com.kenny.openimgur.classes.ImgurFilters.GallerySort;
-import com.kenny.openimgur.classes.ImgurFilters.TimeSort;
-import com.kenny.openimgur.ui.adapters.SearchAdapter;
-import com.kenny.openimgur.util.DBContracts;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.SqlHelper;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.activities.GallerySearchActivity;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.ImgurService;
+import com.puksh.pokenimgur.classes.FragmentListener;
+import com.puksh.pokenimgur.classes.ImgurFilters.GallerySection;
+import com.puksh.pokenimgur.classes.ImgurFilters.GallerySort;
+import com.puksh.pokenimgur.classes.ImgurFilters.TimeSort;
+import com.puksh.pokenimgur.ui.adapters.SearchAdapter;
+import com.puksh.pokenimgur.util.DBContracts;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.SqlHelper;
 import com.kennyc.view.MultiStateView;
 
 /**

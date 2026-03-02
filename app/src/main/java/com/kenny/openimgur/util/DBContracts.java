@@ -1,8 +1,8 @@
-package com.kenny.openimgur.util;
+package com.puksh.pokenimgur.util;
 
 import android.provider.BaseColumns;
 
-import com.kenny.openimgur.classes.ImgurNotification;
+import com.puksh.pokenimgur.classes.ImgurNotification;
 
 /**
  * Created by kcampagna on 7/25/14.

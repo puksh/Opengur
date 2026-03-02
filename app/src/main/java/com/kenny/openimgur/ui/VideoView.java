@@ -1,4 +1,4 @@
-package com.kenny.openimgur.ui;
+package com.puksh.pokenimgur.ui;
 /*
  * Copyright (C) 2006 The Android Open Source Project
  *
@@ -37,9 +37,9 @@ import android.view.ViewGroup;
 import android.widget.MediaController;
 import android.widget.MediaController.MediaPlayerControl;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.ui.CustomMediaController;
-import com.kenny.openimgur.util.LogUtil;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.ui.CustomMediaController;
+import com.puksh.pokenimgur.util.LogUtil;
 
 import java.io.IOException;
 import java.util.Map;

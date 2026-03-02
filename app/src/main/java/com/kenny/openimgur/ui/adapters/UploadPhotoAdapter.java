@@ -1,4 +1,4 @@
-package com.kenny.openimgur.ui.adapters;
+package com.puksh.pokenimgur.ui.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.Upload;
-import com.kenny.openimgur.util.ImageUtil;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.classes.Upload;
+import com.puksh.pokenimgur.util.ImageUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import java.util.ArrayList;

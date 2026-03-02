@@ -1,4 +1,4 @@
-package com.kenny.openimgur.activities;
+package com.puksh.pokenimgur.activities;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
@@ -22,11 +22,11 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.ImgurTheme;
-import com.kenny.openimgur.classes.ImgurUser;
-import com.kenny.openimgur.classes.PokengurApp;
-import com.kenny.openimgur.util.LogUtil;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.classes.ImgurTheme;
+import com.puksh.pokenimgur.classes.ImgurUser;
+import com.puksh.pokenimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.util.LogUtil;
 import com.kennyc.bottomsheet.BottomSheet;
 
 import butterknife.ButterKnife;

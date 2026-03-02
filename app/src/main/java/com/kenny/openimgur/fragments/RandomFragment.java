@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,8 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.api.ApiClient;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.api.ApiClient;
 
 /**
  * Created by kcampagna on 1/27/15.

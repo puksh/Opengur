@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -13,14 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.activities.FullScreenPhotoActivity;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.responses.BasicResponse;
-import com.kenny.openimgur.classes.ImgurBaseObject;
-import com.kenny.openimgur.ui.adapters.GalleryAdapter;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.ViewUtils;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.activities.FullScreenPhotoActivity;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.responses.BasicResponse;
+import com.puksh.pokenimgur.classes.ImgurBaseObject;
+import com.puksh.pokenimgur.ui.adapters.GalleryAdapter;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.ViewUtils;
 import com.kennyc.view.MultiStateView;
 
 import java.util.ArrayList;

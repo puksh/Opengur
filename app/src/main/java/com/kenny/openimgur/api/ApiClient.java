@@ -1,4 +1,4 @@
-package com.kenny.openimgur.api;
+package com.puksh.pokenimgur.api;
 
 
 import android.os.StrictMode;
@@ -7,13 +7,13 @@ import android.support.annotation.StringRes;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kenny.openimgur.BuildConfig;
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.ImgurBaseObject;
-import com.kenny.openimgur.classes.ImgurUser;
-import com.kenny.openimgur.classes.PokengurApp;
-import com.kenny.openimgur.util.FileUtil;
-import com.kenny.openimgur.util.NetworkUtils;
+import com.puksh.pokenimgur.BuildConfig;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.classes.ImgurBaseObject;
+import com.puksh.pokenimgur.classes.ImgurUser;
+import com.puksh.pokenimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.util.FileUtil;
+import com.puksh.pokenimgur.util.NetworkUtils;
 
 import java.io.File;
 import java.io.IOException;

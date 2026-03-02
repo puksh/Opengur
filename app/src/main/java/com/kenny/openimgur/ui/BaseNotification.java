@@ -1,4 +1,4 @@
-package com.kenny.openimgur.ui;
+package com.puksh.pokenimgur.ui;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -13,9 +13,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.classes.PokengurApp;
-import com.kenny.openimgur.util.ColorUtils;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.classes.PokengurApp;
+import com.puksh.pokenimgur.util.ColorUtils;
 
 /**
  * Created by kcampagna on 8/12/15.

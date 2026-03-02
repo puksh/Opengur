@@ -1,4 +1,4 @@
-package com.kenny.openimgur.ui;
+package com.puksh.pokenimgur.ui;
 
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;

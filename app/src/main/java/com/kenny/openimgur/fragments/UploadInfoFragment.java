@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -14,14 +14,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.ui.adapters.TopicsAdapter;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.responses.TopicResponse;
-import com.kenny.openimgur.classes.ImgurTopic;
-import com.kenny.openimgur.classes.UploadListener;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.SqlHelper;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.ui.adapters.TopicsAdapter;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.responses.TopicResponse;
+import com.puksh.pokenimgur.classes.ImgurTopic;
+import com.puksh.pokenimgur.classes.UploadListener;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.SqlHelper;
 
 import java.util.List;
 

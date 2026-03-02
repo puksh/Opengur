@@ -1,4 +1,4 @@
-package com.kenny.openimgur.fragments;
+package com.puksh.pokenimgur.fragments;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -23,19 +23,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FilterQueryProvider;
 
-import com.kenny.openimgur.R;
-import com.kenny.openimgur.api.ApiClient;
-import com.kenny.openimgur.api.ImgurService;
-import com.kenny.openimgur.api.responses.GalleryResponse;
-import com.kenny.openimgur.classes.FragmentListener;
-import com.kenny.openimgur.classes.ImgurFilters;
-import com.kenny.openimgur.classes.ImgurFilters.RedditSort;
-import com.kenny.openimgur.ui.adapters.SearchAdapter;
-import com.kenny.openimgur.util.DBContracts;
-import com.kenny.openimgur.util.LogUtil;
-import com.kenny.openimgur.util.RequestCodes;
-import com.kenny.openimgur.util.SqlHelper;
-import com.kenny.openimgur.util.ViewUtils;
+import com.puksh.pokenimgur.R;
+import com.puksh.pokenimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.ImgurService;
+import com.puksh.pokenimgur.api.responses.GalleryResponse;
+import com.puksh.pokenimgur.classes.FragmentListener;
+import com.puksh.pokenimgur.classes.ImgurFilters;
+import com.puksh.pokenimgur.classes.ImgurFilters.RedditSort;
+import com.puksh.pokenimgur.ui.adapters.SearchAdapter;
+import com.puksh.pokenimgur.util.DBContracts;
+import com.puksh.pokenimgur.util.LogUtil;
+import com.puksh.pokenimgur.util.RequestCodes;
+import com.puksh.pokenimgur.util.SqlHelper;
+import com.puksh.pokenimgur.util.ViewUtils;
 import com.kennyc.view.MultiStateView;
 
 import java.util.ArrayList;

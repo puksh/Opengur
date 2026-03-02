@@ -1,4 +1,4 @@
-package com.kenny.openimgur.ui;
+package com.puksh.pokenimgur.ui;
 
 import android.graphics.Rect;
 import android.support.v7.widget.GridLayoutManager;

@@ -1,9 +1,9 @@
-package com.kenny.openimgur.util;
+package com.puksh.pokenimgur.util;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.kenny.openimgur.classes.ImgurPhoto;
+import com.puksh.pokenimgur.classes.ImgurPhoto;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

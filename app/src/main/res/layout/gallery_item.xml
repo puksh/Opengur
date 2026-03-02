@@ -14,7 +14,7 @@
         android:transitionName="@string/gallery_item_transition"
         tools:src="@drawable/ic_launcher" />
 
-    <com.kenny.openimgur.ui.VideoView
+    <com.puksh.pokenimgur.ui.VideoView
         android:id="@+id/mediaVideo"
         android:layout_width="match_parent"
         android:layout_height="@dimen/gallery_column_height"

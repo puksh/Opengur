@@ -1,4 +1,4 @@
-package com.kenny.openimgur.classes;
+package com.puksh.pokenimgur.classes;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
-import com.kenny.openimgur.api.ApiClient;
+import com.puksh.pokenimgur.api.ApiClient;
 
 import java.util.ArrayList;
 import java.util.List;
